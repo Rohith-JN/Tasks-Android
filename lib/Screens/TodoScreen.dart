@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ class TodoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String title = '';
     String detail = '';
+
     if (this.index != null) {
       title = todoController.todos[index!].title;
       detail = todoController.todos[index!].details;
@@ -26,6 +28,8 @@ class TodoScreen extends StatelessWidget {
         TextEditingController(text: title);
     TextEditingController detailEditingController =
         TextEditingController(text: detail);
+
+    final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -56,19 +60,20 @@ class TodoScreen extends StatelessWidget {
                   splashFactory: NoSplash.splashFactory,
                 ),
                 onPressed: () {
-                  if (this.index.isNull) {
+                  if (this.index == null && _formKey.currentState!.validate()) {
                     todoController.todos.add(Todo(
                       details: detailEditingController.text,
                       title: titleEditingController.text,
                     ));
-                  } else {
+                    Get.back();
+                  }
+                  if (this.index != null && _formKey.currentState!.validate()) {
                     var editing = todoController.todos[index!];
                     editing.title = titleEditingController.text;
                     editing.details = detailEditingController.text;
                     todoController.todos[index!] = editing;
+                    Get.back();
                   }
-                  ;
-                  Get.back();
                 },
                 child: Text((this.index == null) ? 'Add' : 'Update',
                     style:
@@ -79,11 +84,10 @@ class TodoScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          height: 200.0,
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
           child: Container(
               decoration: BoxDecoration(
-                  color: Color(0xFF414141),
+                  color: Theme.of(context).canvasColor,
                   boxShadow: const [
                     BoxShadow(
                       color: Color(0xFF414141),
@@ -95,34 +99,48 @@ class TodoScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14.0)),
               padding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 15.0),
-              child: Expanded(
+              child: Form(
+                key: _formKey,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextField(
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
                       controller: titleEditingController,
                       autofocus: true,
                       autocorrect: false,
                       cursorColor: Colors.grey,
                       maxLines: 1,
+                      maxLength: 25,
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                           hintText: "Title", border: InputBorder.none),
                       style: GoogleFonts.notoSans(
-                          color: Color(0xFFA8A8A8), fontSize: 20.0),
+                          color: Theme.of(context).hintColor, fontSize: 23.0),
                     ),
                     const Divider(
                       color: Color(0xFF707070),
+                      thickness: 1,
                     ),
-                    TextField(
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
                       controller: detailEditingController,
-                      maxLines: 1,
+                      maxLines: null,
                       autocorrect: false,
                       cursorColor: Colors.grey,
                       textInputAction: TextInputAction.done,
                       decoration: const InputDecoration(
                           hintText: "Notes", border: InputBorder.none),
                       style: GoogleFonts.notoSans(
-                          color: Color(0xFFA8A8A8), fontSize: 20.0),
+                          color: Theme.of(context).hintColor, fontSize: 20.0),
                     ),
                   ],
                 ),
