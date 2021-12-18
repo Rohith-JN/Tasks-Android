@@ -15,6 +15,7 @@ class Themes {
       highlightColor: Colors.transparent,
       hintColor: Color(0xFFA8A8A8),
       scaffoldBackgroundColor: Color(0xFF5A5959),
+      iconTheme: IconThemeData(color: Color(0xFFEAEAEA)),
       appBarTheme:
           const AppBarTheme(backgroundColor: Color(0xFF5A5959), elevation: 0),
       textTheme: TextTheme(
@@ -33,6 +34,7 @@ class Themes {
       checkboxTheme: CheckboxThemeData(
         side: BorderSide(color: Color(0xFF707070)),
       ),
+      iconTheme: IconThemeData(color: Color(0xFF707070)),
       highlightColor: Colors.transparent,
       hintColor: Color(0xFF707070),
       scaffoldBackgroundColor: Color(0xFFF0EFEF),

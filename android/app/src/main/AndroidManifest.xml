@@ -2,7 +2,7 @@
     package="com.example.todo_app">
    <application
         android:label="Reminders"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/reminder_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

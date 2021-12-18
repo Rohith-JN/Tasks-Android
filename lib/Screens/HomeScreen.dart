@@ -3,51 +3,144 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/Screens/TodoScreen.dart';
+import 'package:todo_app/Screens/dialogBox.dart';
 import 'package:todo_app/Screens/themes.dart';
 import 'package:todo_app/controllers/TodoController.dart';
 import 'package:todo_app/models/Todo.dart';
 import 'package:flutter/services.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     bool status = false;
     final TodoController todoController = Get.put(TodoController());
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         centerTitle: false,
         title: Text("Reminders", style: Theme.of(context).textTheme.headline1),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-            child: RollingSwitch.icon(
-              width: 110.0,
-              height: 50.0,
-              onChanged: (bool state) {
-                if (Get.isDarkMode) {
-                  Get.changeThemeMode(ThemeMode.light);
-                } else {
-                  Get.changeThemeMode(ThemeMode.dark);
-                }
-              },
-              rollingInfoRight: const RollingIconInfo(
-                icon: Icons.light_mode,
-                backgroundColor: Colors.grey,
-                text: Text('light', style: TextStyle(fontSize: 17.0)),
-              ),
-              rollingInfoLeft: const RollingIconInfo(
-                icon: Icons.dark_mode,
-                backgroundColor: Colors.grey,
-                text: Text('dark', style: TextStyle(fontSize: 17.0)),
-              ),
-            ),
-          ),
-        ],
+      ),
+      extendBodyBehindAppBar: true,
+      drawer: Drawer(
+        child: Obx(() => ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  decoration: BoxDecoration(
+                    color: (Get.isDarkMode) ? Colors.black26 : Colors.grey[300],
+                  ),
+                  accountName: Text('Reminders',
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        color: Theme.of(context).textTheme.headline1!.color,
+                      )),
+                  currentAccountPicture: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Image(
+                        image: AssetImage("assets/App_icon.png"),
+                      )),
+                  accountEmail: null,
+                ),
+                ListTile(
+                  title: Text("Check all",
+                      style: TextStyle(
+                          fontSize: 17.0,
+                          color: Theme.of(context).textTheme.headline1!.color)),
+                  enabled: true,
+                  leading: Icon(Icons.check_box),
+                  onTap: () {
+                    setState(() {
+                      checkAll();
+                    });
+                  },
+                ),
+                ListTile(
+                  enabled: true,
+                  title: Text("Uncheck all",
+                      style: TextStyle(
+                          fontSize: 17.0,
+                          color: Theme.of(context).textTheme.headline1!.color)),
+                  leading: Icon(Icons.check_box_outline_blank),
+                  onTap: () {
+                    setState(() {
+                      unCheckAll();
+                    });
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    (Get.isDarkMode)
+                        ? 'Change theme:  light'
+                        : 'change theme:  dark',
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  leading: Icon(Icons.color_lens_sharp),
+                  onTap: () {
+                    if (Get.isDarkMode) {
+                      Get.changeThemeMode(ThemeMode.light);
+                    } else {
+                      Get.changeThemeMode(ThemeMode.dark);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Delete all",
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  leading: Icon(Icons.delete),
+                  onTap: () {
+                    todoController.todos.clear();
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "About",
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  leading: Icon(Icons.info),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogBox(
+                              key: UniqueKey(),
+                              title: "Reminders",
+                              descriptions: "A simple Reminders/Todo app",
+                              text: 'Check Github',
+                              img: Image(
+                                  image: AssetImage("assets/App_icon.png")));
+                        });
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "No of tasks:  ${todoController.todos.length}",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  onTap: () {},
+                ),
+              ],
+            )),
       ),
       body: Container(
         width: double.infinity,
@@ -170,4 +263,20 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void checkAll() {
+  TodoController todoController = Get.put(TodoController());
+  for (var i = 0; i < todoController.todos.length; i++) {
+    todoController.todos[i].done = true;
+  }
+  GetStorage().write('todos', todoController.todos.toList());
+}
+
+void unCheckAll() {
+  TodoController todoController = Get.put(TodoController());
+  for (var i = 0; i < todoController.todos.length; i++) {
+    todoController.todos[i].done = false;
+  }
+  GetStorage().write('todos', todoController.todos.toList());
 }
