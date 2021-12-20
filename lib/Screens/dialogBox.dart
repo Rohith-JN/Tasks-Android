@@ -44,12 +44,12 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
     return Stack(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               left: Constants.padding,
               top: Constants.avatarRadius + Constants.padding,
               right: Constants.padding,
               bottom: Constants.padding),
-          margin: EdgeInsets.only(top: Constants.avatarRadius),
+          margin: const EdgeInsets.only(top: Constants.avatarRadius),
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             color: Colors.white,
@@ -60,20 +60,20 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             children: <Widget>[
               Text(
                 widget.title,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
                     color: Colors.black),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Text(
                 widget.descriptions,
-                style: TextStyle(fontSize: 15, color: Colors.black),
+                style: const TextStyle(fontSize: 15, color: Colors.black),
                 textAlign: TextAlign.start,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 22,
               ),
               Align(
@@ -81,10 +81,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 child: TextButton(
                   onPressed: () {
                     _launchURL();
+                    Navigator.pop(context);
                   },
                   child: Text(
                     widget.text,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ),
               ),
@@ -99,7 +100,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             radius: Constants.avatarRadius,
             child: ClipRRect(
                 borderRadius:
-                    BorderRadius.all(Radius.circular(Constants.avatarRadius)),
+                    const BorderRadius.all(Radius.circular(Constants.avatarRadius)),
                 child: Image.asset("assets/App_icon.png")),
           ),
         ),

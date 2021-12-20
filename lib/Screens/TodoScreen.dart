@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,19 +10,18 @@ import 'package:todo_app/models/Todo.dart';
 class TodoScreen extends StatelessWidget {
   final int? index;
   final TodoController todoController = Get.find();
-  TodoScreen({this.index});
+  TodoScreen({Key? key, this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String title = '';
     String detail = '';
 
-    if (this.index != null) {
+    if (index != null) {
       title = todoController.todos[index!].title;
       detail = todoController.todos[index!].details;
     }
 
-    Color add = Color(0xFFA8A8A8);
     TextEditingController titleEditingController =
         TextEditingController(text: title);
     TextEditingController detailEditingController =
@@ -33,7 +31,7 @@ class TodoScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text((this.index == null) ? 'New Reminder' : 'Edit Reminder',
+        title: Text((index == null) ? 'New Reminder' : 'Edit Reminder',
             style: TextStyle(
                 fontSize: 22,
                 color: Theme.of(context).textTheme.headline2!.color)),
@@ -60,14 +58,14 @@ class TodoScreen extends StatelessWidget {
                   splashFactory: NoSplash.splashFactory,
                 ),
                 onPressed: () {
-                  if (this.index == null && _formKey.currentState!.validate()) {
+                  if (index == null && _formKey.currentState!.validate()) {
                     todoController.todos.add(Todo(
                       details: detailEditingController.text,
                       title: titleEditingController.text,
                     ));
                     Get.back();
                   }
-                  if (this.index != null && _formKey.currentState!.validate()) {
+                  if (index != null && _formKey.currentState!.validate()) {
                     var editing = todoController.todos[index!];
                     editing.title = titleEditingController.text;
                     editing.details = detailEditingController.text;
@@ -75,9 +73,9 @@ class TodoScreen extends StatelessWidget {
                     Get.back();
                   }
                 },
-                child: Text((this.index == null) ? 'Add' : 'Update',
+                child: Text((index == null) ? 'Add' : 'Update',
                     style:
-                        TextStyle(color: Color(0xFF39A7FD), fontSize: 20.0))),
+                        const TextStyle(color: Color(0xFF39A7FD), fontSize: 20.0))),
           )
         ],
       ),
