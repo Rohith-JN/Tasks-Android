@@ -1,7 +1,5 @@
 // ignore_for_file: file_names
 
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

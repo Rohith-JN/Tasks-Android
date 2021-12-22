@@ -1,13 +1,16 @@
 // ignore_for_file: file_names, empty_statements
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/Screens/TodoScreen.dart';
 import 'package:todo_app/Screens/dialogBox.dart';
 import 'package:todo_app/controllers/TodoController.dart';
 import 'package:flutter/services.dart';
+import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,6 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String now = DateFormat("MM/dd/yyyy").format(DateTime.now());
+  TimeOfDay currentTime = TimeOfDay.now();
+
   @override
   Widget build(BuildContext context) {
     final TodoController todoController = Get.put(TodoController());
@@ -179,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Theme.of(context).hintColor,
                                     fontSize: 23.0,
                                     decoration:
-                                        (todoController.todos[index].done!)
+                                        (todoController.todos[index].done)
                                             ? TextDecoration.lineThrough
                                             : TextDecoration.none),
                               ),
@@ -193,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     side: Theme.of(context).checkboxTheme.side,
                                     onChanged: (value) {
                                       var changed = todoController.todos[index];
-                                      changed.done = value;
+                                      changed.done = value!;
                                       todoController.todos[index] = changed;
                                     }),
                               )
@@ -204,16 +210,41 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Color(0xFF707070),
                             thickness: 1.0,
                           ),
-                          Text(
-                            todoController.todos[index].details,
-                            style: GoogleFonts.notoSans(
-                              color: Theme.of(context).hintColor,
-                              fontSize: 20.0,
-                              decoration: (todoController.todos[index].done!)
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
+                          Text(todoController.todos[index].details,
+                              style: GoogleFonts.notoSans(
+                                color: Theme.of(context).hintColor,
+                                fontSize: 20.0,
+                                decoration: (todoController.todos[index].done)
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              )),
+                          Visibility(
+                            visible: todoController.todos[index].date == '' &&
+                                    todoController.todos[index].time == ''
+                                ? false
+                                : true,
+                            child: Divider(
+                              color: Color(0xFF707070),
+                              thickness: 1.0,
                             ),
                           ),
+                          Visibility(
+                            visible: todoController.todos[index].date == '' &&
+                                    todoController.todos[index].time == ''
+                                ? false
+                                : true,
+                            child: Text(
+                                (todoController.todos[index].date != now)
+                                    ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
+                                    : 'Today, ${todoController.todos[index].time}',
+                                style: GoogleFonts.notoSans(
+                                  color: Theme.of(context).hintColor,
+                                  fontSize: 20.0,
+                                  decoration: (todoController.todos[index].done)
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                )),
+                          )
                         ],
                       ),
                     ),
