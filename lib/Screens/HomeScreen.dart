@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, empty_statements
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +9,6 @@ import 'package:todo_app/Screens/TodoScreen.dart';
 import 'package:todo_app/Screens/dialogBox.dart';
 import 'package:todo_app/controllers/TodoController.dart';
 import 'package:flutter/services.dart';
-import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -223,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     todoController.todos[index].time == ''
                                 ? false
                                 : true,
-                            child: Divider(
+                            child: const Divider(
                               color: Color(0xFF707070),
                               thickness: 1.0,
                             ),
@@ -257,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          Get.to(() => TodoScreen());
+          Get.to(() => const TodoScreen());
         },
         child: Container(
           decoration: BoxDecoration(

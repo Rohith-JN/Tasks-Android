@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,12 +8,11 @@ import 'package:todo_app/controllers/TodoController.dart';
 import 'package:todo_app/models/Todo.dart';
 import 'package:intl/intl.dart';
 import 'package:date_format/date_format.dart';
-import 'package:todo_app/notification_service.dart';
 
 class TodoScreen extends StatefulWidget {
   final int? index;
 
-  TodoScreen({Key? key, this.index}) : super(key: key);
+  const TodoScreen({Key? key, this.index}) : super(key: key);
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
@@ -20,6 +20,40 @@ class TodoScreen extends StatefulWidget {
 
 class _TodoScreenState extends State<TodoScreen> {
   @override
+  void initState() {
+    super.initState();
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Allow Notification'),
+                  content:
+                      Text('Reminders would like to send you notifications'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Don't Allow",
+                        style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () => AwesomeNotifications()
+                            .requestPermissionToSendNotifications()
+                            .then((_) => Navigator.pop(context)),
+                        child: Text(
+                          "Allow",
+                          style: TextStyle(fontSize: 18.0, color: Colors.teal),
+                        ))
+                  ],
+                ));
+      }
+    });
+  }
+
   final TodoController todoController = Get.find();
 
   @override
@@ -115,11 +149,6 @@ class _TodoScreenState extends State<TodoScreen> {
                   splashFactory: NoSplash.splashFactory,
                 ),
                 onPressed: () {
-                  NotificationApi.showScheduledNotification(
-                      scheduledDate: DateTime.now().add(Duration(seconds: 5)),
-                      title: 'Reminders',
-                      body: 'Hello world',
-                      payload: 'sup');
                   if (widget.index == null &&
                       _formKey.currentState!.validate()) {
                     todoController.todos.add(Todo(
@@ -284,5 +313,29 @@ class _TodoScreenState extends State<TodoScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> createReminderNotification(
+      id, body, weekday, hour, minute) async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            channelKey: 'scheduled_channel',
+            id: id,
+            title: 'Reminders',
+            body: 'The Task ${body} is done',
+            notificationLayout: NotificationLayout.Default),
+        actionButtons: [
+          NotificationActionButton(
+            key: 'MARK_DONE',
+            label: 'Mark Done',
+          )
+        ],
+        schedule: NotificationCalendar(
+            weekday: weekday,
+            hour: hour,
+            repeats: true,
+            second: 0,
+            minute: minute,
+            millisecond: 0));
   }
 }

@@ -6,12 +6,14 @@ class Todo {
   String? date;
   String? time;
   bool done;
+  int? id;
 
   Todo(
       {required this.title,
       required this.details,
       required this.date,
       required this.time,
+      this.id,
       this.done = false});
 
   factory Todo.fromJson(Map<String, dynamic> json) => Todo(
@@ -19,13 +21,15 @@ class Todo {
       details: json['details'],
       done: json['done'],
       date: json['date'],
-      time: json['time']);
+      time: json['time'],
+      id: json['id']);
 
   Map<String, dynamic> toJson() => {
         'title': title,
         'details': details,
         'done': done,
         'date': date,
-        'time': time
+        'time': time,
+        'id':'id'
       };
 }
