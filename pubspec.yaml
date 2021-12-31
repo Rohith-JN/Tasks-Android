@@ -31,10 +31,11 @@ dependencies:
   get: ^4.3.8
   rxdart: ^0.27.3
   flutter_local_notifications: ^9.1.5
-  awesome_notifications: ^0.6.19
   intl: ^0.17.0
   get_storage: ^2.0.3
-  url_launcher: ^6.0.17
+  audioplayers: ^0.20.1
+  flutter_native_timezone: ^2.0.0
+  location: ^4.3.0
   flutter:
     sdk: flutter
 
@@ -48,12 +49,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

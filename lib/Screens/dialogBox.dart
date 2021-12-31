@@ -1,23 +1,21 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Constants {
   Constants._();
-  static const double padding = 20;
+  static const double padding = 40;
   static const double avatarRadius = 45;
 }
 
 class CustomDialogBox extends StatefulWidget {
-  final String title, descriptions, text;
+  final String title, descriptions;
   final Image img;
 
   const CustomDialogBox(
       {required Key key,
       required this.title,
       required this.descriptions,
-      required this.text,
       required this.img})
       : super(key: key);
 
@@ -44,7 +42,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
         Container(
           padding: const EdgeInsets.only(
               left: Constants.padding,
-              top: Constants.avatarRadius + Constants.padding,
+              top: Constants.avatarRadius + 20,
               right: Constants.padding,
               bottom: Constants.padding),
           margin: const EdgeInsets.only(top: Constants.avatarRadius),
@@ -71,21 +69,14 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 style: const TextStyle(fontSize: 15, color: Colors.black),
                 textAlign: TextAlign.start,
               ),
-              const SizedBox(
-                height: 22,
+              const SizedBox(height: 7.0),
+              const Text(
+                "version: 1.0.0",
+                style: TextStyle(fontSize: 15, color: Colors.black),
+                textAlign: TextAlign.center,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: TextButton(
-                  onPressed: () {
-                    _launchURL();
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    widget.text,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ),
+              const SizedBox(
+                height: 15,
               ),
             ],
           ),
@@ -97,21 +88,12 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             backgroundColor: Colors.transparent,
             radius: Constants.avatarRadius,
             child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.all(Radius.circular(Constants.avatarRadius)),
-                child: Image.asset("assets/App_icon.png")),
+                borderRadius: const BorderRadius.all(
+                    Radius.circular(Constants.avatarRadius)),
+                child: Image.asset("assets/app_icon.png")),
           ),
         ),
       ],
     );
-  }
-}
-
-_launchURL() async {
-  const url = 'https://github.com/Rohith-JN/Reminders_App';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
   }
 }

@@ -1,7 +1,9 @@
 // ignore_for_file: file_names
 
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:todo_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/controllers/TodoController.dart';
@@ -19,41 +21,6 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  @override
-  void initState() {
-    super.initState();
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Allow Notification'),
-                  content:
-                      Text('Reminders would like to send you notifications'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "Don't Allow",
-                        style: TextStyle(fontSize: 18.0, color: Colors.grey),
-                      ),
-                    ),
-                    TextButton(
-                        onPressed: () => AwesomeNotifications()
-                            .requestPermissionToSendNotifications()
-                            .then((_) => Navigator.pop(context)),
-                        child: Text(
-                          "Allow",
-                          style: TextStyle(fontSize: 18.0, color: Colors.teal),
-                        ))
-                  ],
-                ));
-      }
-    });
-  }
-
   final TodoController todoController = Get.find();
 
   @override
@@ -89,6 +56,7 @@ class _TodoScreenState extends State<TodoScreen> {
 
     Future<Null> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
           context: context,
           initialDate: selectedDate,
           initialDatePickerMode: DatePickerMode.day,
@@ -96,7 +64,7 @@ class _TodoScreenState extends State<TodoScreen> {
           lastDate: DateTime(DateTime.now().year + 5));
       if (picked != null) {
         selectedDate = picked;
-        _dateController.text = DateFormat.yMd().format(selectedDate);
+        _dateController.text = DateFormat("MM/dd/yyyy").format(selectedDate);
       }
     }
 
@@ -122,11 +90,11 @@ class _TodoScreenState extends State<TodoScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text((widget.index == null) ? 'New Reminder' : 'Edit Reminder',
+        title: Text((widget.index == null) ? 'New Task' : 'Edit Task',
             style: TextStyle(
                 fontSize: 22,
                 color: Theme.of(context).textTheme.headline2!.color)),
-        leadingWidth: 80.0,
+        leadingWidth: 90.0,
         leading: Center(
           child: TextButton(
             style: const ButtonStyle(
@@ -152,12 +120,15 @@ class _TodoScreenState extends State<TodoScreen> {
                   if (widget.index == null &&
                       _formKey.currentState!.validate()) {
                     todoController.todos.add(Todo(
+                      id: UniqueKey().hashCode,
                       details: detailEditingController.text,
                       title: titleEditingController.text,
                       date: _dateController.text,
                       time: _timeController.text,
                     ));
                     Get.back();
+                    HapticFeedback.heavyImpact();
+                    showNotification();
                   }
                   if (widget.index != null &&
                       _formKey.currentState!.validate()) {
@@ -168,6 +139,8 @@ class _TodoScreenState extends State<TodoScreen> {
                     editing.time = _timeController.text;
                     todoController.todos[widget.index!] = editing;
                     Get.back();
+                    HapticFeedback.heavyImpact();
+                    showNotification();
                   }
                 },
                 child: Text((widget.index == null) ? 'Add' : 'Update',
@@ -260,21 +233,28 @@ class _TodoScreenState extends State<TodoScreen> {
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    child: TextField(
-                      enabled: false,
-                      controller: _dateController,
-                      onChanged: (String val) {
-                        _setDate = val;
-                      },
-                      decoration: const InputDecoration(
-                          hintText: "Date", border: InputBorder.none),
-                      style: GoogleFonts.notoSans(
-                          color: Theme.of(context).hintColor, fontSize: 23.0),
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          child: TextField(
+                            enabled: false,
+                            controller: _dateController,
+                            onChanged: (String val) {
+                              _setDate = val;
+                            },
+                            decoration: const InputDecoration(
+                                hintText: "Date", border: InputBorder.none),
+                            style: GoogleFonts.notoSans(
+                                color: Theme.of(context).hintColor,
+                                fontSize: 23.0),
+                          ),
+                        ),
+                      ),
+                    ],
                   )),
               Container(
                   margin: EdgeInsets.only(top: 20.0),
@@ -292,21 +272,28 @@ class _TodoScreenState extends State<TodoScreen> {
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      _selectTime(context);
-                    },
-                    child: TextField(
-                      onChanged: (String val) {
-                        _setTime = val;
-                      },
-                      enabled: false,
-                      controller: _timeController,
-                      decoration: InputDecoration(
-                          hintText: "Time", border: InputBorder.none),
-                      style: GoogleFonts.notoSans(
-                          color: Theme.of(context).hintColor, fontSize: 23.0),
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            _selectTime(context);
+                          },
+                          child: TextField(
+                            onChanged: (String val) {
+                              _setTime = val;
+                            },
+                            enabled: false,
+                            controller: _timeController,
+                            decoration: InputDecoration(
+                                hintText: "Time", border: InputBorder.none),
+                            style: GoogleFonts.notoSans(
+                                color: Theme.of(context).hintColor,
+                                fontSize: 23.0),
+                          ),
+                        ),
+                      ),
+                    ],
                   )),
             ],
           ),
@@ -315,27 +302,30 @@ class _TodoScreenState extends State<TodoScreen> {
     );
   }
 
-  Future<void> createReminderNotification(
-      id, body, weekday, hour, minute) async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            channelKey: 'scheduled_channel',
-            id: id,
-            title: 'Reminders',
-            body: 'The Task ${body} is done',
-            notificationLayout: NotificationLayout.Default),
-        actionButtons: [
-          NotificationActionButton(
-            key: 'MARK_DONE',
-            label: 'Mark Done',
-          )
-        ],
-        schedule: NotificationCalendar(
-            weekday: weekday,
-            hour: hour,
-            repeats: true,
-            second: 0,
-            minute: minute,
-            millisecond: 0));
+  showNotification() {
+    TodoController todoController = Get.put(TodoController());
+    for (var i = 0; i < todoController.todos.length; i++) {
+      NotificationService().showNotification(
+          todoController.todos[i].id,
+          'Task done',
+          todoController.todos[i].details,
+          run(todoController.todos[i].date, todoController.todos[i].time));
+    }
+  }
+
+  run(date, time) {
+    String value = '${date} ${time}';
+    String currentFormat = "MM/dd/yyyy hh:mm a";
+    DateTime? dateTime = DateTime.now();
+    if (value != null || value.isNotEmpty) {
+      try {
+        bool isUtc = false;
+        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
+      } catch (e) {
+        print("$e");
+      }
+    }
+    String parsed = dateTime!.toString();
+    return tz.TZDateTime.parse(tz.local, parsed);
   }
 }

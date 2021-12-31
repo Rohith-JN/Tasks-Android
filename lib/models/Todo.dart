@@ -6,30 +6,33 @@ class Todo {
   String? date;
   String? time;
   bool done;
-  int? id;
-
+  bool dateAndTimeEnabled;
+  int id;
   Todo(
       {required this.title,
       required this.details,
       required this.date,
       required this.time,
-      this.id,
+      this.dateAndTimeEnabled = false,
+      required this.id,
       this.done = false});
 
   factory Todo.fromJson(Map<String, dynamic> json) => Todo(
+      id: json['id'],
       title: json['title'],
       details: json['details'],
       done: json['done'],
       date: json['date'],
       time: json['time'],
-      id: json['id']);
+      dateAndTimeEnabled: json['dateAndTimeEnabled']);
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'title': title,
         'details': details,
         'done': done,
         'date': date,
         'time': time,
-        'id':'id'
+        'dateAndTimeEnabled': dateAndTimeEnabled
       };
 }
