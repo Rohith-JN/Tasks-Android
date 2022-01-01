@@ -120,11 +120,11 @@ class _TodoScreenState extends State<TodoScreen> {
                   if (widget.index == null &&
                       _formKey.currentState!.validate()) {
                     todoController.todos.add(Todo(
-                      id: UniqueKey().hashCode,
                       details: detailEditingController.text,
                       title: titleEditingController.text,
                       date: _dateController.text,
                       time: _timeController.text,
+                      id: UniqueKey().hashCode,
                     ));
                     Get.back();
                     HapticFeedback.heavyImpact();
@@ -218,7 +218,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     ),
                   )),
               Container(
-                  margin: EdgeInsets.only(top: 20.0),
+                  margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Theme.of(context).canvasColor,
@@ -257,7 +257,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     ],
                   )),
               Container(
-                  margin: EdgeInsets.only(top: 20.0),
+                  margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Theme.of(context).canvasColor,
@@ -279,13 +279,13 @@ class _TodoScreenState extends State<TodoScreen> {
                           onTap: () {
                             _selectTime(context);
                           },
-                          child: TextField(
+                          child: TextFormField(
                             onChanged: (String val) {
                               _setTime = val;
                             },
                             enabled: false,
                             controller: _timeController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "Time", border: InputBorder.none),
                             style: GoogleFonts.notoSans(
                                 color: Theme.of(context).hintColor,

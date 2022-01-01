@@ -1,7 +1,5 @@
 // ignore_for_file: file_names, empty_statements
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -110,6 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   leading: const Icon(Icons.delete),
                   onTap: () {
                     todoController.todos.clear();
+                    NotificationService()
+                        .flutterLocalNotificationsPlugin
+                        .cancelAll();
                   },
                 ),
                 ListTile(
@@ -164,29 +165,29 @@ class _HomeScreenState extends State<HomeScreen> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
             child: (todoController.todos.isEmpty)
-                ? const Center(
-                    child: Text(
-                    "No tasks, Add new tasks",
-                    style: TextStyle(color: Colors.black),
-                  ))
+                ? Center(
+                    child: Text("Add new tasks",
+                        style: GoogleFonts.notoSans(
+                            fontSize: 20.0,
+                            color:
+                                Theme.of(context).textTheme.headline1!.color)))
                 : ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) => Visibility(
                           visible: true,
                           child: GestureDetector(
                             onTap: () {
-                              Get.to(TodoScreen(index: index));
+                              Get.to(() => TodoScreen(index: index));
                             },
                             child: Dismissible(
                               key: UniqueKey(),
                               direction: DismissDirection.startToEnd,
                               onDismissed: (_) {
                                 HapticFeedback.heavyImpact();
-                                todoController.todos.removeAt(index);
                                 NotificationService()
                                     .flutterLocalNotificationsPlugin
                                     .cancel(todoController.todos[index].id);
-                                log('dismissed at ${todoController.todos[index].id}');
+                                todoController.todos.removeAt(index);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(
@@ -269,12 +270,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             )),
                                       ),
                                       Visibility(
-                                        visible:
-                                            todoController.todos[index].date ==
-                                                        '' &&
-                                                    todoController.todos[index]
-                                                            .time ==
-                                                        ''
+                                        visible: todoController.todos[index].date == '' &&
+                                                 todoController.todos[index].time == ''
                                                 ? false
                                                 : true,
                                         child: const Divider(
@@ -283,40 +280,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       Visibility(
-                                        visible:
-                                            todoController.todos[index].date ==
-                                                        '' &&
-                                                    todoController.todos[index]
-                                                            .time ==
-                                                        ''
-                                                ? false
-                                                : true,
-                                        child: Obx(() => Text(
-                                            (todoController.todos[index].date !=
-                                                    now)
-                                                ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
-                                                : 'Today, ${todoController.todos[index].time}',
-                                            style: GoogleFonts.notoSans(
-                                              color: (run(
-                                                              todoController
-                                                                  .todos[index]
-                                                                  .date,
-                                                              todoController
-                                                                  .todos[index]
-                                                                  .time)
-                                                          .compareTo(
-                                                              tz.TZDateTime.now(
-                                                                  tz.local)) >
-                                                      0)
-                                                  ? Theme.of(context).hintColor
-                                                  : Colors.redAccent,
-                                              fontSize: 20.0,
-                                              decoration: (todoController
-                                                      .todos[index].done)
-                                                  ? TextDecoration.lineThrough
-                                                  : TextDecoration.none,
-                                            ))),
-                                      )
+                                            visible: todoController.todos[index].date == '' && 
+                                            todoController.todos[index].time == '' ? false : true,
+                                            child: Text(
+                                                (todoController.todos[index]
+                                                            .date !=
+                                                        now)
+                                                    ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
+                                                    : 'Today, ${todoController.todos[index].time}',
+                                                style: GoogleFonts.notoSans(
+                                                  color: (run(todoController.todos[index].date,
+                                                              todoController.todos[index].time)
+                                                              .compareTo(tz.TZDateTime.now(tz.local)) >0)
+                                                      ? Theme.of(context)
+                                                          .hintColor
+                                                      : Colors.redAccent,
+                                                  fontSize: 20.0,
+                                                  decoration: (todoController
+                                                          .todos[index].done)
+                                                      ? TextDecoration
+                                                          .lineThrough
+                                                      : TextDecoration.none,
+                                                )),
+                                          )
                                     ],
                                   ),
                                 ),
