@@ -124,6 +124,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       title: titleEditingController.text,
                       date: _dateController.text,
                       time: _timeController.text,
+                      dateAndTimeEnabled: true,
                       id: UniqueKey().hashCode,
                     ));
                     Get.back();
@@ -137,6 +138,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     editing.details = detailEditingController.text;
                     editing.date = _dateController.text;
                     editing.time = _timeController.text;
+                    editing.dateAndTimeEnabled = true;
                     todoController.todos[widget.index!] = editing;
                     Get.back();
                     HapticFeedback.heavyImpact();

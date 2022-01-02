@@ -13,7 +13,7 @@ class Todo {
       required this.details,
       required this.date,
       required this.time,
-      this.dateAndTimeEnabled = false,
+      this.dateAndTimeEnabled = true,
       required this.id,
       this.done = false});
 

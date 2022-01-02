@@ -125,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     NotificationService()
                         .flutterLocalNotificationsPlugin
                         .cancelAll();
+                    turnOffSwitch();
                   },
                 ),
                 ListTile(
@@ -279,30 +280,52 @@ class _HomeScreenState extends State<HomeScreen> {
                                           thickness: 1.0,
                                         ),
                                       ),
-                                      Visibility(
-                                            visible: todoController.todos[index].date == '' && 
-                                            todoController.todos[index].time == '' ? false : true,
-                                            child: Text(
-                                                (todoController.todos[index]
-                                                            .date !=
-                                                        now)
-                                                    ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
-                                                    : 'Today, ${todoController.todos[index].time}',
-                                                style: GoogleFonts.notoSans(
-                                                  color: (run(todoController.todos[index].date,
-                                                              todoController.todos[index].time)
-                                                              .compareTo(tz.TZDateTime.now(tz.local)) >0)
-                                                      ? Theme.of(context)
-                                                          .hintColor
-                                                      : Colors.redAccent,
-                                                  fontSize: 20.0,
-                                                  decoration: (todoController
-                                                          .todos[index].done)
-                                                      ? TextDecoration
-                                                          .lineThrough
-                                                      : TextDecoration.none,
-                                                )),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Visibility(
+                                                visible: todoController.todos[index].date == '' && 
+                                                todoController.todos[index].time == '' ? false : true,
+                                                child: Text(
+                                                    (todoController.todos[index]
+                                                                .date !=
+                                                            now)
+                                                        ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
+                                                        : 'Today, ${todoController.todos[index].time}',
+                                                    style: GoogleFonts.notoSans(
+                                                      color: (run(todoController.todos[index].date,
+                                                                  todoController.todos[index].time)
+                                                                  .compareTo(tz.TZDateTime.now(tz.local)) >0)
+                                                          ? Theme.of(context)
+                                                              .hintColor
+                                                          : Colors.redAccent,
+                                                      fontSize: 20.0,
+                                                      decoration: (todoController
+                                                              .todos[index].done)
+                                                          ? TextDecoration
+                                                              .lineThrough
+                                                          : TextDecoration.none,
+                                                    )),
+                                              ),
+                                              Visibility(
+                                                visible: todoController.todos[index].date == '' && 
+                                                todoController.todos[index].time == '' ? false : true,
+                                                child: Switch(activeColor: Theme.of(context).textTheme.headline1!.color,onChanged: (value) {
+                                                    var changed = todoController
+                                                        .todos[index];
+                                                    changed.dateAndTimeEnabled= value;
+                                                    todoController.todos[index] = changed;
+                                                    if (todoController.todos[index].dateAndTimeEnabled == false) {
+                                                      NotificationService().flutterLocalNotificationsPlugin.cancel(todoController.todos[index].id);
+                                                    }
+                                                    else {
+                                                      showNotification();
+                                                    }
+                                                  }, value: todoController.todos[index].dateAndTimeEnabled,
+                                            ),
                                           )
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
@@ -349,6 +372,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<AudioPlayer> playLocalAsset() async {
     AudioCache cache = AudioCache();
     return await cache.play("audio.mp3");
+  }
+
+  showNotification() {
+    TodoController todoController = Get.put(TodoController());
+    for (var i = 0; i < todoController.todos.length; i++) {
+      NotificationService().showNotification(
+          todoController.todos[i].id,
+          'Task done',
+          todoController.todos[i].details,
+          run(todoController.todos[i].date, todoController.todos[i].time));
+    }
+  }
+
+  turnOffSwitch() {
+    TodoController todoController = Get.put(TodoController());
+    for (var i = 0; i < todoController.todos.length; i++) {
+      setState(() {
+        todoController.todos[i].dateAndTimeEnabled = false;
+      });
+    }
+    GetStorage().write('todos', todoController.todos.toList());
   }
 
   run(date, time) {
