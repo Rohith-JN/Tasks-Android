@@ -42,7 +42,7 @@ class _TasksDoneState extends State<TasksDone> {
         centerTitle: false,
         title: Padding(
           padding: const EdgeInsets.only(bottom: 2.3),
-          child: Text("Tasks done", style: Theme.of(context).textTheme.headline1),
+          child: Text("Completed", style: Theme.of(context).textTheme.headline1),
         ),
       ),
       body: (todoController.doneTodos.isEmpty)
