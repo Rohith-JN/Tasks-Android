@@ -29,12 +29,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final TodoController todoController = Get.put(TodoController());
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 30.0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 5.0),
+          child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 30.0,), onPressed: () {
+            Navigator.pop(context);
+          },),
+        ),
         iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         centerTitle: false,
-        title: Text("Tasks", style: Theme.of(context).textTheme.headline1),
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 2.3),
+          child: Text("Tasks", style: Theme.of(context).textTheme.headline1),
+        ),
       ),
       extendBodyBehindAppBar: true,
-      drawer: Drawer(
+      endDrawer: Drawer(
         child: Obx(() => ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
@@ -286,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Visibility(
                                                 visible: todoController.todos[index].date == '' && 
                                                 todoController.todos[index].time == '' ? false : true,
-                                                child: Text(
+                                                child: Obx(() => Text(
                                                     (todoController.todos[index]
                                                                 .date !=
                                                             now)
@@ -305,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ? TextDecoration
                                                               .lineThrough
                                                           : TextDecoration.none,
-                                                    )),
+                                                    ))),
                                               ),
                                               Visibility(
                                                 visible: todoController.todos[index].date == '' && 
