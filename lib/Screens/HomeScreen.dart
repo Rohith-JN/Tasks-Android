@@ -6,7 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/Screens/TodoScreen.dart';
-import 'package:todo_app/Screens/dialogBox.dart';
+import 'package:todo_app/widgets/dialogBox.dart';
 import 'package:todo_app/controllers/TodoController.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
