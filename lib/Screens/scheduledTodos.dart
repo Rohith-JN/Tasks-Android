@@ -191,21 +191,6 @@ class _ScheduledTodosState extends State<ScheduledTodos> {
           ),
     ));
   }
-  showNotification() {
-    TodoController todoController = Get.put(TodoController());
-    for (var i = 0; i < todoController.scheduledTodos.length; i++) {
-      NotificationService().showNotification(
-          todoController.scheduledTodos[i].id,
-          'Task done',
-          todoController.scheduledTodos[i].details,
-          run(todoController.scheduledTodos[i].date, todoController.scheduledTodos[i].time));
-    }
-  }
-
-  Future<AudioPlayer> playLocalAsset() async {
-    AudioCache cache = AudioCache();
-    return await cache.play("audio.mp3");
-  }
 
   run(date, time) {
     String value = '${date} ${time}';

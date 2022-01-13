@@ -113,41 +113,40 @@ class _TodoScreenState extends State<TodoScreen> {
         actions: [
           Center(
             child: TextButton(
-                style: const ButtonStyle(
-                  splashFactory: NoSplash.splashFactory,
-                ),
-                onPressed: () {
-                  if (widget.index == null &&
-                      _formKey.currentState!.validate()) {
-                    todoController.todos.add(Todo(
-                      details: detailEditingController.text,
-                      title: titleEditingController.text,
-                      date: _dateController.text,
-                      time: _timeController.text,
-                      dateAndTimeEnabled: true,
-                      id: UniqueKey().hashCode,
-                    ));
-                    Get.back();
-                    HapticFeedback.heavyImpact();
-                    showNotification();
-                  }
-                  if (widget.index != null &&
-                      _formKey.currentState!.validate()) {
-                    var editing = todoController.todos[widget.index!];
-                    editing.title = titleEditingController.text;
-                    editing.details = detailEditingController.text;
-                    editing.date = _dateController.text;
-                    editing.time = _timeController.text;
-                    editing.dateAndTimeEnabled = true;
-                    todoController.todos[widget.index!] = editing;
-                    Get.back();
-                    HapticFeedback.heavyImpact();
-                    showNotification();
-                  }
-                },
-                child: Text((widget.index == null) ? 'Add' : 'Update',
-                    style: const TextStyle(
-                        color: Color(0xFF39A7FD), fontSize: 20.0))),
+              style: const ButtonStyle(
+                splashFactory: NoSplash.splashFactory,
+              ),
+              onPressed: () {
+                if (widget.index == null && _formKey.currentState!.validate()) {
+                  todoController.todos.add(Todo(
+                    details: detailEditingController.text,
+                    title: titleEditingController.text,
+                    date: _dateController.text,
+                    time: _timeController.text,
+                    dateAndTimeEnabled: true,
+                    id: UniqueKey().hashCode,
+                  ));
+                  Get.back();
+                  HapticFeedback.heavyImpact();
+                  showNotification();
+                }
+                if (widget.index != null && _formKey.currentState!.validate()) {
+                  var editing = todoController.todos[widget.index!];
+                  editing.title = titleEditingController.text;
+                  editing.details = detailEditingController.text;
+                  editing.date = _dateController.text;
+                  editing.time = _timeController.text;
+                  editing.dateAndTimeEnabled = true;
+                  todoController.todos[widget.index!] = editing;
+                  Get.back();
+                  HapticFeedback.heavyImpact();
+                  showNotification();
+                }
+              },
+              child: Text((widget.index == null) ? 'Add' : 'Update',
+                  style: const TextStyle(
+                      color: Color(0xFF39A7FD), fontSize: 20.0)),
+            ),
           )
         ],
       ),
@@ -309,8 +308,8 @@ class _TodoScreenState extends State<TodoScreen> {
     for (var i = 0; i < todoController.todos.length; i++) {
       NotificationService().showNotification(
           todoController.todos[i].id,
-          'Task done',
-          todoController.todos[i].details,
+          'Reminder',
+          todoController.todos[i].title,
           run(todoController.todos[i].date, todoController.todos[i].time));
     }
   }

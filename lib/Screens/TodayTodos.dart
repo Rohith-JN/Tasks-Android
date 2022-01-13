@@ -191,21 +191,6 @@ class _TodayTodosState extends State<TodayTodos> {
           ),
     ));
   }
-  showNotification() {
-    TodoController todoController = Get.put(TodoController());
-    for (var i = 0; i < todoController.todayTodos.length; i++) {
-      NotificationService().showNotification(
-          todoController.todayTodos[i].id,
-          'Task done',
-          todoController.todayTodos[i].details,
-          run(todoController.todayTodos[i].date, todoController.todayTodos[i].time));
-    }
-  }
-
-  Future<AudioPlayer> playLocalAsset() async {
-    AudioCache cache = AudioCache();
-    return await cache.play("audio.mp3");
-  }
 
   run(date, time) {
     String value = '${date} ${time}';

@@ -389,7 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (var i = 0; i < todoController.todos.length; i++) {
       NotificationService().showNotification(
           todoController.todos[i].id,
-          'Task done',
+          'Reminder',
           todoController.todos[i].details,
           run(todoController.todos[i].date, todoController.todos[i].time));
     }

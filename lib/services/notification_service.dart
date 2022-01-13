@@ -34,7 +34,7 @@ class NotificationService {
         const NotificationDetails(
             android: AndroidNotificationDetails(
                 'Scheduled_channel', 'Scheduled Notification',
-                importance: Importance.high, priority: Priority.high)),
+                importance: Importance.max, priority: Priority.max)),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);
