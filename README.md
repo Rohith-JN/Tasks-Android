@@ -14,7 +14,7 @@ Features:
 * Tasks are saved in the local storage
 * Tasks can be added, deleted, marked as done, scheduled
 * Tasks can be scheduled at a specific time and date
-* Tasks_app contains a side bar to delete all, check all, un check all etc
+* Tasks_app contains a side bar to delete all tasks, check all tasks, un check all tasks atc
 
 
 Built With:
