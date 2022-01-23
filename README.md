@@ -15,6 +15,7 @@ Features:
 * Tasks can be added, deleted, marked as done, scheduled
 * Tasks can be scheduled at a specific time and date
 * Tasks_app contains a side bar to delete all tasks, check all tasks, un check all tasks etc
+* Light and dark themes
 
 
 Built With:
