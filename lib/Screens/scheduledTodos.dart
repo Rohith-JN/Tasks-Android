@@ -1,12 +1,10 @@
 // ignore_for_file: file_names
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/controllers/TodoController.dart';
-import 'package:todo_app/services/notification_service.dart';
+import 'package:Tasks/controllers/TodoController.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class ScheduledTodos extends StatefulWidget {

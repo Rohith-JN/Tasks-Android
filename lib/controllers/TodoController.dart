@@ -3,7 +3,7 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/models/Todo.dart';
+import 'package:Tasks/models/Todo.dart';
 
 class TodoController extends GetxController {
   var todos = <Todo>[].obs;

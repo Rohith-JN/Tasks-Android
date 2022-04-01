@@ -1,13 +1,13 @@
 // ignore_for_file: file_names
 
 import 'package:timezone/timezone.dart' as tz;
-import 'package:todo_app/services/notification_service.dart';
+import 'package:Tasks/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todo_app/controllers/TodoController.dart';
-import 'package:todo_app/models/Todo.dart';
+import 'package:Tasks/controllers/TodoController.dart';
+import 'package:Tasks/models/Todo.dart';
 import 'package:intl/intl.dart';
 import 'package:date_format/date_format.dart';
 

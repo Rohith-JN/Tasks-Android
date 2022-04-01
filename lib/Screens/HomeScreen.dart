@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/Screens/TodoScreen.dart';
-import 'package:todo_app/widgets/dialogBox.dart';
-import 'package:todo_app/controllers/TodoController.dart';
+import 'package:Tasks/Screens/TasksDone.dart';
+import 'package:Tasks/Screens/TodayTodos.dart';
+import 'package:Tasks/Screens/TodoScreen.dart';
+import 'package:Tasks/Screens/scheduledTodos.dart';
+import 'package:Tasks/widgets/dialogBox.dart';
+import 'package:Tasks/controllers/TodoController.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:todo_app/services/notification_service.dart';
+import 'package:Tasks/services/notification_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
@@ -29,19 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final TodoController todoController = Get.put(TodoController());
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 30.0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 5.0),
-          child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 30.0,), onPressed: () {
-            Navigator.pop(context);
-          },),
-        ),
         iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         centerTitle: false,
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 2.3),
-          child: Text("Tasks", style: Theme.of(context).textTheme.headline1),
-        ),
+        title: Text("Tasks", style: Theme.of(context).textTheme.headline1),
       ),
       extendBodyBehindAppBar: true,
       endDrawer: Drawer(
@@ -136,6 +129,48 @@ class _HomeScreenState extends State<HomeScreen> {
                         .flutterLocalNotificationsPlugin
                         .cancelAll();
                     turnOffSwitch();
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Completed",
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  leading: const Icon(Icons.done),
+                  onTap: () {
+                    Get.to(() => const TasksDone());
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Scheduled",
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  leading: const Icon(Icons.calendar_today),
+                  onTap: () {
+                    Get.to(() => const ScheduledTodos());
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Today",
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Theme.of(context).textTheme.headline1!.color),
+                  ),
+                  leading: Padding(
+                    padding: const EdgeInsets.only(left: 3.0),
+                    child: Text('${DateFormat("dd").format(DateTime.now())}', style: GoogleFonts.notoSans(
+                            fontSize: 22.0,
+                            color: Theme.of(context).textTheme.headline1!.color,
+                          )),
+                  ),
+                  onTap: () {
+                    Get.to(() => const TodayTodos());
                   },
                 ),
                 ListTile(
