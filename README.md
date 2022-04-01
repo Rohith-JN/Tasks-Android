@@ -23,3 +23,6 @@ Built With:
 * [Flutter](https://flutter.dev/?gclid=CjwKCAiA866PBhAYEiwANkIneDzbcVakQmaNxZu0TmETLBg7Xq499c1YCZ1aIJL3LCU9lc7hUEgYIRoCsGAQAvD_BwE&gclsrc=aw.ds)
 * [Getx](https://pub.dev/packages/get)
 * [get_storage](https://pub.dev/packages/get_storage)
+* [get_storage](https://pub.dev/packages/get_storage)
+
+
