@@ -5,10 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:Tasks/Screens/TasksDone.dart';
-import 'package:Tasks/Screens/TodayTodos.dart';
 import 'package:Tasks/Screens/TodoScreen.dart';
-import 'package:Tasks/Screens/scheduledTodos.dart';
 import 'package:Tasks/widgets/dialogBox.dart';
 import 'package:Tasks/controllers/TodoController.dart';
 import 'package:flutter/services.dart';
@@ -129,48 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         .flutterLocalNotificationsPlugin
                         .cancelAll();
                     turnOffSwitch();
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    "Completed",
-                    style: TextStyle(
-                        fontSize: 17.0,
-                        color: Theme.of(context).textTheme.headline1!.color),
-                  ),
-                  leading: const Icon(Icons.done),
-                  onTap: () {
-                    Get.to(() => const TasksDone());
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    "Scheduled",
-                    style: TextStyle(
-                        fontSize: 17.0,
-                        color: Theme.of(context).textTheme.headline1!.color),
-                  ),
-                  leading: const Icon(Icons.calendar_today),
-                  onTap: () {
-                    Get.to(() => const ScheduledTodos());
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    "Today",
-                    style: TextStyle(
-                        fontSize: 17.0,
-                        color: Theme.of(context).textTheme.headline1!.color),
-                  ),
-                  leading: Padding(
-                    padding: const EdgeInsets.only(left: 3.0),
-                    child: Text('${DateFormat("dd").format(DateTime.now())}', style: GoogleFonts.notoSans(
-                            fontSize: 22.0,
-                            color: Theme.of(context).textTheme.headline1!.color,
-                          )),
-                  ),
-                  onTap: () {
-                    Get.to(() => const TodayTodos());
                   },
                 ),
                 ListTile(
