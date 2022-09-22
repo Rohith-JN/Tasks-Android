@@ -13,11 +13,6 @@
   <a href="#how-to-use">How To Use</a> 
 </p>
 <br>
-<div align = "center">
-  <img src="https://github.com/Rohith-JN/Tasks/blob/main/lib/Screenshots/Dark_theme/Home_Screen_Dark.png" width="250" />&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/Rohith-JN/Tasks/blob/main/lib/Screenshots/Dark_theme/Todo_Screen_Dark.png" width="250" /> &nbsp;&nbsp;
-  <img src="https://github.com/Rohith-JN/Tasks/blob/main/lib/Screenshots/Dark_theme/Side_Menu_Dark.png" width="250" />
-</div>
 
 ## Libraries and Tools Used
 
