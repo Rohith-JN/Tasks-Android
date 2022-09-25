@@ -1,27 +1,28 @@
 // ignore_for_file: file_names
 
+import 'package:Tasks/controllers/Controller.dart';
 import 'package:Tasks/services/functions.dart';
 import 'package:Tasks/widgets/themes.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:Tasks/controllers/TodoController.dart';
 import 'package:Tasks/models/Todo.dart';
 import 'package:intl/intl.dart';
 
 class TodoScreen extends StatefulWidget {
-  final int? index;
+  final int? todoIndex;
+  final int arrayIndex;
 
-  const TodoScreen({Key? key, this.index}) : super(key: key);
+  const TodoScreen({Key? key, this.todoIndex, required this.arrayIndex})
+      : super(key: key);
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  final TodoController todoController = Get.find();
+  final ArrayController arrayController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +31,15 @@ class _TodoScreenState extends State<TodoScreen> {
     String date = '';
     String? time = '';
 
-    if (widget.index != null) {
-      title = todoController.todos[widget.index!].title;
-      detail = todoController.todos[widget.index!].details;
-      date = todoController.todos[widget.index!].date!;
-      time = todoController.todos[widget.index!].time;
+    if (widget.todoIndex != null) {
+      title = arrayController
+          .arrays[widget.arrayIndex].todos![widget.todoIndex!].title;
+      detail = arrayController
+          .arrays[widget.arrayIndex].todos![widget.todoIndex!].details;
+      date = arrayController
+          .arrays[widget.arrayIndex].todos![widget.todoIndex!].date!;
+      time = arrayController
+          .arrays[widget.arrayIndex].todos![widget.todoIndex!].time;
     }
 
     TextEditingController titleEditingController =
@@ -86,7 +91,7 @@ class _TodoScreenState extends State<TodoScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text((widget.index == null) ? 'New Task' : 'Edit Task',
+        title: Text((widget.todoIndex == null) ? 'New Task' : 'Edit Task',
             style: menuTextStyle),
         leadingWidth: 90.0,
         leading: Center(
@@ -111,8 +116,9 @@ class _TodoScreenState extends State<TodoScreen> {
                 splashFactory: NoSplash.splashFactory,
               ),
               onPressed: () {
-                if (widget.index == null && _formKey.currentState!.validate()) {
-                  todoController.todos.add(Todo(
+                if (widget.todoIndex == null &&
+                    _formKey.currentState!.validate()) {
+                  arrayController.arrays[widget.arrayIndex].todos?.add(Todo(
                     details: detailEditingController.text,
                     title: titleEditingController.text,
                     date: _dateController.text,
@@ -122,22 +128,25 @@ class _TodoScreenState extends State<TodoScreen> {
                   ));
                   Get.back();
                   HapticFeedback.heavyImpact();
-                  showNotification();
+                  // showNotification();
                 }
-                if (widget.index != null && _formKey.currentState!.validate()) {
-                  var editing = todoController.todos[widget.index!];
+                if (widget.todoIndex != null &&
+                    _formKey.currentState!.validate()) {
+                  var editing = arrayController
+                      .arrays[widget.arrayIndex].todos![widget.todoIndex!];
                   editing.title = titleEditingController.text;
                   editing.details = detailEditingController.text;
                   editing.date = _dateController.text;
                   editing.time = _timeController.text;
                   editing.dateAndTimeEnabled = true;
-                  todoController.todos[widget.index!] = editing;
+                  arrayController.arrays[widget.arrayIndex]
+                      .todos![widget.todoIndex!] = editing;
                   Get.back();
                   HapticFeedback.heavyImpact();
-                  showNotification();
+                  // showNotification();
                 }
               },
-              child: Text((widget.index == null) ? 'Add' : 'Update',
+              child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
                   style: menuTextStyleBlue),
             ),
           )
@@ -161,37 +170,36 @@ class _TodoScreenState extends State<TodoScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                          },
-                          controller: titleEditingController,
-                          autofocus: true,
-                          autocorrect: false,
-                          cursorColor: Colors.grey,
-                          maxLines: 1,
-                          maxLength: 25,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                              hintText: "Title", border: InputBorder.none),
-                          style: todoScreenStyle),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                            },
+                            controller: titleEditingController,
+                            autofocus: true,
+                            autocorrect: false,
+                            cursorColor: Colors.grey,
+                            maxLines: 1,
+                            maxLength: 25,
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                                hintText: "Title", border: InputBorder.none),
+                            style: todoScreenStyle),
                         dividerStyle,
                         TextFormField(
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                          },
-                          controller: detailEditingController,
-                          maxLines: null,
-                          autocorrect: false,
-                          cursorColor: Colors.grey,
-                          textInputAction: TextInputAction.done,
-                          decoration: const InputDecoration(
-                              hintText: "Notes", border: InputBorder.none),
-                          style: todoScreenDetailsStyle
-                        ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                            },
+                            controller: detailEditingController,
+                            maxLines: null,
+                            autocorrect: false,
+                            cursorColor: Colors.grey,
+                            textInputAction: TextInputAction.done,
+                            decoration: const InputDecoration(
+                                hintText: "Notes", border: InputBorder.none),
+                            style: todoScreenDetailsStyle),
                       ],
                     ),
                   )),

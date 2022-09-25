@@ -4,23 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
-import '../controllers/TodoController.dart';
-
-void checkAll() {
-  TodoController todoController = Get.put(TodoController());
-  for (var i = 0; i < todoController.todos.length; i++) {
-    todoController.todos[i].done = true;
-  }
-  GetStorage().write('todos', todoController.todos.toList());
-}
-
-void unCheckAll() {
-  TodoController todoController = Get.put(TodoController());
-  for (var i = 0; i < todoController.todos.length; i++) {
-    todoController.todos[i].done = false;
-  }
-  GetStorage().write('todos', todoController.todos.toList());
-}
 
 Future<AudioPlayer> playLocalAsset() async {
   AudioCache cache = AudioCache();
@@ -41,6 +24,7 @@ tz.TZDateTime parse(date, time) {
   return tz.TZDateTime.parse(tz.local, parsed);
 }
 
+/*
 void showNotification() {
   TodoController todoController = Get.put(TodoController());
   for (var i = 0; i < todoController.todos.length; i++) {
@@ -51,11 +35,4 @@ void showNotification() {
         parse(todoController.todos[i].date, todoController.todos[i].time));
   }
 }
-
-void turnOffSwitch() {
-  TodoController todoController = Get.put(TodoController());
-  for (var i = 0; i < todoController.todos.length; i++) {
-    todoController.todos[i].dateAndTimeEnabled = false;
-  }
-  GetStorage().write('todos', todoController.todos.toList());
-}
+*/

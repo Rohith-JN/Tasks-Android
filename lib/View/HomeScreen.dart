@@ -1,18 +1,19 @@
 // ignore_for_file: file_names, empty_statements
 
+import 'package:Tasks/controllers/Controller.dart';
 import 'package:Tasks/services/functions.dart';
 import 'package:Tasks/widgets/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:Tasks/View/TodoScreen.dart';
-import 'package:Tasks/controllers/TodoController.dart';
 import 'package:flutter/services.dart';
 import 'package:Tasks/services/notification_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final int index;
+  const HomeScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,13 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TodoController todoController = Get.put(TodoController());
+    final ArrayController arrayController = Get.put(ArrayController());
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text("Tasks", style: titleStyle),
+          title: Text(arrayController.arrays[widget.index].title,
+              style: titleStyle),
           actions: [
-            Obx(() => (todoController.todos.isEmpty)
+            Obx(() => (arrayController.arrays[widget.index].todos == null)
                 ? Container()
                 : IconButton(
                     onPressed: () {
@@ -39,33 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (BuildContext context) {
                           return Container(
                             padding: const EdgeInsets.only(top: 15.0),
-                            height: (todoController.todos.isEmpty) ? 80 : 255,
+                            height: (arrayController
+                                    .arrays[widget.index].todos!.isEmpty)
+                                ? 80
+                                : 255,
                             child: ListView(children: [
-                              ListTile(
-                                title:
-                                    Text("Check all", style: optionsTextStyle),
-                                enabled: true,
-                                leading: const Icon(Icons.check_box),
-                                onTap: () {
-                                  setState(() {
-                                    checkAll();
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                enabled: true,
-                                title: Text("Uncheck all",
-                                    style: optionsTextStyle),
-                                leading:
-                                    const Icon(Icons.check_box_outline_blank),
-                                onTap: () {
-                                  setState(() {
-                                    unCheckAll();
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
                               ListTile(
                                 title: Text(
                                   "Delete all",
@@ -89,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         TextButton(
                                             onPressed: () {
-                                              todoController.todos.clear();
+                                              arrayController
+                                                  .arrays[widget.index].todos!
+                                                  .clear();
                                               NotificationService()
                                                   .flutterLocalNotificationsPlugin
                                                   .cancelAll();
@@ -99,22 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                   );
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  "Cancel all notifications",
-                                  style: optionsTextStyle,
-                                ),
-                                leading: const Icon(Icons.notifications_off),
-                                onTap: () {
-                                  NotificationService()
-                                      .flutterLocalNotificationsPlugin
-                                      .cancelAll();
-                                  setState(() {
-                                    turnOffSwitch();
-                                  });
-                                  Navigator.pop(context);
                                 },
                               ),
                             ]),
@@ -130,13 +96,16 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: (todoController.todos.isEmpty)
+              child: (arrayController.arrays[widget.index].todos == null)
                   ? Center(child: Text("Add new tasks", style: alertTextStyle))
                   : ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
-                              Get.to(() => TodoScreen(index: index));
+                              Get.to(() => TodoScreen(
+                                    todoIndex: index,
+                                    arrayIndex: widget.index,
+                                  ));
                             },
                             child: Dismissible(
                               key: UniqueKey(),
@@ -145,8 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 HapticFeedback.heavyImpact();
                                 NotificationService()
                                     .flutterLocalNotificationsPlugin
-                                    .cancel(todoController.todos[index].id);
-                                todoController.todos.removeAt(index);
+                                    .cancel(arrayController
+                                        .arrays[widget.index].todos![index].id);
+                                arrayController.arrays[widget.index].todos!
+                                    .removeAt(index);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(
@@ -167,10 +138,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                              todoController.todos[index].title,
+                                              arrayController
+                                                  .arrays[widget.index]
+                                                  .todos![index]
+                                                  .title,
                                               style: todoTitleStyle(
-                                                  todoController
-                                                      .todos[index].done)),
+                                                  arrayController
+                                                      .arrays[widget.index]
+                                                      .todos![index]
+                                                      .done)),
                                           Transform.scale(
                                             scale: 1.3,
                                             child: Checkbox(
@@ -178,17 +154,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 checkColor: Colors.black,
                                                 activeColor:
                                                     const Color(0xFFEAEAEA),
-                                                value: todoController
-                                                    .todos[index].done,
+                                                value: arrayController
+                                                    .arrays[widget.index]
+                                                    .todos![index]
+                                                    .done,
                                                 side: Theme.of(context)
                                                     .checkboxTheme
                                                     .side,
                                                 onChanged: (value) {
-                                                  var changed = todoController
-                                                      .todos[index];
+                                                  var changed = arrayController
+                                                      .arrays[widget.index]
+                                                      .todos![index];
                                                   changed.done = value!;
-                                                  todoController.todos[index] =
-                                                      changed;
+                                                  arrayController
+                                                      .arrays[widget.index]
+                                                      .todos![index] = changed;
                                                   if (changed.done == true) {
                                                     playLocalAsset();
                                                   }
@@ -198,15 +178,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       const SizedBox(height: 5.0),
                                       dividerStyle,
-                                      Text(todoController.todos[index].details,
-                                          style: todoDetailsStyle(todoController
-                                              .todos[index].done)),
+                                      Text(
+                                          arrayController.arrays[widget.index]
+                                              .todos![index].details,
+                                          style: todoDetailsStyle(
+                                              arrayController
+                                                  .arrays[widget.index]
+                                                  .todos![index]
+                                                  .done)),
                                       Visibility(
-                                          visible: todoController
-                                                          .todos[index].date ==
+                                          visible: arrayController
+                                                          .arrays[widget.index]
+                                                          .todos![index]
+                                                          .date ==
                                                       '' &&
-                                                  todoController
-                                                          .todos[index].time ==
+                                                  arrayController
+                                                          .arrays[widget.index]
+                                                          .todos![index]
+                                                          .time ==
                                                       ''
                                               ? false
                                               : true,
@@ -216,40 +205,52 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Visibility(
-                                            visible: todoController.todos[index]
+                                            visible: arrayController
+                                                            .arrays[
+                                                                widget.index]
+                                                            .todos![index]
                                                             .date ==
                                                         '' &&
-                                                    todoController.todos[index]
+                                                    arrayController
+                                                            .arrays[
+                                                                widget.index]
+                                                            .todos![index]
                                                             .time ==
                                                         ''
                                                 ? false
                                                 : true,
                                             child: Obx(() => Text(
-                                                (todoController.todos[index]
-                                                            .date !=
+                                                (arrayController.arrays[widget.index].todos![index].date !=
                                                         now)
-                                                    ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
-                                                    : 'Today, ${todoController.todos[index].time}',
+                                                    ? '${arrayController.arrays[widget.index].todos![index].date!}, ${arrayController.arrays[widget.index].todos![index].time}'
+                                                    : 'Today, ${arrayController.arrays[widget.index].todos![index].time}',
                                                 style: todoTimeStyle(
                                                     parse(
-                                                                todoController
-                                                                    .todos[
+                                                                arrayController
+                                                                    .arrays[widget
+                                                                        .index]
+                                                                    .todos![
                                                                         index]
                                                                     .date,
-                                                                todoController
-                                                                    .todos[
-                                                                        index]
+                                                                arrayController
+                                                                    .arrays[widget.index]
+                                                                    .todos![index]
                                                                     .time)
-                                                            .compareTo(
-                                                                tz.TZDateTime.now(tz.local)) >
+                                                            .compareTo(tz.TZDateTime.now(tz.local)) >
                                                         0,
-                                                    todoController.todos[index].done))),
+                                                    arrayController.arrays[widget.index].todos![index].done))),
                                           ),
                                           Visibility(
-                                            visible: todoController.todos[index]
+                                            visible: arrayController
+                                                            .arrays[
+                                                                widget.index]
+                                                            .todos![index]
                                                             .date ==
                                                         '' &&
-                                                    todoController.todos[index]
+                                                    arrayController
+                                                            .arrays[
+                                                                widget.index]
+                                                            .todos![index]
                                                             .time ==
                                                         ''
                                                 ? false
@@ -260,24 +261,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .headline1!
                                                   .color,
                                               onChanged: (value) {
-                                                var changed =
-                                                    todoController.todos[index];
+                                                var changed = arrayController
+                                                    .arrays[widget.index]
+                                                    .todos![index];
                                                 changed.dateAndTimeEnabled =
                                                     value;
-                                                todoController.todos[index] =
-                                                    changed;
-                                                if (todoController.todos[index]
+                                                arrayController
+                                                    .arrays[widget.index]
+                                                    .todos![index] = changed;
+                                                if (arrayController
+                                                        .arrays[widget.index]
+                                                        .todos![index]
                                                         .dateAndTimeEnabled ==
                                                     false) {
                                                   NotificationService()
                                                       .flutterLocalNotificationsPlugin
-                                                      .cancel(todoController
-                                                          .todos[index].id);
+                                                      .cancel(arrayController
+                                                          .arrays[widget.index]
+                                                          .todos![index]
+                                                          .id);
                                                 } else {
-                                                  showNotification();
+                                                  // showNotification();
                                                 }
                                               },
-                                              value: todoController.todos[index]
+                                              value: arrayController
+                                                  .arrays[widget.index]
+                                                  .todos![index]
                                                   .dateAndTimeEnabled,
                                             ),
                                           )
@@ -292,11 +301,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       separatorBuilder: (_, __) => const SizedBox(
                             height: 25.0,
                           ),
-                      itemCount: todoController.todos.length),
+                      itemCount:
+                          arrayController.arrays[widget.index].todos!.length),
             )),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Get.to(() => const TodoScreen());
+              Navigator.of(context).push(_routeToTodoScreen(widget.index));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -309,4 +319,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )));
   }
+}
+
+Route _routeToTodoScreen(arrayIndex) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        TodoScreen(arrayIndex: arrayIndex),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
