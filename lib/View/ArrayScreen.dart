@@ -1,11 +1,11 @@
 // ignore_for_file: file_names
 
-import 'package:Tasks/widgets/themes.dart';
+import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:Tasks/controllers/Controller.dart';
-import 'package:Tasks/models/Array.dart';
+import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/models/Array.dart';
 
 class ArrayScreen extends StatefulWidget {
   final int? index;
@@ -48,7 +48,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
             },
             child: Text(
               "Cancel",
-              style: menuTextStyleBlue,
+              style: menuTextStyleGreen,
             ),
           ),
         ),
@@ -77,7 +77,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
                 }
               },
               child: Text((widget.index == null) ? 'Add' : 'Update',
-                  style: menuTextStyleBlue),
+                  style: menuTextStyleGreen),
             ),
           )
         ],
@@ -90,7 +90,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
             children: [
               Container(
                   decoration: BoxDecoration(
-                      color: Theme.of(context).canvasColor,
+                      color: Color.fromARGB(255, 37, 37, 37),
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -112,10 +112,12 @@ class _ArrayScreenState extends State<ArrayScreen> {
                             maxLines: 1,
                             maxLength: 25,
                             textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                                hintText: "Title", border: InputBorder.none),
+                            decoration: InputDecoration(
+                                counterStyle: counterTextStyle,
+                                hintText: "Title",
+                                hintStyle: hintTextStyle,
+                                border: InputBorder.none),
                             style: todoScreenStyle),
-                        dividerStyle,
                       ],
                     ),
                   )),

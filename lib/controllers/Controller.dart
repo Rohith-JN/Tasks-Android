@@ -2,7 +2,7 @@
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:Tasks/models/Array.dart';
+import 'package:tasks/models/Array.dart';
 
 class ArrayController extends GetxController {
   var arrays = <Array>[].obs;

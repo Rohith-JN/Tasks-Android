@@ -1,14 +1,9 @@
-import 'package:Tasks/services/notification_service.dart';
+import 'package:tasks/services/Notification.service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
-
-Future<AudioPlayer> playLocalAsset() async {
-  AudioCache cache = AudioCache();
-  return await cache.play("audio.mp3");
-}
 
 tz.TZDateTime parse(date, time) {
   String value = '${date} ${time}';

@@ -1,5 +1,5 @@
 // ignore_for_file: file_names
-import 'package:Tasks/models/Todo.dart';
+import 'package:tasks/models/Todo.dart';
 
 class Array {
   String title;

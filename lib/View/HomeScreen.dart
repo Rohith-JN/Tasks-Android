@@ -1,14 +1,14 @@
 // ignore_for_file: file_names, empty_statements
 
-import 'package:Tasks/controllers/Controller.dart';
-import 'package:Tasks/services/functions.dart';
-import 'package:Tasks/widgets/themes.dart';
+import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/services/Functions.dart';
+import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:Tasks/View/TodoScreen.dart';
+import 'package:tasks/view/TodoScreen.dart';
 import 'package:flutter/services.dart';
-import 'package:Tasks/services/notification_service.dart';
+import 'package:tasks/services/Notification.service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
@@ -37,35 +37,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 : IconButton(
                     onPressed: () {
                       showModalBottomSheet<void>(
+                        backgroundColor: Color.fromARGB(255, 37, 37, 37),
                         context: context,
                         builder: (BuildContext context) {
                           return Container(
                             padding: const EdgeInsets.only(top: 15.0),
-                            height: (arrayController
-                                    .arrays[widget.index].todos!.isEmpty)
-                                ? 80
-                                : 255,
+                            height: 80,
                             child: ListView(children: [
                               ListTile(
                                 title: Text(
                                   "Delete all",
                                   style: optionsTextStyle,
                                 ),
-                                leading: const Icon(Icons.delete),
+                                leading: const Icon(
+                                  Icons.delete,
+                                  color: primaryColor,
+                                ),
                                 onTap: () {
                                   Navigator.pop(context);
                                   showDialog<String>(
                                     context: context,
                                     builder: (BuildContext context) =>
                                         AlertDialog(
-                                      title: const Text('Delete all tasks'),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 37, 37, 37),
+                                      title: const Text(
+                                        'Delete all tasks',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       content: const Text(
-                                          'Are you sure you want to delete all tasks?'),
+                                          'Are you sure you want to delete all tasks?',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 187, 187, 187))),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () =>
                                               Navigator.pop(context, 'Cancel'),
-                                          child: const Text('Cancel'),
+                                          child: const Text(
+                                            'Cancel',
+                                            style:
+                                                TextStyle(color: primaryColor),
+                                          ),
                                         ),
                                         TextButton(
                                             onPressed: () {
@@ -77,7 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .cancelAll();
                                               Navigator.pop(context, 'OK');
                                             },
-                                            child: const Text('OK')),
+                                            child: const Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                  color: primaryColor),
+                                            )),
                                       ],
                                     ),
                                   );
@@ -124,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     left: 6.5, right: 6.5),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Theme.of(context).canvasColor,
+                                      color: Color.fromARGB(255, 37, 37, 37),
                                       borderRadius:
                                           BorderRadius.circular(14.0)),
                                   padding: const EdgeInsets.symmetric(
@@ -149,30 +166,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       .done)),
                                           Transform.scale(
                                             scale: 1.3,
-                                            child: Checkbox(
-                                                shape: const CircleBorder(),
-                                                checkColor: Colors.black,
-                                                activeColor:
-                                                    const Color(0xFFEAEAEA),
-                                                value: arrayController
-                                                    .arrays[widget.index]
-                                                    .todos![index]
-                                                    .done,
-                                                side: Theme.of(context)
-                                                    .checkboxTheme
-                                                    .side,
-                                                onChanged: (value) {
-                                                  var changed = arrayController
+                                            child: Theme(
+                                              data: ThemeData(
+                                                  unselectedWidgetColor:
+                                                      Color.fromARGB(
+                                                          255, 187, 187, 187)),
+                                              child: Checkbox(
+                                                  shape: CircleBorder(),
+                                                  checkColor: Colors.white,
+                                                  activeColor: primaryColor,
+                                                  value: arrayController
                                                       .arrays[widget.index]
-                                                      .todos![index];
-                                                  changed.done = value!;
-                                                  arrayController
-                                                      .arrays[widget.index]
-                                                      .todos![index] = changed;
-                                                  if (changed.done == true) {
-                                                    playLocalAsset();
-                                                  }
-                                                }),
+                                                      .todos![index]
+                                                      .done,
+                                                  side: Theme.of(context)
+                                                      .checkboxTheme
+                                                      .side,
+                                                  onChanged: (value) {
+                                                    var changed =
+                                                        arrayController
+                                                            .arrays[
+                                                                widget.index]
+                                                            .todos![index];
+                                                    changed.done = value!;
+                                                    arrayController
+                                                        .arrays[widget.index]
+                                                        .todos![index] = changed;
+                                                  }),
+                                            ),
                                           )
                                         ],
                                       ),
@@ -256,10 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ? false
                                                 : true,
                                             child: Switch(
-                                              activeColor: Theme.of(context)
-                                                  .textTheme
-                                                  .headline1!
-                                                  .color,
+                                              activeColor: primaryColor,
                                               onChanged: (value) {
                                                 var changed = arrayController
                                                     .arrays[widget.index]
@@ -310,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: const Color(0xFF414141),
+                  color: Color.fromARGB(255, 37, 37, 37),
                   borderRadius: BorderRadius.circular(14.0)),
               width: 140.0,
               height: 55.0,

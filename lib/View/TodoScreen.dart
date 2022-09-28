@@ -1,13 +1,13 @@
 // ignore_for_file: file_names
 
-import 'package:Tasks/controllers/Controller.dart';
-import 'package:Tasks/services/functions.dart';
-import 'package:Tasks/widgets/themes.dart';
+import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/services/Functions.dart';
+import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:Tasks/models/Todo.dart';
+import 'package:tasks/models/Todo.dart';
 import 'package:intl/intl.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -57,6 +57,19 @@ class _TodoScreenState extends State<TodoScreen> {
 
     Future<Null> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
+          builder: (context, child) {
+            return Theme(
+              data: ThemeData.dark().copyWith(
+                  colorScheme: const ColorScheme.dark(
+                surface: primaryColor,
+                secondary: primaryColor,
+                onPrimary: Colors.white, // selected text color
+                onSurface: Colors.white, // default text color
+                primary: primaryColor, // circle color
+              )),
+              child: child!,
+            );
+          },
           initialEntryMode: DatePickerEntryMode.calendarOnly,
           context: context,
           initialDate: selectedDate,
@@ -71,9 +84,22 @@ class _TodoScreenState extends State<TodoScreen> {
 
     Future<Null> _selectTime(BuildContext context) async {
       final TimeOfDay? picked = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-      );
+          builder: (context, child) {
+            return Theme(
+              data: ThemeData.dark().copyWith(
+                timePickerTheme: timePickerTheme,
+                textButtonTheme: TextButtonThemeData(
+                  style: ButtonStyle(
+                      foregroundColor: MaterialStateColor.resolveWith(
+                          (states) => primaryColor)),
+                ),
+              ),
+              child: child!,
+            );
+          },
+          context: context,
+          initialTime: selectedTime,
+          initialEntryMode: TimePickerEntryMode.input);
       if (picked != null) {
         selectedTime = picked;
         _hour = selectedTime.hour.toString();
@@ -104,7 +130,7 @@ class _TodoScreenState extends State<TodoScreen> {
             },
             child: Text(
               "Cancel",
-              style: menuTextStyleBlue,
+              style: menuTextStyleGreen,
             ),
           ),
         ),
@@ -147,7 +173,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 }
               },
               child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
-                  style: menuTextStyleBlue),
+                  style: menuTextStyleGreen),
             ),
           )
         ],
@@ -160,7 +186,7 @@ class _TodoScreenState extends State<TodoScreen> {
             children: [
               Container(
                   decoration: BoxDecoration(
-                      color: Theme.of(context).canvasColor,
+                      color: Color.fromARGB(255, 37, 37, 37),
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -182,8 +208,11 @@ class _TodoScreenState extends State<TodoScreen> {
                             maxLines: 1,
                             maxLength: 25,
                             textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                                hintText: "Title", border: InputBorder.none),
+                            decoration: InputDecoration(
+                                counterStyle: counterTextStyle,
+                                hintStyle: hintTextStyle,
+                                hintText: "Title",
+                                border: InputBorder.none),
                             style: todoScreenStyle),
                         dividerStyle,
                         TextFormField(
@@ -197,8 +226,11 @@ class _TodoScreenState extends State<TodoScreen> {
                             autocorrect: false,
                             cursorColor: Colors.grey,
                             textInputAction: TextInputAction.done,
-                            decoration: const InputDecoration(
-                                hintText: "Notes", border: InputBorder.none),
+                            decoration: InputDecoration(
+                                counterStyle: counterTextStyle,
+                                hintStyle: hintTextStyle,
+                                hintText: "Notes",
+                                border: InputBorder.none),
                             style: todoScreenDetailsStyle),
                       ],
                     ),
@@ -207,7 +239,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).canvasColor,
+                      color: Color.fromARGB(255, 37, 37, 37),
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -224,8 +256,11 @@ class _TodoScreenState extends State<TodoScreen> {
                             onChanged: (String val) {
                               _setDate = val;
                             },
-                            decoration: const InputDecoration(
-                                hintText: "Date", border: InputBorder.none),
+                            decoration: InputDecoration(
+                                hintText: "Date",
+                                counterStyle: counterTextStyle,
+                                hintStyle: hintTextStyle,
+                                border: InputBorder.none),
                             style: todoScreenStyle,
                           ),
                         ),
@@ -236,7 +271,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).canvasColor,
+                      color: Color.fromARGB(255, 37, 37, 37),
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -253,8 +288,11 @@ class _TodoScreenState extends State<TodoScreen> {
                             },
                             enabled: false,
                             controller: _timeController,
-                            decoration: const InputDecoration(
-                                hintText: "Time", border: InputBorder.none),
+                            decoration: InputDecoration(
+                                hintText: "Time",
+                                counterStyle: counterTextStyle,
+                                hintStyle: hintTextStyle,
+                                border: InputBorder.none),
                             style: todoScreenStyle,
                           ),
                         ),

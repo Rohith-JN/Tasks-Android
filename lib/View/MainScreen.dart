@@ -1,7 +1,8 @@
-import 'package:Tasks/View/ArrayScreen.dart';
-import 'package:Tasks/View/HomeScreen.dart';
-import 'package:Tasks/controllers/Controller.dart';
-import 'package:Tasks/widgets/themes.dart';
+import 'package:tasks/authentication/auth.service.dart';
+import 'package:tasks/view/ArrayScreen.dart';
+import 'package:tasks/view/HomeScreen.dart';
+import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,51 @@ class _MainScreenState extends State<MainScreen> {
         appBar: AppBar(
           centerTitle: false,
           title: Text("Tasks", style: titleStyle),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    backgroundColor: Color.fromARGB(255, 37, 37, 37),
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        height: 140,
+                        child: ListView(children: [
+                          ListTile(
+                            title: Text(
+                              "Sign out",
+                              style: optionsTextStyle,
+                            ),
+                            leading: const Icon(
+                              Icons.logout,
+                              color: primaryColor,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Authentication.signOut(context);
+                            },
+                          ),
+                          ListTile(
+                            title: Text(
+                              "Delete account",
+                              style: optionsTextStyle,
+                            ),
+                            leading: const Icon(
+                              Icons.delete,
+                              color: primaryColor,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ]),
+                      );
+                    },
+                  );
+                },
+                icon: menuIcon)
+          ],
         ),
         body: Container(
           width: double.infinity,
@@ -32,6 +78,11 @@ class _MainScreenState extends State<MainScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    width: MediaQuery.of(context).size.width * 0.44,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 37, 37, 37),
+                        borderRadius: BorderRadius.circular(14.0)),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,24 +91,26 @@ class _MainScreenState extends State<MainScreen> {
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
                               "0",
-                              style: GoogleFonts.notoSans(fontSize: 40.0),
+                              style: GoogleFonts.notoSans(
+                                  fontSize: 40.0, color: primaryColor),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
                               "Today",
-                              style: GoogleFonts.notoSans(fontSize: 35.0),
+                              style: GoogleFonts.notoSans(
+                                  fontSize: 35.0, color: Colors.white),
                             ),
                           ),
                         ]),
+                  ),
+                  Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     height: MediaQuery.of(context).size.height * 0.15,
                     decoration: BoxDecoration(
-                        color: Theme.of(context).canvasColor,
+                        color: Color.fromARGB(255, 37, 37, 37),
                         borderRadius: BorderRadius.circular(14.0)),
-                  ),
-                  Container(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,22 +119,19 @@ class _MainScreenState extends State<MainScreen> {
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
                               "0",
-                              style: GoogleFonts.notoSans(fontSize: 40.0),
+                              style: GoogleFonts.notoSans(
+                                  fontSize: 40.0, color: primaryColor),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
                               "All",
-                              style: GoogleFonts.notoSans(fontSize: 35.0),
+                              style: GoogleFonts.notoSans(
+                                  fontSize: 35.0, color: Colors.white),
                             ),
                           ),
                         ]),
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).canvasColor,
-                        borderRadius: BorderRadius.circular(14.0)),
                   ),
                 ],
               ),
@@ -89,6 +139,11 @@ class _MainScreenState extends State<MainScreen> {
                 height: 20.0,
               ),
               Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.15,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 37, 37, 37),
+                    borderRadius: BorderRadius.circular(14.0)),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,22 +152,19 @@ class _MainScreenState extends State<MainScreen> {
                         padding: const EdgeInsets.only(left: 20.0),
                         child: Text(
                           "0",
-                          style: GoogleFonts.notoSans(fontSize: 40.0),
+                          style: GoogleFonts.notoSans(
+                              fontSize: 40.0, color: primaryColor),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: Text(
                           "Scheduled",
-                          style: GoogleFonts.notoSans(fontSize: 35.0),
+                          style: GoogleFonts.notoSans(
+                              fontSize: 35.0, color: Colors.white),
                         ),
                       ),
                     ]),
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.15,
-                decoration: BoxDecoration(
-                    color: Theme.of(context).canvasColor,
-                    borderRadius: BorderRadius.circular(14.0)),
               ),
               const SizedBox(
                 height: 30.0,
@@ -141,6 +193,11 @@ class _MainScreenState extends State<MainScreen> {
                               arrayController.arrays.removeAt(index);
                             },
                             child: Container(
+                              width: double.infinity,
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 37, 37, 37),
+                                  borderRadius: BorderRadius.circular(14.0)),
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 25.0),
                                 child: Row(
@@ -153,6 +210,7 @@ class _MainScreenState extends State<MainScreen> {
                                       child: Text(
                                         arrayController.arrays[index].title,
                                         style: GoogleFonts.notoSans(
+                                            color: Colors.white,
                                             fontSize: 25.0),
                                       ),
                                     ),
@@ -162,17 +220,13 @@ class _MainScreenState extends State<MainScreen> {
                                       child: Text(
                                         '${(arrayController.arrays[index].todos?.length == null) ? '0' : arrayController.arrays[index].todos?.length}',
                                         style: GoogleFonts.notoSans(
+                                            color: primaryColor,
                                             fontSize: 27.0),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).canvasColor,
-                                  borderRadius: BorderRadius.circular(14.0)),
                             ),
                           ),
                         ),
@@ -190,7 +244,7 @@ class _MainScreenState extends State<MainScreen> {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: const Color(0xFF414141),
+                  color: Color.fromARGB(255, 37, 37, 37),
                   borderRadius: BorderRadius.circular(14.0)),
               width: 140.0,
               height: 55.0,
