@@ -31,12 +31,12 @@ class MyApp extends StatelessWidget {
       title: 'Tasks',
       theme: ThemeData(
           scaffoldBackgroundColor: Colors.black,
-          appBarTheme: AppBarTheme(color: Colors.black)),
+          appBarTheme: const AppBarTheme(color: Colors.black)),
       home: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: primaryColor,));
             } else if (snapshot.hasError) {
               return Center(
                   child: Text("Something went wrong!", style: headingWhite));

@@ -4,14 +4,23 @@ import 'package:tasks/utils/global.dart';
 
 class Authentication {
   static Future signIn(emailController, passwordController, context) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: ((context) => const Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ))));
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
+      Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         backgroundColor: secondaryColor,
         content: Text(e.message!, style: const TextStyle(color: Colors.white)),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -33,8 +42,10 @@ class Authentication {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: ((context) =>
-            const Center(child: CircularProgressIndicator())));
+        builder: ((context) => const Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ))));
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text);
@@ -59,8 +70,10 @@ class Authentication {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: ((context) =>
-            const Center(child: CircularProgressIndicator())));
+        builder: ((context) => const Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ))));
     try {
       await showDialog<String>(
         barrierDismissible: true,
@@ -72,28 +85,77 @@ class Authentication {
               style: TextStyle(color: Color.fromARGB(255, 187, 187, 187))),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pop(context, 'Cancel');
+              },
               child:
                   const Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context, 'Ok');
                 FirebaseAuth.instance.signOut();
+                Navigator.pop(context, 'Ok');
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: const Text('OK', style: TextStyle(color: primaryColor)),
             ),
           ],
         ),
       );
-      Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         backgroundColor: secondaryColor,
         content: Text(e.message!, style: const TextStyle(color: Colors.white)),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.of(context).pop();
+    }
+  }
+
+  static Future deleteAccount(context) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: ((context) => const Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ))));
+    try {
+      await showDialog<String>(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 37, 37, 37),
+          title: const Text('Delete account',
+              style: TextStyle(color: Colors.white)),
+          content: const Text('Are you sure you want to delete your account?',
+              style: TextStyle(color: Color.fromARGB(255, 187, 187, 187))),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pop(context, 'Cancel');
+              },
+              child:
+                  const Text('Cancel', style: TextStyle(color: primaryColor)),
+            ),
+            TextButton(
+              onPressed: () {
+                FirebaseAuth.instance.currentUser!.delete();
+                Navigator.pop(context, 'Ok');
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              child: const Text('OK', style: TextStyle(color: primaryColor)),
+            ),
+          ],
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      final snackBar = SnackBar(
+        backgroundColor: secondaryColor,
+        content: Text(e.message!, style: const TextStyle(color: Colors.white)),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 }

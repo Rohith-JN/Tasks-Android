@@ -6,6 +6,7 @@ import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tasks/utils/routes.dart';
 import 'package:tasks/view/TodoScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/services/Notification.service.dart';
@@ -31,90 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: false,
           title: Text(arrayController.arrays[widget.index].title,
               style: titleStyle),
-          actions: [
-            Obx(() => (arrayController.arrays[widget.index].todos == null)
-                ? Container()
-                : IconButton(
-                    onPressed: () {
-                      showModalBottomSheet<void>(
-                        backgroundColor: Color.fromARGB(255, 37, 37, 37),
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(
-                            padding: const EdgeInsets.only(top: 15.0),
-                            height: 80,
-                            child: ListView(children: [
-                              ListTile(
-                                title: Text(
-                                  "Delete all",
-                                  style: optionsTextStyle,
-                                ),
-                                leading: const Icon(
-                                  Icons.delete,
-                                  color: primaryColor,
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 37, 37, 37),
-                                      title: const Text(
-                                        'Delete all tasks',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      content: const Text(
-                                          'Are you sure you want to delete all tasks?',
-                                          style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 187, 187, 187))),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'Cancel'),
-                                          child: const Text(
-                                            'Cancel',
-                                            style:
-                                                TextStyle(color: primaryColor),
-                                          ),
-                                        ),
-                                        TextButton(
-                                            onPressed: () {
-                                              arrayController
-                                                  .arrays[widget.index].todos!
-                                                  .clear();
-                                              NotificationService()
-                                                  .flutterLocalNotificationsPlugin
-                                                  .cancelAll();
-                                              Navigator.pop(context, 'OK');
-                                            },
-                                            child: const Text(
-                                              'OK',
-                                              style: TextStyle(
-                                                  color: primaryColor),
-                                            )),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ]),
-                          );
-                        },
-                      );
-                    },
-                    icon: menuIcon))
-          ],
         ),
         extendBodyBehindAppBar: true,
         body: Obx(() => Container(
               width: double.infinity,
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: (arrayController.arrays[widget.index].todos == null)
-                  ? Center(child: Text("Add new tasks", style: alertTextStyle))
+              child: (arrayController.arrays[widget.index].todos!.isEmpty)
+                  ? Center(child: Text("Add new tasks", style: buttonTextStyle))
                   : ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => GestureDetector(
@@ -135,13 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .arrays[widget.index].todos![index].id);
                                 arrayController.arrays[widget.index].todos!
                                     .removeAt(index);
+                                arrayController.arrays.refresh();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                     left: 6.5, right: 6.5),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 37, 37, 37),
+                                      color: tertiaryColor,
                                       borderRadius:
                                           BorderRadius.circular(14.0)),
                                   padding: const EdgeInsets.symmetric(
@@ -192,6 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     arrayController
                                                         .arrays[widget.index]
                                                         .todos![index] = changed;
+                                                    arrayController.arrays
+                                                        .refresh();
                                                   }),
                                             ),
                                           )
@@ -298,8 +226,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .arrays[widget.index]
                                                           .todos![index]
                                                           .id);
+                                                  arrayController.arrays
+                                                      .refresh();
                                                 } else {
                                                   // showNotification();
+                                                  arrayController.arrays
+                                                      .refresh();
                                                 }
                                               },
                                               value: arrayController
@@ -324,11 +256,12 @@ class _HomeScreenState extends State<HomeScreen> {
             )),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(_routeToTodoScreen(widget.index));
+              Navigator.of(context)
+                  .push(Routes.routeToTodoScreen(widget.index));
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 37, 37, 37),
+                  color: tertiaryColor,
                   borderRadius: BorderRadius.circular(14.0)),
               width: 140.0,
               height: 55.0,
@@ -337,23 +270,4 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )));
   }
-}
-
-Route _routeToTodoScreen(arrayIndex) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        TodoScreen(arrayIndex: arrayIndex),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }
