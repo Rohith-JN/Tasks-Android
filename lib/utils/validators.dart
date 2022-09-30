@@ -12,4 +12,7 @@ class Validator {
     MaxLengthValidator(15,
         errorText: "Password should not be greater than 15 characters")
   ]);
+  static MultiValidator titleValidator = MultiValidator([
+    RequiredValidator(errorText: "Please enter some text")
+  ]);
 }

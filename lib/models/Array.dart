@@ -4,7 +4,7 @@ import 'package:tasks/models/Todo.dart';
 class Array {
   String title;
   int id;
-  List<Todo>? todos;
+  List<dynamic>? todos; // list<Todo>?
   Array({
     required this.title,
     required this.id,

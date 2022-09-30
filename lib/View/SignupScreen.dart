@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tasks/Authentication/authentication.dart';
+import 'package:tasks/Authentication/auth.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:tasks/utils/validators.dart';
 import 'package:tasks/view/MainScreen.dart';

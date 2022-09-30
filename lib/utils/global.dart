@@ -7,6 +7,7 @@ const backgroundColor = Colors.black;
 const primaryColor = Color(0xFF28D8A1);
 const formInputColor = Color.fromARGB(255, 48, 48, 48);
 const secondaryColor = Color(0xFF707070);
+const tertiaryColor = Color.fromARGB(255, 37, 37, 37);
 
 // TextStyles
 
@@ -178,6 +179,9 @@ TextStyle todoTimeStyle(condition1, condition2) => GoogleFonts.notoSans(
 TextStyle buttonTextStyle =
     const TextStyle(color: primaryColor, fontSize: 23.0);
 
+TextStyle buttonTextStyleWhite =
+    const TextStyle(color: Colors.white, fontSize: 23.0);
+
 TextStyle menuTextStyle =
     const TextStyle(fontSize: 22, color: Color(0xFFEAEAEA));
 
@@ -190,6 +194,7 @@ TextStyle todoScreenDetailsStyle = GoogleFonts.notoSans(
   color: const Color(0xFFA8A8A8),
   fontSize: 20.0,
 );
+
 //Other styles
 
 Divider dividerStyle = const Divider(
@@ -204,7 +209,7 @@ Icon menuIcon = const Icon(
 );
 
 final timePickerTheme = TimePickerThemeData(
-  backgroundColor: Color.fromARGB(255, 75, 75, 75),
+  backgroundColor: Color.fromARGB(255, 70, 70, 70),
   dayPeriodTextColor: primaryColor,
   hourMinuteTextColor: MaterialStateColor.resolveWith((states) =>
       states.contains(MaterialState.selected) ? Colors.white : Colors.white),

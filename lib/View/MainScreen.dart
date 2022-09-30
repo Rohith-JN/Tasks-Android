@@ -1,6 +1,5 @@
 import 'package:tasks/authentication/auth.service.dart';
-import 'package:tasks/view/ArrayScreen.dart';
-import 'package:tasks/view/HomeScreen.dart';
+import 'package:tasks/utils/routes.dart';
 import 'package:tasks/controllers/Controller.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
             IconButton(
                 onPressed: () {
                   showModalBottomSheet<void>(
-                    backgroundColor: Color.fromARGB(255, 37, 37, 37),
+                    backgroundColor: tertiaryColor,
                     context: context,
                     builder: (BuildContext context) {
                       return Container(
@@ -59,6 +58,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             onTap: () {
                               Navigator.pop(context);
+                              Authentication.deleteAccount(context);
                             },
                           ),
                         ]),
@@ -69,182 +69,213 @@ class _MainScreenState extends State<MainScreen> {
                 icon: menuIcon)
           ],
         ),
-        body: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 37, 37, 37),
-                        borderRadius: BorderRadius.circular(14.0)),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              "0",
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 40.0, color: primaryColor),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              "Today",
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 35.0, color: Colors.white),
-                            ),
-                          ),
-                        ]),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 37, 37, 37),
-                        borderRadius: BorderRadius.circular(14.0)),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              "0",
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 40.0, color: primaryColor),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              "All",
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 35.0, color: Colors.white),
-                            ),
-                          ),
-                        ]),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.15,
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 37, 37, 37),
-                    borderRadius: BorderRadius.circular(14.0)),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          "0",
-                          style: GoogleFonts.notoSans(
-                              fontSize: 40.0, color: primaryColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          "Scheduled",
-                          style: GoogleFonts.notoSans(
-                              fontSize: 35.0, color: Colors.white),
-                        ),
-                      ),
-                    ]),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Lists", style: titleStyle)),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.42,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => GestureDetector(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(_routeToHomeScreen(index));
-                          },
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.startToEnd,
-                            onDismissed: (_) {
-                              HapticFeedback.heavyImpact();
-                              arrayController.arrays.removeAt(index);
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 37, 37, 37),
-                                  borderRadius: BorderRadius.circular(14.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 25.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 20.0),
-                                      child: Text(
-                                        arrayController.arrays[index].title,
-                                        style: GoogleFonts.notoSans(
-                                            color: Colors.white,
-                                            fontSize: 25.0),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 20.0),
-                                      child: Text(
-                                        '${(arrayController.arrays[index].todos?.length == null) ? '0' : arrayController.arrays[index].todos?.length}',
-                                        style: GoogleFonts.notoSans(
-                                            color: primaryColor,
-                                            fontSize: 27.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      decoration: BoxDecoration(
+                          color: tertiaryColor,
+                          borderRadius: BorderRadius.circular(14.0)),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                "0",
+                                style: GoogleFonts.notoSans(
+                                    fontSize: 40.0, color: primaryColor),
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                "Today",
+                                style: GoogleFonts.notoSans(
+                                    fontSize: 35.0, color: Colors.white),
+                              ),
+                            ),
+                          ]),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      decoration: BoxDecoration(
+                          color: tertiaryColor,
+                          borderRadius: BorderRadius.circular(14.0)),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                "0",
+                                style: GoogleFonts.notoSans(
+                                    fontSize: 40.0, color: primaryColor),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                "All",
+                                style: GoogleFonts.notoSans(
+                                    fontSize: 35.0, color: Colors.white),
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  decoration: BoxDecoration(
+                      color: tertiaryColor,
+                      borderRadius: BorderRadius.circular(14.0)),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text(
+                            "0",
+                            style: GoogleFonts.notoSans(
+                                fontSize: 40.0, color: primaryColor),
                           ),
                         ),
-                    separatorBuilder: (_, __) => const SizedBox(
-                          height: 15.0,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text(
+                            "Scheduled",
+                            style: GoogleFonts.notoSans(
+                                fontSize: 35.0, color: Colors.white),
+                          ),
                         ),
-                    itemCount: arrayController.arrays.length),
-              )
-            ],
+                      ]),
+                ),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Lists", style: titleStyle)),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                Column(
+                  children: [
+                    Obx(() => (arrayController.arrays.isEmpty)
+                        ? Container(
+                            height: MediaQuery.of(context).size.height * 0.37,
+                            child: Center(
+                                child: Text("Add new lists",
+                                    style: buttonTextStyleWhite)),
+                          )
+                        : Container(
+                            height: MediaQuery.of(context).size.height * 0.37,
+                            child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                      onLongPress: () {
+                                        Navigator.of(context).push(
+                                            Routes.routeToArrayScreenIndex(
+                                                index));
+                                      },
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            Routes.routeToHomeScreen(index));
+                                      },
+                                      child: Dismissible(
+                                        key: UniqueKey(),
+                                        direction: DismissDirection.startToEnd,
+                                        onDismissed: (_) {
+                                          HapticFeedback.heavyImpact();
+                                          arrayController.arrays
+                                              .removeAt(index);
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.07,
+                                          decoration: BoxDecoration(
+                                              color: tertiaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(14.0)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 25.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20.0),
+                                                  child: Text(
+                                                    arrayController
+                                                        .arrays[index].title,
+                                                    style: GoogleFonts.notoSans(
+                                                        color: Colors.white,
+                                                        fontSize: 25.0),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20.0),
+                                                  child: Text(
+                                                    '${(arrayController.arrays[index].todos?.length == null) ? '0' : arrayController.arrays[index].todos?.length}',
+                                                    style: GoogleFonts.notoSans(
+                                                        color: primaryColor,
+                                                        fontSize: 27.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                separatorBuilder: (_, __) => const SizedBox(
+                                      height: 15.0,
+                                    ),
+                                itemCount: arrayController.arrays.length),
+                          )),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(_routeToArrayScreen());
+              Navigator.of(context).push(Routes.routeToArrayScreen());
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 37, 37, 37),
+                  color: tertiaryColor,
                   borderRadius: BorderRadius.circular(14.0)),
               width: 140.0,
               height: 55.0,
@@ -253,43 +284,4 @@ class _MainScreenState extends State<MainScreen> {
               ),
             )));
   }
-}
-
-Route _routeToArrayScreen() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        const ArrayScreen(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
-
-Route _routeToHomeScreen(index) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(
-      index: index,
-    ),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }

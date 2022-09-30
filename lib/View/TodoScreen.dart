@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:tasks/controllers/Controller.dart';
-import 'package:tasks/services/Functions.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tasks/models/Todo.dart';
 import 'package:intl/intl.dart';
+import 'package:tasks/utils/validators.dart';
 
 class TodoScreen extends StatefulWidget {
   final int? todoIndex;
@@ -152,6 +152,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     dateAndTimeEnabled: true,
                     id: UniqueKey().hashCode,
                   ));
+                  arrayController.arrays.refresh();
                   Get.back();
                   HapticFeedback.heavyImpact();
                   // showNotification();
@@ -167,6 +168,8 @@ class _TodoScreenState extends State<TodoScreen> {
                   editing.dateAndTimeEnabled = true;
                   arrayController.arrays[widget.arrayIndex]
                       .todos![widget.todoIndex!] = editing;
+                  arrayController.arrays.refresh();
+
                   Get.back();
                   HapticFeedback.heavyImpact();
                   // showNotification();
@@ -186,7 +189,7 @@ class _TodoScreenState extends State<TodoScreen> {
             children: [
               Container(
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 37, 37, 37),
+                      color: tertiaryColor,
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -196,11 +199,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                            },
+                            validator: Validator.titleValidator,
                             controller: titleEditingController,
                             autofocus: true,
                             autocorrect: false,
@@ -216,11 +215,7 @@ class _TodoScreenState extends State<TodoScreen> {
                             style: todoScreenStyle),
                         dividerStyle,
                         TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                            },
+                            validator: Validator.titleValidator,
                             controller: detailEditingController,
                             maxLines: null,
                             autocorrect: false,
@@ -239,7 +234,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 37, 37, 37),
+                      color: tertiaryColor,
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -271,7 +266,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 37, 37, 37),
+                      color: tertiaryColor,
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),

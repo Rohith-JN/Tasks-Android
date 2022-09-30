@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tasks/controllers/Controller.dart';
 import 'package:tasks/models/Array.dart';
+import 'package:tasks/utils/validators.dart';
 
 class ArrayScreen extends StatefulWidget {
   final int? index;
@@ -90,7 +91,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
             children: [
               Container(
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 37, 37, 37),
+                      color: tertiaryColor,
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
@@ -100,11 +101,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                            },
+                            validator: Validator.titleValidator,
                             controller: titleEditingController,
                             autofocus: true,
                             autocorrect: false,
