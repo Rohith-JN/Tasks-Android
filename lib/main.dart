@@ -5,7 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:tasks/services/Notification.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tasks/view/LoginScreen.dart';
+import 'package:tasks/view/AuthScreen.dart';
 import 'package:tasks/view/MainScreen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -36,14 +36,14 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator(color: primaryColor,));
+              return Center(child: CircularProgressIndicator(color: primaryColor,));
             } else if (snapshot.hasError) {
               return Center(
                   child: Text("Something went wrong!", style: headingWhite));
             } else if (snapshot.hasData) {
               return const MainScreen();
             } else {
-              return const LogIn();
+              return const AuthScreen();
             }
           }),
     );

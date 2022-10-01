@@ -7,7 +7,7 @@ class Authentication {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: ((context) => const Center(
+        builder: ((context) => Center(
                 child: CircularProgressIndicator(
               color: primaryColor,
             ))));
@@ -26,6 +26,14 @@ class Authentication {
   }
 
   static Future signUp(emailController, passwordController, context) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: ((context) => Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ))));
+    Navigator.of(context).pop();
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
@@ -34,6 +42,7 @@ class Authentication {
         backgroundColor: secondaryColor,
         content: Text(e.message!, style: const TextStyle(color: Colors.white)),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -42,7 +51,7 @@ class Authentication {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: ((context) => const Center(
+        builder: ((context) => Center(
                 child: CircularProgressIndicator(
               color: primaryColor,
             ))));
@@ -70,7 +79,7 @@ class Authentication {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: ((context) => const Center(
+        builder: ((context) => Center(
                 child: CircularProgressIndicator(
               color: primaryColor,
             ))));
@@ -90,7 +99,7 @@ class Authentication {
                 Navigator.pop(context, 'Cancel');
               },
               child:
-                  const Text('Cancel', style: TextStyle(color: primaryColor)),
+                  Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
               onPressed: () {
@@ -98,7 +107,7 @@ class Authentication {
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
-              child: const Text('OK', style: TextStyle(color: primaryColor)),
+              child: Text('OK', style: TextStyle(color: primaryColor)),
             ),
           ],
         ),
@@ -116,7 +125,7 @@ class Authentication {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: ((context) => const Center(
+        builder: ((context) => Center(
                 child: CircularProgressIndicator(
               color: primaryColor,
             ))));
@@ -137,7 +146,7 @@ class Authentication {
                 Navigator.pop(context, 'Cancel');
               },
               child:
-                  const Text('Cancel', style: TextStyle(color: primaryColor)),
+                  Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
               onPressed: () {
@@ -145,7 +154,7 @@ class Authentication {
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
-              child: const Text('OK', style: TextStyle(color: primaryColor)),
+              child: Text('OK', style: TextStyle(color: primaryColor)),
             ),
           ],
         ),
