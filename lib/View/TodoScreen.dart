@@ -60,7 +60,7 @@ class _TodoScreenState extends State<TodoScreen> {
           builder: (context, child) {
             return Theme(
               data: ThemeData.dark().copyWith(
-                  colorScheme: const ColorScheme.dark(
+                  colorScheme: ColorScheme.dark(
                 surface: primaryColor,
                 secondary: primaryColor,
                 onPrimary: Colors.white, // selected text color
@@ -87,7 +87,24 @@ class _TodoScreenState extends State<TodoScreen> {
           builder: (context, child) {
             return Theme(
               data: ThemeData.dark().copyWith(
-                timePickerTheme: timePickerTheme,
+                timePickerTheme: TimePickerThemeData(
+                  backgroundColor: const Color.fromARGB(255, 70, 70, 70),
+                  dayPeriodTextColor: primaryColor,
+                  hourMinuteTextColor: MaterialStateColor.resolveWith(
+                      (states) => states.contains(MaterialState.selected)
+                          ? Colors.white
+                          : Colors.white),
+                  dialHandColor: primaryColor,
+                  helpTextStyle: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor),
+                  dialTextColor: MaterialStateColor.resolveWith((states) =>
+                      states.contains(MaterialState.selected)
+                          ? Colors.white
+                          : Colors.white),
+                  entryModeIconColor: primaryColor,
+                ),
                 textButtonTheme: TextButtonThemeData(
                   style: ButtonStyle(
                       foregroundColor: MaterialStateColor.resolveWith(
@@ -130,7 +147,7 @@ class _TodoScreenState extends State<TodoScreen> {
             },
             child: Text(
               "Cancel",
-              style: menuTextStyleGreen,
+              style: TextStyle(fontSize: 20.0, color: primaryColor),
             ),
           ),
         ),
@@ -176,7 +193,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 }
               },
               child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
-                  style: menuTextStyleGreen),
+                  style: TextStyle(fontSize: 20.0, color: primaryColor)),
             ),
           )
         ],

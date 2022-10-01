@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, empty_statements
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tasks/controllers/Controller.dart';
 import 'package:tasks/services/Functions.dart';
 import 'package:tasks/utils/global.dart';
@@ -31,7 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           centerTitle: false,
           title: Text(arrayController.arrays[widget.index].title,
-              style: titleStyle),
+              style: GoogleFonts.notoSans(
+                fontSize: 30,
+                color: primaryColor,
+                fontWeight: FontWeight.bold,
+              )),
         ),
         extendBodyBehindAppBar: true,
         body: Obx(() => Container(
@@ -39,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: (arrayController.arrays[widget.index].todos!.isEmpty)
-                  ? Center(child: Text("Add new tasks", style: buttonTextStyle))
+                  ? Center(
+                      child: Text("Add new tasks",
+                          style:
+                              TextStyle(color: primaryColor, fontSize: 23.0)))
                   : ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => GestureDetector(
@@ -95,10 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Theme(
                                               data: ThemeData(
                                                   unselectedWidgetColor:
-                                                      Color.fromARGB(
+                                                      const Color.fromARGB(
                                                           255, 187, 187, 187)),
                                               child: Checkbox(
-                                                  shape: CircleBorder(),
+                                                  shape: const CircleBorder(),
                                                   checkColor: Colors.white,
                                                   activeColor: primaryColor,
                                                   value: arrayController
@@ -266,7 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 140.0,
               height: 55.0,
               child: Center(
-                child: Text('Add task', style: buttonTextStyle),
+                child: Text('Add task',
+                    style: TextStyle(color: primaryColor, fontSize: 23.0)),
               ),
             )));
   }

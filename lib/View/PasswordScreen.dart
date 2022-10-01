@@ -32,7 +32,15 @@ class _PasswordState extends State<Password> {
           children: [
             Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: backButton(context)),
+                child: IconButton(
+                  splashColor: Colors.transparent,
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: primaryColor,
+                    size: 30.0,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                )),
           ],
         ),
       ),
@@ -68,11 +76,40 @@ class _PasswordState extends State<Password> {
                   const SizedBox(height: 30),
                   Container(
                     constraints: const BoxConstraints(maxWidth: 600),
-                    decoration: buttonShadow,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(9),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: primaryColor,
+                            spreadRadius: 5,
+                            blurRadius: 10,
+                          ),
+                          BoxShadow(
+                            color: primaryColor,
+                            spreadRadius: -4,
+                            blurRadius: 5,
+                          )
+                        ]),
                     width: double.infinity,
                     height: 60.0,
                     child: ElevatedButton(
-                      style: buttonStyle,
+                      style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all<TextStyle?>(
+                            const TextStyle(
+                                fontSize: 25.0, fontWeight: FontWeight.bold)),
+                        shape: MaterialStateProperty.all<OutlinedBorder?>(
+                          RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                  style: BorderStyle.solid),
+                              borderRadius: BorderRadius.circular(9)),
+                        ),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(primaryColor),
+                      ),
                       onPressed: () {
                         if (formkey.currentState!.validate()) {
                           Authentication.resetPassword(

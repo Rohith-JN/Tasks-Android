@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 //  Colors
 
 const backgroundColor = Colors.black;
-const primaryColor = Color(0xFF28D8A1);
+var primaryColor = Color(0xFF28D8A1);
 const formInputColor = Color.fromARGB(255, 48, 48, 48);
 const secondaryColor = Color(0xFF707070);
 const tertiaryColor = Color.fromARGB(255, 37, 37, 37);
@@ -13,8 +13,6 @@ const tertiaryColor = Color.fromARGB(255, 37, 37, 37);
 
 TextStyle headingWhite = const TextStyle(
     color: Colors.white, fontSize: 50.0, fontWeight: FontWeight.bold);
-TextStyle headingGreen = const TextStyle(
-    color: primaryColor, fontSize: 50.0, fontWeight: FontWeight.bold);
 TextStyle formInputText = const TextStyle(color: Colors.white, fontSize: 20);
 TextStyle hintTextStyle = const TextStyle(
   color: Color.fromARGB(255, 173, 173, 173),
@@ -26,7 +24,6 @@ TextStyle counterTextStyle = const TextStyle(
 );
 TextStyle paragraphWhite =
     const TextStyle(color: secondaryColor, fontSize: 25.0);
-TextStyle paragraphGreen = const TextStyle(color: primaryColor, fontSize: 25.0);
 TextStyle paragraphGray =
     const TextStyle(color: secondaryColor, fontSize: 20.0);
 TextStyle paragraphWhiteBig =
@@ -37,8 +34,6 @@ TextStyle accountTextStyle = const TextStyle(
 );
 TextStyle listTileTextStyle =
     const TextStyle(fontSize: 17.0, color: Colors.white);
-TextStyle menuTextStyleGreen =
-    const TextStyle(fontSize: 20.0, color: primaryColor);
 
 // Decorations
 
@@ -99,54 +94,7 @@ InputDecoration passwordInputDecoration(
             onPressed: onPressed),
         hintStyle: hintTextStyle);
 
-BoxDecoration buttonShadow = const BoxDecoration(
-    borderRadius: BorderRadius.all(
-      Radius.circular(9),
-    ),
-    boxShadow: [
-      BoxShadow(
-        color: Color(0xFF28D8A1),
-        spreadRadius: 5,
-        blurRadius: 10,
-      ),
-      BoxShadow(
-        color: Color(0xFF28D8A1),
-        spreadRadius: -4,
-        blurRadius: 5,
-      )
-    ]);
-
-ButtonStyle buttonStyle = ButtonStyle(
-  textStyle: MaterialStateProperty.all<TextStyle?>(
-      const TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-  shape: MaterialStateProperty.all<OutlinedBorder?>(
-    RoundedRectangleBorder(
-        side: const BorderSide(
-            color: Colors.transparent, width: 1, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(9)),
-  ),
-  backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF28D8A1)),
-);
-
-// Buttons
-
-IconButton backButton(context) => IconButton(
-      splashColor: Colors.transparent,
-      icon: const Icon(
-        Icons.arrow_back,
-        color: primaryColor,
-        size: 30.0,
-      ),
-      onPressed: () => Navigator.of(context).pop(),
-    );
-
 //
-TextStyle titleStyle = GoogleFonts.notoSans(
-  fontSize: 30,
-  color: primaryColor,
-  fontWeight: FontWeight.bold,
-);
-
 TextStyle optionsTextStyle = GoogleFonts.notoSans(
   fontSize: 17.0,
   color: const Color(0xFFEAEAEA),
@@ -176,9 +124,6 @@ TextStyle todoTimeStyle(condition1, condition2) => GoogleFonts.notoSans(
           (condition2) ? TextDecoration.lineThrough : TextDecoration.none,
     );
 
-TextStyle buttonTextStyle =
-    const TextStyle(color: primaryColor, fontSize: 23.0);
-
 TextStyle buttonTextStyleWhite =
     const TextStyle(color: Colors.white, fontSize: 23.0);
 
@@ -206,17 +151,4 @@ Icon menuIcon = const Icon(
   Icons.menu,
   color: Color(0xFFEAEAEA),
   size: 27.0,
-);
-
-final timePickerTheme = TimePickerThemeData(
-  backgroundColor: Color.fromARGB(255, 70, 70, 70),
-  dayPeriodTextColor: primaryColor,
-  hourMinuteTextColor: MaterialStateColor.resolveWith((states) =>
-      states.contains(MaterialState.selected) ? Colors.white : Colors.white),
-  dialHandColor: primaryColor,
-  helpTextStyle: const TextStyle(
-      fontSize: 12, fontWeight: FontWeight.bold, color: primaryColor),
-  dialTextColor: MaterialStateColor.resolveWith((states) =>
-      states.contains(MaterialState.selected) ? Colors.white : Colors.white),
-  entryModeIconColor: primaryColor,
 );

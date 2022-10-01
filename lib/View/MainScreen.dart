@@ -1,4 +1,6 @@
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:tasks/authentication/auth.service.dart';
+import 'package:tasks/services/Functions.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:tasks/controllers/Controller.dart';
 import 'package:tasks/utils/global.dart';
@@ -21,7 +23,12 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text("Tasks", style: titleStyle),
+          title: Text("Tasks",
+              style: GoogleFonts.notoSans(
+                fontSize: 30,
+                color: primaryColor,
+                fontWeight: FontWeight.bold,
+              )),
           actions: [
             IconButton(
                 onPressed: () {
@@ -31,14 +38,71 @@ class _MainScreenState extends State<MainScreen> {
                     builder: (BuildContext context) {
                       return Container(
                         padding: const EdgeInsets.only(top: 15.0),
-                        height: 140,
+                        height: 310,
                         child: ListView(children: [
+                          const SizedBox(height: 10.0),
+                          Center(
+                            child: Icon(
+                              Icons.account_circle,
+                              size: 40.0,
+                              color: primaryColor,
+                            ),
+                          ),
+                          const SizedBox(height: 15.0),
+                          const Center(
+                              child: Text(
+                            "rohithnambiar04@gmail.com",
+                            style:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
+                          )),
+                          const SizedBox(height: 15.0),
+                          dividerStyle,
+                          ListTile(
+                            title: Text(
+                              "Change theme",
+                              style: optionsTextStyle,
+                            ),
+                            leading: Icon(
+                              Icons.color_lens_sharp,
+                              color: primaryColor,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                              showDialog<String>(
+                                barrierDismissible: true,
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 37, 37, 37),
+                                  title: const Text('Pick a color',
+                                      style: TextStyle(color: Colors.white)),
+                                  actions: [
+                                    ColorPicker(
+                                        showLabel: false,
+                                        pickerColor: primaryColor,
+                                        onColorChanged: (color) {
+                                          setState(() {
+                                            primaryColor = color;
+                                          });
+                                        }),
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(
+                                          context, 'Select Color'),
+                                      child: const Text('Select Color',
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                           ListTile(
                             title: Text(
                               "Sign out",
                               style: optionsTextStyle,
                             ),
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.logout,
                               color: primaryColor,
                             ),
@@ -52,7 +116,7 @@ class _MainScreenState extends State<MainScreen> {
                               "Delete account",
                               style: optionsTextStyle,
                             ),
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.delete,
                               color: primaryColor,
                             ),
@@ -70,7 +134,7 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Container(
             width: double.infinity,
             padding:
@@ -174,7 +238,12 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Lists", style: titleStyle)),
+                    child: Text("Lists",
+                        style: GoogleFonts.notoSans(
+                          fontSize: 30,
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ))),
                 const SizedBox(
                   height: 30.0,
                 ),
@@ -280,7 +349,8 @@ class _MainScreenState extends State<MainScreen> {
               width: 140.0,
               height: 55.0,
               child: Center(
-                child: Text('Add list', style: buttonTextStyle),
+                child: Text('Add list',
+                    style: TextStyle(color: primaryColor, fontSize: 23.0)),
               ),
             )));
   }

@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:tasks/models/Todo.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +50,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
             },
             child: Text(
               "Cancel",
-              style: menuTextStyleGreen,
+              style: TextStyle(fontSize: 20.0, color: primaryColor),
             ),
           ),
         ),
@@ -78,7 +79,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
                 }
               },
               child: Text((widget.index == null) ? 'Add' : 'Update',
-                  style: menuTextStyleGreen),
+                  style: TextStyle(fontSize: 20.0, color: primaryColor)),
             ),
           )
         ],
