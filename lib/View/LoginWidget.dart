@@ -107,8 +107,8 @@ class _LogInState extends State<LogIn> {
               ),
               onPressed: () {
                 if (formkey.currentState!.validate()) {
-                  authController.signIn(
-                      emailController, passwordController, context);
+                  authController.signIn(emailController.text.trim(),
+                      passwordController.text.trim(), context);
                 }
               },
               child: const Text('LOGIN'),

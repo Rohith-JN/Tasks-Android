@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasks/controllers/userController.dart';
+import 'package:tasks/main.dart';
+import 'package:tasks/models/User.dart';
+import 'package:tasks/services/database.service.dart';
 
 import '../utils/global.dart';
 
@@ -15,7 +19,7 @@ class AuthController extends GetxController {
     _firebaseUser.bindStream(_auth.authStateChanges());
   }
 
-  Future signIn(emailController, passwordController, context) async {
+  Future signIn(String email, String password, context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -24,20 +28,23 @@ class AuthController extends GetxController {
               color: primaryColor,
             ))));
     try {
-      await _auth.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-      Navigator.of(context).pop();
+      UserCredential authResult = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      Get.find<UserController>().user =
+          await Database().getUser(authResult.user!.uid);
+      navigatorKey.currentState!.pop(context);
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         backgroundColor: secondaryColor,
         content: Text(e.message!, style: const TextStyle(color: Colors.white)),
       );
-      Navigator.of(context).pop();
+      navigatorKey.currentState!.pop(context);
+
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
-  Future signUp(emailController, passwordController, context) async {
+  Future signUp(email, password, name, context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -45,16 +52,22 @@ class AuthController extends GetxController {
                 child: CircularProgressIndicator(
               color: primaryColor,
             ))));
-    Navigator.of(context).pop();
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+      print(email);
+      UserCredential authResult = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      UserModel user =
+          UserModel(id: authResult.user!.uid, name: name, email: email);
+      if (await Database().createNewUser(user)) {
+        Get.find<UserController>().user = user;
+      }
+      navigatorKey.currentState!.pop(context);
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         backgroundColor: secondaryColor,
         content: Text(e.message!, style: const TextStyle(color: Colors.white)),
       );
-      Navigator.of(context).pop();
+      navigatorKey.currentState!.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -68,8 +81,7 @@ class AuthController extends GetxController {
               color: primaryColor,
             ))));
     try {
-      await _auth
-          .sendPasswordResetEmail(email: emailController.text);
+      await _auth.sendPasswordResetEmail(email: emailController.text);
       var snackBar = const SnackBar(
         backgroundColor: secondaryColor,
         content: Text('Password Reset Email Sent',
@@ -83,7 +95,7 @@ class AuthController extends GetxController {
         content: Text(e.message!, style: const TextStyle(color: Colors.white)),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.of(context).pop();
+      navigatorKey.currentState!.pop(context);
     }
   }
 
@@ -110,12 +122,12 @@ class AuthController extends GetxController {
                 Navigator.of(context).pop();
                 Navigator.pop(context, 'Cancel');
               },
-              child:
-                  Text('Cancel', style: TextStyle(color: primaryColor)),
+              child: Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
               onPressed: () {
                 _auth.signOut();
+                Get.find<UserController>().clear();
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
@@ -157,12 +169,14 @@ class AuthController extends GetxController {
                 Navigator.of(context).pop();
                 Navigator.pop(context, 'Cancel');
               },
-              child:
-                  Text('Cancel', style: TextStyle(color: primaryColor)),
+              child: Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
               onPressed: () {
-                _auth.currentUser!.delete();
+                try {
+                  _auth.currentUser!.delete();
+                } on FirebaseAuthException catch (e) {}
+                Database().deleteUser(_auth.currentUser!.uid);
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },

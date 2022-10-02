@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:tasks/controllers/bindings/authBinding.dart';
+import 'package:tasks/controllers/bindings/Bindings.dart';
+import 'package:tasks/controllers/userController.dart';
 import 'package:tasks/services/Notification.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialBinding: AuthBinding(),
+      initialBinding: Binding(),
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Tasks',
@@ -38,7 +39,10 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(color: primaryColor,));
+              return Center(
+                  child: CircularProgressIndicator(
+                color: primaryColor,
+              ));
             } else if (snapshot.hasError) {
               return Center(
                   child: Text("Something went wrong!", style: headingWhite));

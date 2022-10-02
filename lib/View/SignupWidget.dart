@@ -104,8 +104,8 @@ class _SignUpState extends State<SignUp> {
               ),
               onPressed: () {
                 if (formkey.currentState!.validate()) {
-                  authController.signUp(emailController,
-                      passwordController, context);
+                  authController.signUp(emailController.text.trim(),
+                      passwordController.text, nameController.text, context);
                 }
               },
               child: const Text('SIGNUP'),
