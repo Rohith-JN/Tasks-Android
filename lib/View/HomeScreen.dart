@@ -1,8 +1,7 @@
 // ignore_for_file: file_names, empty_statements
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tasks/controllers/Controller.dart';
-import 'package:tasks/services/Functions.dart';
+import 'package:tasks/controllers/controller.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:tasks/view/TodoScreen.dart';
 import 'package:flutter/services.dart';
-import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +23,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String now = DateFormat("MM/dd/yyyy").format(DateTime.now());
   TimeOfDay currentTime = TimeOfDay.now();
+
+  tz.TZDateTime parse(date, time) {
+    String value = '${date} ${time}';
+    String currentFormat = "MM/dd/yyyy hh:mm a";
+    DateTime? dateTime = DateTime.now();
+    if (value != null || value.isNotEmpty) {
+      try {
+        bool isUtc = false;
+        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
+      } catch (e) {}
+    }
+    String parsed = dateTime!.toString();
+    return tz.TZDateTime.parse(tz.local, parsed);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -228,12 +241,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         .todos![index]
                                                         .dateAndTimeEnabled ==
                                                     false) {
-                                                  NotificationService()
-                                                      .flutterLocalNotificationsPlugin
-                                                      .cancel(arrayController
-                                                          .arrays[widget.index]
-                                                          .todos![index]
-                                                          .id);
+                                                  //NotificationService()
+                                                    //  .flutterLocalNotificationsPlugin
+                                                      //.cancel(arrayController
+                                                        //  .arrays[widget.index]
+                                                          //.todos![index]
+                                                          //.id);
                                                   arrayController.arrays
                                                       .refresh();
                                                 } else {

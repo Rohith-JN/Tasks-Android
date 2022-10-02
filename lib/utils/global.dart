@@ -62,6 +62,31 @@ InputDecoration emailInputDecoration = InputDecoration(
     hintText: 'Email',
     hintStyle: hintTextStyle);
 
+InputDecoration nameInputDecoration = InputDecoration(
+    contentPadding: const EdgeInsets.all(20.0),
+    isDense: true,
+    focusColor: Colors.transparent,
+    focusedBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(9),
+      ),
+      borderSide: BorderSide(
+        color: Colors.transparent,
+      ),
+    ),
+    filled: true,
+    fillColor: const Color.fromARGB(255, 48, 48, 48),
+    border: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(9),
+      ),
+      borderSide: BorderSide(
+        color: Colors.transparent,
+      ),
+    ),
+    hintText: 'Name',
+    hintStyle: hintTextStyle);
+
 InputDecoration passwordInputDecoration(
         passwordVisible, VoidCallback onPressed) =>
     InputDecoration(

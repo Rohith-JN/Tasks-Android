@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tasks/Authentication/auth.service.dart';
+import 'package:get/get.dart';
+import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:tasks/utils/validators.dart';
-import 'package:tasks/view/MainScreen.dart';
 
 class SignUp extends StatefulWidget {
   final VoidCallback onClickedSignIn;
@@ -13,12 +13,15 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final AuthController authController = Get.find();
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool passwordVisible = true;
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -32,6 +35,15 @@ class _SignUpState extends State<SignUp> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 40),
+          Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: TextFormField(
+                style: formInputText,
+                controller: nameController,
+                decoration: nameInputDecoration,
+                validator: Validator.nameValidator),
+          ),
+          const SizedBox(height: 15),
           Container(
             constraints: const BoxConstraints(maxWidth: 600),
             child: TextFormField(
@@ -58,7 +70,7 @@ class _SignUpState extends State<SignUp> {
           Container(
             constraints: const BoxConstraints(maxWidth: 600),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(9),
                 ),
                 boxShadow: [
@@ -77,20 +89,23 @@ class _SignUpState extends State<SignUp> {
             height: 60.0,
             child: ElevatedButton(
               style: ButtonStyle(
-  textStyle: MaterialStateProperty.all<TextStyle?>(
-      const TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-  shape: MaterialStateProperty.all<OutlinedBorder?>(
-    RoundedRectangleBorder(
-        side: const BorderSide(
-            color: Colors.transparent, width: 1, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(9)),
-  ),
-  backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
-),
+                textStyle: MaterialStateProperty.all<TextStyle?>(
+                    const TextStyle(
+                        fontSize: 25.0, fontWeight: FontWeight.bold)),
+                shape: MaterialStateProperty.all<OutlinedBorder?>(
+                  RoundedRectangleBorder(
+                      side: const BorderSide(
+                          color: Colors.transparent,
+                          width: 1,
+                          style: BorderStyle.solid),
+                      borderRadius: BorderRadius.circular(9)),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
+              ),
               onPressed: () {
                 if (formkey.currentState!.validate()) {
-                  Authentication.signUp(
-                      emailController, passwordController, context);
+                  authController.signUp(emailController,
+                      passwordController, context);
                 }
               },
               child: const Text('SIGNUP'),

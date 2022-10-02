@@ -1,13 +1,12 @@
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:tasks/authentication/auth.service.dart';
-import 'package:tasks/services/Functions.dart';
 import 'package:tasks/utils/routes.dart';
-import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/controllers/controller.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../controllers/authController.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -18,6 +17,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final ArrayController arrayController = Get.put(ArrayController());
+  final AuthController authController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +108,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             onTap: () {
                               Navigator.pop(context);
-                              Authentication.signOut(context);
+                              authController.signOut(context);
                             },
                           ),
                           ListTile(
@@ -122,7 +122,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             onTap: () {
                               Navigator.pop(context);
-                              Authentication.deleteAccount(context);
+                              authController.deleteAccount(context);
                             },
                           ),
                         ]),

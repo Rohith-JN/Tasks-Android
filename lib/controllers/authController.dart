@@ -1,9 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tasks/utils/global.dart';
+import 'package:get/get.dart';
 
-class Authentication {
-  static Future signIn(emailController, passwordController, context) async {
+import '../utils/global.dart';
+
+class AuthController extends GetxController {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  Rxn<User> _firebaseUser = Rxn<User>();
+
+  String? get user => _firebaseUser.value!.email;
+
+  @override
+  void onInit() {
+    _firebaseUser.bindStream(_auth.authStateChanges());
+  }
+
+  Future signIn(emailController, passwordController, context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -12,7 +24,7 @@ class Authentication {
               color: primaryColor,
             ))));
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
@@ -25,7 +37,7 @@ class Authentication {
     }
   }
 
-  static Future signUp(emailController, passwordController, context) async {
+  Future signUp(emailController, passwordController, context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -35,7 +47,7 @@ class Authentication {
             ))));
     Navigator.of(context).pop();
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
@@ -47,7 +59,7 @@ class Authentication {
     }
   }
 
-  static Future resetPassword(context, emailController) async {
+  Future resetPassword(context, emailController) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -56,7 +68,7 @@ class Authentication {
               color: primaryColor,
             ))));
     try {
-      await FirebaseAuth.instance
+      await _auth
           .sendPasswordResetEmail(email: emailController.text);
       var snackBar = const SnackBar(
         backgroundColor: secondaryColor,
@@ -75,7 +87,7 @@ class Authentication {
     }
   }
 
-  static Future signOut(context) async {
+  Future signOut(context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -103,7 +115,7 @@ class Authentication {
             ),
             TextButton(
               onPressed: () {
-                FirebaseAuth.instance.signOut();
+                _auth.signOut();
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
@@ -121,7 +133,7 @@ class Authentication {
     }
   }
 
-  static Future deleteAccount(context) async {
+  Future deleteAccount(context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -150,7 +162,7 @@ class Authentication {
             ),
             TextButton(
               onPressed: () {
-                FirebaseAuth.instance.currentUser!.delete();
+                _auth.currentUser!.delete();
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },

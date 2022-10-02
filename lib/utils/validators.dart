@@ -1,6 +1,9 @@
 import 'package:form_field_validator/form_field_validator.dart';
 
 class Validator {
+  static MultiValidator nameValidator = MultiValidator([
+    RequiredValidator(errorText: "* Required"),
+  ]);
   static MultiValidator emailValidator = MultiValidator([
     RequiredValidator(errorText: "* Required"),
     EmailValidator(errorText: "Enter valid email id"),

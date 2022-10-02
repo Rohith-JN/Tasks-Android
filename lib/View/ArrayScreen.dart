@@ -5,7 +5,7 @@ import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/controllers/controller.dart';
 import 'package:tasks/models/Array.dart';
 import 'package:tasks/utils/validators.dart';
 

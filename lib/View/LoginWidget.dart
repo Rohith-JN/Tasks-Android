@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/utils/global.dart';
-import 'package:tasks/authentication/auth.service.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:tasks/utils/validators.dart';
 
@@ -14,6 +15,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  final AuthController authController = Get.find();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -105,7 +107,7 @@ class _LogInState extends State<LogIn> {
               ),
               onPressed: () {
                 if (formkey.currentState!.validate()) {
-                  Authentication.signIn(
+                  authController.signIn(
                       emailController, passwordController, context);
                 }
               },

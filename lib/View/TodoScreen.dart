@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:tasks/controllers/Controller.dart';
+import 'package:tasks/controllers/controller.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,7 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
+  
   final ArrayController arrayController = Get.find();
 
   @override

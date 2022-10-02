@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:tasks/controllers/bindings/authBinding.dart';
 import 'package:tasks/services/Notification.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialBinding: AuthBinding(),
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Tasks',

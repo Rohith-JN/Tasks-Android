@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tasks/authentication/auth.service.dart';
+import 'package:get/get.dart';
+import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:tasks/utils/validators.dart';
 
@@ -11,6 +12,7 @@ class Password extends StatefulWidget {
 }
 
 class _PasswordState extends State<Password> {
+  final AuthController authController = Get.find();
   TextEditingController emailController = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
@@ -112,7 +114,7 @@ class _PasswordState extends State<Password> {
                       ),
                       onPressed: () {
                         if (formkey.currentState!.validate()) {
-                          Authentication.resetPassword(
+                          authController.resetPassword(
                               context, emailController);
                         }
                       },
