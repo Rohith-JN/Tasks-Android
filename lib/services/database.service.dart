@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tasks/models/Array.dart';
 import 'package:tasks/models/User.dart';
 
 class Database {
@@ -29,11 +30,40 @@ class Database {
     }
   }
 
-  void deleteUser(String uid) async {
+  Future<void> deleteUser(String uid) async {
     try {
       await _firestore.collection("users").doc(uid).delete();
     } catch (e) {
       print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> addArray(String uid, String title) async {
+    try {
+      await _firestore.collection("users").doc(uid).collection("arrays").add({
+        'dateCreated': Timestamp.now(),
+        'title': title,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+   Future<void> updateArray(String uid, String title, String docId) async {
+    try {
+      await _firestore.collection("users").doc(uid).collection("arrays").doc(docId).update({
+        "title": title
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+   Future<void> deleteArray(String uid, String docId) async {
+    try {
+      await _firestore.collection("users").doc(uid).collection("arrays").doc(docId).delete();
+    } catch (e) {
       rethrow;
     }
   }

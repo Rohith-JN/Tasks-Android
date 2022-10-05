@@ -35,7 +35,6 @@ dependencies:
   rxdart: ^0.27.3
   flutter_local_notifications: ^9.1.5
   intl: ^0.17.0
-  get_storage: ^2.0.3
   audioplayers: ^0.20.1
   flutter_native_timezone: ^2.0.0
   flutter:

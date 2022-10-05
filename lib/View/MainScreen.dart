@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:tasks/controllers/arrayController.dart';
+import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/routes.dart';
-import 'package:tasks/controllers/controller.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,8 +18,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final ArrayController arrayController = Get.put(ArrayController());
   final AuthController authController = Get.find();
+  final ArrayController arrayController = Get.put(ArrayController());
+  final String uid = Get.find<AuthController>().user!.uid;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -249,89 +252,96 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 Column(
                   children: [
-                    Obx(() => (arrayController.arrays.isEmpty)
-                        ? Container(
-                            height: MediaQuery.of(context).size.height * 0.37,
-                            child: Center(
-                                child: Text("Add new lists",
-                                    style: buttonTextStyleWhite)),
-                          )
-                        : Container(
-                            height: MediaQuery.of(context).size.height * 0.37,
-                            child: ListView.separated(
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                      onLongPress: () {
-                                        Navigator.of(context).push(
-                                            Routes.routeToArrayScreenIndex(
-                                                index));
-                                      },
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            Routes.routeToHomeScreen(index));
-                                      },
-                                      child: Dismissible(
-                                        key: UniqueKey(),
-                                        direction: DismissDirection.startToEnd,
-                                        onDismissed: (_) {
-                                          HapticFeedback.heavyImpact();
-                                          arrayController.arrays
-                                              .removeAt(index);
+                    Container(
+                        height: MediaQuery.of(context).size.height * 0.37,
+                        child: GetX<ArrayController>(
+                            init: Get.put<ArrayController>(ArrayController()),
+                            builder: (ArrayController arrayController) {
+                              return ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) =>
+                                      GestureDetector(
+                                        onLongPress: () {
+                                          Navigator.of(context).push(
+                                              Routes.routeToArrayScreenIndex(
+                                                  index));
                                         },
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.07,
-                                          decoration: BoxDecoration(
-                                              color: tertiaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 25.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 20.0),
-                                                  child: Text(
-                                                    arrayController
-                                                        .arrays[index].title,
-                                                    style: GoogleFonts.notoSans(
-                                                        color: Colors.white,
-                                                        fontSize: 25.0),
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              Routes.routeToHomeScreen(index));
+                                        },
+                                        child: Dismissible(
+                                          key: UniqueKey(),
+                                          direction:
+                                              DismissDirection.startToEnd,
+                                          onDismissed: (_) {
+                                            HapticFeedback.heavyImpact();
+                                            Database().deleteArray(
+                                                uid,
+                                                arrayController
+                                                        .arrays[index].id ??
+                                                    '');
+                                          },
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.07,
+                                            decoration: BoxDecoration(
+                                                color: tertiaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        14.0)),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 25.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 20.0),
+                                                    child: Text(
+                                                      arrayController
+                                                              .arrays[index]
+                                                              .title ??
+                                                          '',
+                                                      style:
+                                                          GoogleFonts.notoSans(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 25.0),
+                                                    ),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 20.0),
-                                                  child: Text(
-                                                    '${(arrayController.arrays[index].todos?.length == null) ? '0' : arrayController.arrays[index].todos?.length}',
-                                                    style: GoogleFonts.notoSans(
-                                                        color: primaryColor,
-                                                        fontSize: 27.0),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 20.0),
+                                                    child: Text(
+                                                      '0',
+                                                      style:
+                                                          GoogleFonts.notoSans(
+                                                              color:
+                                                                  primaryColor,
+                                                              fontSize: 27.0),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                separatorBuilder: (_, __) => const SizedBox(
-                                      height: 15.0,
-                                    ),
-                                itemCount: arrayController.arrays.length),
-                          )),
+                                  separatorBuilder: (_, __) => const SizedBox(
+                                        height: 15.0,
+                                      ),
+                                  itemCount: arrayController.arrays.length);
+                            })),
                   ],
                 )
               ],

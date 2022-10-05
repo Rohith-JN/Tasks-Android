@@ -1,12 +1,14 @@
 // ignore_for_file: file_names
 
+import 'package:tasks/controllers/authController.dart';
+import 'package:tasks/controllers/userController.dart';
 import 'package:tasks/models/Todo.dart';
+import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tasks/controllers/controller.dart';
-import 'package:tasks/models/Array.dart';
+import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/validators.dart';
 
 class ArrayScreen extends StatefulWidget {
@@ -20,10 +22,11 @@ class ArrayScreen extends StatefulWidget {
 
 class _ArrayScreenState extends State<ArrayScreen> {
   final ArrayController arrayController = Get.find();
+  final AuthController authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    String title = '';
+    String? title = '';
 
     if (widget.index != null) {
       title = arrayController.arrays[widget.index!].title;
@@ -32,7 +35,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
     TextEditingController titleEditingController =
         TextEditingController(text: title);
 
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -62,18 +65,20 @@ class _ArrayScreenState extends State<ArrayScreen> {
                 splashFactory: NoSplash.splashFactory,
               ),
               onPressed: () {
-                if (widget.index == null && _formKey.currentState!.validate()) {
-                  arrayController.arrays.add(Array(
-                      title: titleEditingController.text,
-                      id: UniqueKey().hashCode,
-                      todos: []));
+                if (widget.index == null && formKey.currentState!.validate()) {
+                  Database().addArray(
+                      authController.user!.uid, titleEditingController.text);
+                  //arrayController.arrays.add(Array(
+                  //title: titleEditingController.text,
+                  //id: UniqueKey().hashCode,
+                  //todos: []));
                   Get.back();
                   HapticFeedback.heavyImpact();
                 }
-                if (widget.index != null && _formKey.currentState!.validate()) {
-                  var editing = arrayController.arrays[widget.index!];
-                  editing.title = titleEditingController.text;
-                  arrayController.arrays[widget.index!] = editing;
+                if (widget.index != null && formKey.currentState!.validate()) {
+                  //var editing = arrayController.arrays[widget.index!];
+                  //editing.title = titleEditingController.text;
+                  //arrayController.arrays[widget.index!] = editing;
                   Get.back();
                   HapticFeedback.heavyImpact();
                 }
@@ -97,7 +102,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
                   child: Form(
-                    key: _formKey,
+                    key: formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:tasks/controllers/controller.dart';
+import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -170,7 +170,6 @@ class _TodoScreenState extends State<TodoScreen> {
                     dateAndTimeEnabled: true,
                     id: UniqueKey().hashCode,
                   ));
-                  arrayController.arrays.refresh();
                   Get.back();
                   HapticFeedback.heavyImpact();
                   // showNotification();
@@ -186,7 +185,6 @@ class _TodoScreenState extends State<TodoScreen> {
                   editing.dateAndTimeEnabled = true;
                   arrayController.arrays[widget.arrayIndex]
                       .todos![widget.todoIndex!] = editing;
-                  arrayController.arrays.refresh();
 
                   Get.back();
                   HapticFeedback.heavyImpact();

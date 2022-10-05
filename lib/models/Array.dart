@@ -1,25 +1,19 @@
 // ignore_for_file: file_names
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tasks/models/Todo.dart';
 
-class Array {
-  String title;
-  int id;
+class ArrayModel {
+  String? title;
+  String? id;
   List<Todo>? todos;
-  Array({
-    required this.title,
-    required this.id,
-    required this.todos
-  });
+  Timestamp? dateCreated;
 
-  factory Array.fromJson(Map<String, dynamic> json) => Array(
-      id: json['id'],
-      title: json['title'],
-      todos: json['todos']
-      );
+  ArrayModel({this.title, this.id, this.todos, this.dateCreated});
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'todos': todos
-      };
+  ArrayModel.fromMap(DocumentSnapshot doc) {
+    title = doc["title"];
+    id = doc.id;
+    todos = doc["todos"];
+    dateCreated = doc["dateCreated"];
+  }
 }

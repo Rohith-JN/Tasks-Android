@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, empty_statements
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tasks/controllers/controller.dart';
+import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ArrayController arrayController = Get.put(ArrayController());
   String now = DateFormat("MM/dd/yyyy").format(DateTime.now());
   TimeOfDay currentTime = TimeOfDay.now();
 
@@ -40,11 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ArrayController arrayController = Get.put(ArrayController());
+  String? title = arrayController.arrays[widget.index].title;
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text(arrayController.arrays[widget.index].title,
+          title: Text(title!,
               style: GoogleFonts.notoSans(
                 fontSize: 30,
                 color: primaryColor,
@@ -81,7 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .arrays[widget.index].todos![index].id);
                                 arrayController.arrays[widget.index].todos!
                                     .removeAt(index);
-                                arrayController.arrays.refresh();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(
@@ -139,8 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     arrayController
                                                         .arrays[widget.index]
                                                         .todos![index] = changed;
-                                                    arrayController.arrays
-                                                        .refresh();
                                                   }),
                                             ),
                                           )
@@ -247,12 +245,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         //  .arrays[widget.index]
                                                           //.todos![index]
                                                           //.id);
-                                                  arrayController.arrays
-                                                      .refresh();
                                                 } else {
                                                   // showNotification();
-                                                  arrayController.arrays
-                                                      .refresh();
                                                 }
                                               },
                                               value: arrayController
