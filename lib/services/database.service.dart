@@ -39,7 +39,7 @@ class Database {
     }
   }
 
-  Future<void> addArray(String uid, String title) async {
+  Future<void> addArray(String uid, String title, String arrayId) async {
     try {
       await _firestore.collection("users").doc(uid).collection("arrays").add({
         'dateCreated': Timestamp.now(),
@@ -50,19 +50,27 @@ class Database {
     }
   }
 
-   Future<void> updateArray(String uid, String title, String docId) async {
+  Future<void> updateArray(String uid, String title, String docId) async {
     try {
-      await _firestore.collection("users").doc(uid).collection("arrays").doc(docId).update({
-        "title": title
-      });
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("arrays")
+          .doc(docId)
+          .update({"title": title});
     } catch (e) {
       rethrow;
     }
   }
 
-   Future<void> deleteArray(String uid, String docId) async {
+  Future<void> deleteArray(String uid, String docId) async {
     try {
-      await _firestore.collection("users").doc(uid).collection("arrays").doc(docId).delete();
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("arrays")
+          .doc(docId)
+          .delete();
     } catch (e) {
       rethrow;
     }

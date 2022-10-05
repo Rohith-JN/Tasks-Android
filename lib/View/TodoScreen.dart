@@ -22,7 +22,6 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  
   final ArrayController arrayController = Get.find();
 
   @override
@@ -33,6 +32,7 @@ class _TodoScreenState extends State<TodoScreen> {
     String? time = '';
 
     if (widget.todoIndex != null) {
+      /*
       title = arrayController
           .arrays[widget.arrayIndex].todos![widget.todoIndex!].title;
       detail = arrayController
@@ -41,6 +41,7 @@ class _TodoScreenState extends State<TodoScreen> {
           .arrays[widget.arrayIndex].todos![widget.todoIndex!].date!;
       time = arrayController
           .arrays[widget.arrayIndex].todos![widget.todoIndex!].time;
+      */
     }
 
     TextEditingController titleEditingController =
@@ -162,6 +163,7 @@ class _TodoScreenState extends State<TodoScreen> {
               onPressed: () {
                 if (widget.todoIndex == null &&
                     _formKey.currentState!.validate()) {
+                  /*
                   arrayController.arrays[widget.arrayIndex].todos?.add(Todo(
                     details: detailEditingController.text,
                     title: titleEditingController.text,
@@ -170,12 +172,14 @@ class _TodoScreenState extends State<TodoScreen> {
                     dateAndTimeEnabled: true,
                     id: UniqueKey().hashCode,
                   ));
+                  */
                   Get.back();
                   HapticFeedback.heavyImpact();
                   // showNotification();
                 }
                 if (widget.todoIndex != null &&
                     _formKey.currentState!.validate()) {
+                  /*
                   var editing = arrayController
                       .arrays[widget.arrayIndex].todos![widget.todoIndex!];
                   editing.title = titleEditingController.text;
@@ -185,7 +189,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   editing.dateAndTimeEnabled = true;
                   arrayController.arrays[widget.arrayIndex]
                       .todos![widget.todoIndex!] = editing;
-
+*/
                   Get.back();
                   HapticFeedback.heavyImpact();
                   // showNotification();

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tasks/view/ArrayScreen.dart';
-import 'package:tasks/view/HomeScreen.dart';
 import 'package:tasks/view/PasswordScreen.dart';
 import 'package:tasks/view/SignupWidget.dart';
 import 'package:tasks/view/TodoScreen.dart';
@@ -66,10 +65,10 @@ class Routes {
     );
   }
 
-  static Route routeToArrayScreenIndex(index) {
+  static Route routeToArrayScreenIndex(index, docId) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          ArrayScreen(index: index),
+          ArrayScreen(index: index, docId: docId),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
@@ -85,7 +84,7 @@ class Routes {
       },
     );
   }
-
+  /*
   static Route routeToHomeScreen(index) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(
@@ -106,4 +105,5 @@ class Routes {
       },
     );
   }
+  */
 }

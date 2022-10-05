@@ -1,5 +1,5 @@
 // ignore_for_file: file_names, empty_statements
-
+/*
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/global.dart';
@@ -287,3 +287,4 @@ class _HomeScreenState extends State<HomeScreen> {
             )));
   }
 }
+*/

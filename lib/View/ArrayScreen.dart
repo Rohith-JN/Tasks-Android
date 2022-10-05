@@ -13,8 +13,9 @@ import 'package:tasks/utils/validators.dart';
 
 class ArrayScreen extends StatefulWidget {
   final int? index;
+  final String? docId;
 
-  const ArrayScreen({Key? key, this.index}) : super(key: key);
+  const ArrayScreen({Key? key, this.index, this.docId}) : super(key: key);
 
   @override
   State<ArrayScreen> createState() => _ArrayScreenState();
@@ -66,8 +67,8 @@ class _ArrayScreenState extends State<ArrayScreen> {
               ),
               onPressed: () {
                 if (widget.index == null && formKey.currentState!.validate()) {
-                  Database().addArray(
-                      authController.user!.uid, titleEditingController.text);
+                  Database().addArray(authController.user!.uid,
+                      titleEditingController.text, widget.docId ?? '');
                   //arrayController.arrays.add(Array(
                   //title: titleEditingController.text,
                   //id: UniqueKey().hashCode,
@@ -76,9 +77,11 @@ class _ArrayScreenState extends State<ArrayScreen> {
                   HapticFeedback.heavyImpact();
                 }
                 if (widget.index != null && formKey.currentState!.validate()) {
-                  //var editing = arrayController.arrays[widget.index!];
-                  //editing.title = titleEditingController.text;
-                  //arrayController.arrays[widget.index!] = editing;
+                  var editing = arrayController.arrays[widget.index!];
+                  editing.title = titleEditingController.text;
+                  arrayController.arrays[widget.index!] = editing;
+                  Database().updateArray(
+                      authController.user!.uid, editing.title!, widget.docId!);
                   Get.back();
                   HapticFeedback.heavyImpact();
                 }
