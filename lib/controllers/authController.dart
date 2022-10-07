@@ -172,10 +172,8 @@ class AuthController extends GetxController {
               child: Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
-              onPressed: () {
-                try {
-                  _auth.currentUser!.delete();
-                } on FirebaseAuthException catch (e) {}
+              onPressed: () async {
+                await _auth.currentUser!.delete();
                 Database().deleteUser(_auth.currentUser!.uid);
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
