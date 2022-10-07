@@ -1,38 +1,39 @@
 // ignore_for_file: file_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Todo {
-  String title;
-  String details;
+  String? id;
+  int? intId;
+  String? title;
+  String? details;
   String? date;
   String? time;
-  bool done;
-  bool dateAndTimeEnabled;
-  int id;
-  Todo(
-      {required this.title,
-      required this.details,
-      required this.date,
-      required this.time,
-      this.dateAndTimeEnabled = true,
-      required this.id,
-      this.done = false});
+  bool? dateAndTimeEnabled;
+  bool? done;
+  Timestamp? dateCreated;
 
-  factory Todo.fromJson(Map<String, dynamic> json) => Todo(
-      id: json['id'],
-      title: json['title'],
-      details: json['details'],
-      done: json['done'],
-      date: json['date'],
-      time: json['time'],
-      dateAndTimeEnabled: json['dateAndTimeEnabled']);
+  Todo({
+    this.id,
+    this.intId,
+    this.title,
+    this.details,
+    this.date,
+    this.time,
+    this.dateAndTimeEnabled,
+    this.done,
+    this.dateCreated,
+  });
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'details': details,
-        'done': done,
-        'date': date,
-        'time': time,
-        'dateAndTimeEnabled': dateAndTimeEnabled
-      };
+  Todo.fromMap(DocumentSnapshot doc) {
+    id = doc.id;
+    intId = doc["intId"];
+    title = doc['title'];
+    details = doc['details'];
+    date = doc['date'];
+    time = doc['time'];
+    done = doc['done'];
+    dateAndTimeEnabled = doc['dateAndTimeEnabled'];
+    dateCreated = doc['dateCreated'];
+  }
 }

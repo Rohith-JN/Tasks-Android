@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 //  Colors
 
 const backgroundColor = Colors.black;
-var primaryColor = Color(0xFF28D8A1);
+var primaryColor = Color(0xFF33aaf6);
 const formInputColor = Color.fromARGB(255, 48, 48, 48);
 const secondaryColor = Color(0xFF707070);
 const tertiaryColor = Color.fromARGB(255, 37, 37, 37);
@@ -142,11 +142,11 @@ TextStyle todoDetailsStyle(condition) => GoogleFonts.notoSans(
           (condition) ? TextDecoration.lineThrough : TextDecoration.none,
     );
 
-TextStyle todoTimeStyle(condition1, condition2) => GoogleFonts.notoSans(
-      color: (condition1) ? const Color(0xFFA8A8A8) : Colors.redAccent,
+TextStyle todoTimeStyle(condition1) => GoogleFonts.notoSans(
+      color: const Color(0xFFA8A8A8),
       fontSize: 20.0,
       decoration:
-          (condition2) ? TextDecoration.lineThrough : TextDecoration.none,
+          (condition1) ? TextDecoration.lineThrough : TextDecoration.none,
     );
 
 TextStyle buttonTextStyleWhite =

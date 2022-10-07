@@ -1,28 +1,50 @@
 // ignore_for_file: file_names
 
-import 'package:tasks/controllers/arrayController.dart';
+import 'dart:async';
+import 'package:tasks/controllers/authController.dart';
+import 'package:tasks/controllers/todoController.dart';
+import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tasks/models/Todo.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/utils/validators.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class TodoScreen extends StatefulWidget {
-  final int? todoIndex;
-  final int arrayIndex;
+  final int? index;
+  final String? id;
 
-  const TodoScreen({Key? key, this.todoIndex, required this.arrayIndex})
-      : super(key: key);
+  const TodoScreen({Key? key, this.index, this.id}) : super(key: key);
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  final ArrayController arrayController = Get.find();
+  final TodoController todoController = Get.find();
+  final AuthController authController = Get.find();
+
+  tz.TZDateTime parse(date, time) {
+    String value = '$date $time';
+    String currentFormat = "MM/dd/yyyy hh:mm a";
+    DateTime? dateTime = DateTime.now();
+    if (value != null || value.isNotEmpty) {
+      try {
+        bool isUtc = false;
+        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
+      } catch (e) {}
+    }
+    String parsed = dateTime!.toString();
+    return tz.TZDateTime.parse(tz.local, parsed);
+  }
+
+  bool done = false;
+  bool dateAndTimeEnabled = false;
+  int intId = UniqueKey().hashCode;
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +53,11 @@ class _TodoScreenState extends State<TodoScreen> {
     String date = '';
     String? time = '';
 
-    if (widget.todoIndex != null) {
-      /*
-      title = arrayController
-          .arrays[widget.arrayIndex].todos![widget.todoIndex!].title;
-      detail = arrayController
-          .arrays[widget.arrayIndex].todos![widget.todoIndex!].details;
-      date = arrayController
-          .arrays[widget.arrayIndex].todos![widget.todoIndex!].date!;
-      time = arrayController
-          .arrays[widget.arrayIndex].todos![widget.todoIndex!].time;
-      */
+    if (widget.index != null) {
+      title = todoController.todos[widget.index!].title ?? '';
+      detail = todoController.todos[widget.index!].details ?? '';
+      date = todoController.todos[widget.index!].date!;
+      time = todoController.todos[widget.index!].time;
     }
 
     TextEditingController titleEditingController =
@@ -133,10 +149,14 @@ class _TodoScreenState extends State<TodoScreen> {
 
     final _formKey = GlobalKey<FormState>();
 
+    final StreamController<bool> checkBoxController = StreamController();
+    final StreamController<bool> dateAndTimeEnabledController =
+        StreamController();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text((widget.todoIndex == null) ? 'New Task' : 'Edit Task',
+        title: Text((widget.index == null) ? 'New Task' : 'Edit Task',
             style: menuTextStyle),
         leadingWidth: 90.0,
         leading: Center(
@@ -161,41 +181,54 @@ class _TodoScreenState extends State<TodoScreen> {
                 splashFactory: NoSplash.splashFactory,
               ),
               onPressed: () {
-                if (widget.todoIndex == null &&
-                    _formKey.currentState!.validate()) {
-                  /*
-                  arrayController.arrays[widget.arrayIndex].todos?.add(Todo(
-                    details: detailEditingController.text,
-                    title: titleEditingController.text,
-                    date: _dateController.text,
-                    time: _timeController.text,
-                    dateAndTimeEnabled: true,
-                    id: UniqueKey().hashCode,
-                  ));
-                  */
+                if (widget.index == null && _formKey.currentState!.validate()) {
+                  Database().addTodo(
+                      authController.user!.uid,
+                      intId,
+                      titleEditingController.text,
+                      detailEditingController.text,
+                      _dateController.text,
+                      _timeController.text,
+                      (_dateController.text != '' && _timeController.text != '')
+                          ? true
+                          : false,
+                      false);
                   Get.back();
                   HapticFeedback.heavyImpact();
-                  // showNotification();
+                  NotificationService().showNotification(
+                      intId,
+                      'Reminder',
+                      titleEditingController.text,
+                      parse(_dateController.text, _timeController.text));
                 }
-                if (widget.todoIndex != null &&
-                    _formKey.currentState!.validate()) {
-                  /*
-                  var editing = arrayController
-                      .arrays[widget.arrayIndex].todos![widget.todoIndex!];
+                if (widget.index != null && _formKey.currentState!.validate()) {
+                  var editing = todoController.todos[widget.index!];
                   editing.title = titleEditingController.text;
                   editing.details = detailEditingController.text;
                   editing.date = _dateController.text;
                   editing.time = _timeController.text;
-                  editing.dateAndTimeEnabled = true;
-                  arrayController.arrays[widget.arrayIndex]
-                      .todos![widget.todoIndex!] = editing;
-*/
+                  editing.done = done;
+                  editing.dateAndTimeEnabled = dateAndTimeEnabled;
+                  todoController.todos[widget.index!] = editing;
+                  Database().updateTodo(
+                      authController.user!.uid,
+                      editing.title!,
+                      editing.details!,
+                      editing.date!,
+                      editing.time!,
+                      editing.dateAndTimeEnabled!,
+                      editing.done!,
+                      widget.id!);
                   Get.back();
                   HapticFeedback.heavyImpact();
-                  // showNotification();
+                  NotificationService().showNotification(
+                      todoController.todos[widget.index!].intId!,
+                      'Reminder',
+                      titleEditingController.text,
+                      parse(_dateController.text, _timeController.text));
                 }
               },
-              child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
+              child: Text((widget.index == null) ? 'Add' : 'Update',
                   style: TextStyle(fontSize: 20.0, color: primaryColor)),
             ),
           )
@@ -250,6 +283,58 @@ class _TodoScreenState extends State<TodoScreen> {
                       ],
                     ),
                   )),
+              Visibility(
+                visible: (widget.index != null) ? true : false,
+                child: Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: tertiaryColor,
+                        borderRadius: BorderRadius.circular(14.0)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 20.0),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Completed",
+                            style: todoScreenStyle,
+                          ),
+                          Transform.scale(
+                            scale: 1.3,
+                            child: Theme(
+                              data: ThemeData(
+                                  unselectedWidgetColor:
+                                      const Color.fromARGB(255, 187, 187, 187)),
+                              child: StreamBuilder(
+                                  stream: checkBoxController.stream,
+                                  initialData: (widget.index == null)
+                                      ? false
+                                      : todoController
+                                          .todos[widget.index!].done,
+                                  builder:
+                                      (context, AsyncSnapshot<bool> snapshot) {
+                                    return Checkbox(
+                                        shape: const CircleBorder(),
+                                        checkColor: Colors.white,
+                                        activeColor: primaryColor,
+                                        value: snapshot.data,
+                                        side: Theme.of(context)
+                                            .checkboxTheme
+                                            .side,
+                                        onChanged: (value) {
+                                          checkBoxController.sink.add(value!);
+                                          done = value;
+                                        });
+                                  }),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+              ),
               Container(
                   margin: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
@@ -258,58 +343,94 @@ class _TodoScreenState extends State<TodoScreen> {
                       borderRadius: BorderRadius.circular(14.0)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
-                  child: Row(
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            _selectDate(context);
-                          },
-                          child: TextField(
-                            enabled: false,
-                            controller: _dateController,
-                            onChanged: (String val) {
-                              _setDate = val;
-                            },
-                            decoration: InputDecoration(
-                                hintText: "Date",
-                                counterStyle: counterTextStyle,
-                                hintStyle: hintTextStyle,
-                                border: InputBorder.none),
-                            style: todoScreenStyle,
-                          ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Reminder",
+                              style: todoScreenStyle,
+                            ),
+                            Transform.scale(
+                              scale: 1.3,
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: const Color.fromARGB(
+                                        255, 187, 187, 187)),
+                                child: StreamBuilder(
+                                    stream: dateAndTimeEnabledController.stream,
+                                    initialData: (widget.index == null)
+                                        ? false
+                                        : todoController.todos[widget.index!]
+                                            .dateAndTimeEnabled,
+                                    builder: (context,
+                                        AsyncSnapshot<bool> snapshot) {
+                                      return Checkbox(
+                                          shape: const CircleBorder(),
+                                          checkColor: Colors.white,
+                                          activeColor: primaryColor,
+                                          value: snapshot.data,
+                                          side: Theme.of(context)
+                                              .checkboxTheme
+                                              .side,
+                                          onChanged: (value) {
+                                            dateAndTimeEnabledController.sink
+                                                .add(value!);
+                                            if (value == false) {
+                                              _timeController.clear();
+                                              _dateController.clear();
+                                              dateAndTimeEnabled = false;
+                                            }
+                                            if (_timeController.text != '' &&
+                                                _dateController.text != '') {
+                                              dateAndTimeEnabled = true;
+                                            }
+                                          });
+                                    }),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                    ],
-                  )),
-              Container(
-                  margin: const EdgeInsets.only(top: 20.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: tertiaryColor,
-                      borderRadius: BorderRadius.circular(14.0)),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 15.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            _selectTime(context);
+                      dividerStyle,
+                      GestureDetector(
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                        child: TextField(
+                          enabled: false,
+                          controller: _dateController,
+                          onChanged: (String val) {
+                            _setDate = val;
                           },
-                          child: TextFormField(
-                            onChanged: (String val) {
-                              _setTime = val;
-                            },
-                            enabled: false,
-                            controller: _timeController,
-                            decoration: InputDecoration(
-                                hintText: "Time",
-                                counterStyle: counterTextStyle,
-                                hintStyle: hintTextStyle,
-                                border: InputBorder.none),
-                            style: todoScreenStyle,
-                          ),
+                          decoration: InputDecoration(
+                              hintText: "Select Date",
+                              counterStyle: counterTextStyle,
+                              hintStyle: hintTextStyle,
+                              border: InputBorder.none),
+                          style: todoScreenStyle,
+                        ),
+                      ),
+                      dividerStyle,
+                      GestureDetector(
+                        onTap: () {
+                          _selectTime(context);
+                        },
+                        child: TextFormField(
+                          onChanged: (String val) {
+                            _setTime = val;
+                          },
+                          enabled: false,
+                          controller: _timeController,
+                          decoration: InputDecoration(
+                              hintText: "Select Time",
+                              counterStyle: counterTextStyle,
+                              hintStyle: hintTextStyle,
+                              border: InputBorder.none),
+                          style: todoScreenStyle,
                         ),
                       ),
                     ],

@@ -1,7 +1,9 @@
 // ignore_for_file: file_names, empty_statements
-/*
+
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tasks/controllers/arrayController.dart';
+import 'package:tasks/controllers/authController.dart';
+import 'package:tasks/controllers/todoController.dart';
+import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,20 +15,22 @@ import 'package:tasks/services/notification.service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
-  final int index;
-  const HomeScreen({Key? key, required this.index}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final ArrayController arrayController = Get.put(ArrayController());
+  final TodoController todoController = Get.put(TodoController());
+  final AuthController authController = Get.find();
+  final String uid = Get.find<AuthController>().user!.uid;
+
   String now = DateFormat("MM/dd/yyyy").format(DateTime.now());
   TimeOfDay currentTime = TimeOfDay.now();
 
   tz.TZDateTime parse(date, time) {
-    String value = '${date} ${time}';
+    String value = '$date $time';
     String currentFormat = "MM/dd/yyyy hh:mm a";
     DateTime? dateTime = DateTime.now();
     if (value != null || value.isNotEmpty) {
@@ -41,11 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-  String? title = arrayController.arrays[widget.index].title;
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text(title!,
+          title: Text('Tasks',
               style: GoogleFonts.notoSans(
                 fontSize: 30,
                 color: primaryColor,
@@ -57,222 +60,125 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: (arrayController.arrays[widget.index].todos!.isEmpty)
-                  ? Center(
+              child: (todoController.todos.isEmpty)
+                  ? const Center(
                       child: Text("Add new tasks",
                           style:
-                              TextStyle(color: primaryColor, fontSize: 23.0)))
-                  : ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) => GestureDetector(
-                            onTap: () {
-                              Get.to(() => TodoScreen(
-                                    todoIndex: index,
-                                    arrayIndex: widget.index,
-                                  ));
-                            },
-                            child: Dismissible(
-                              key: UniqueKey(),
-                              direction: DismissDirection.startToEnd,
-                              onDismissed: (_) {
-                                HapticFeedback.heavyImpact();
-                                NotificationService()
-                                    .flutterLocalNotificationsPlugin
-                                    .cancel(arrayController
-                                        .arrays[widget.index].todos![index].id);
-                                arrayController.arrays[widget.index].todos!
-                                    .removeAt(index);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 6.5, right: 6.5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: tertiaryColor,
-                                      borderRadius:
-                                          BorderRadius.circular(14.0)),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24.0, vertical: 15.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              arrayController
-                                                  .arrays[widget.index]
-                                                  .todos![index]
-                                                  .title,
-                                              style: todoTitleStyle(
-                                                  arrayController
-                                                      .arrays[widget.index]
-                                                      .todos![index]
-                                                      .done)),
-                                          Transform.scale(
-                                            scale: 1.3,
-                                            child: Theme(
-                                              data: ThemeData(
-                                                  unselectedWidgetColor:
-                                                      const Color.fromARGB(
-                                                          255, 187, 187, 187)),
-                                              child: Checkbox(
-                                                  shape: const CircleBorder(),
-                                                  checkColor: Colors.white,
-                                                  activeColor: primaryColor,
-                                                  value: arrayController
-                                                      .arrays[widget.index]
-                                                      .todos![index]
-                                                      .done,
-                                                  side: Theme.of(context)
-                                                      .checkboxTheme
-                                                      .side,
-                                                  onChanged: (value) {
-                                                    var changed =
-                                                        arrayController
-                                                            .arrays[
-                                                                widget.index]
-                                                            .todos![index];
-                                                    changed.done = value!;
-                                                    arrayController
-                                                        .arrays[widget.index]
-                                                        .todos![index] = changed;
-                                                  }),
-                                            ),
-                                          )
-                                        ],
+                              TextStyle(color: Colors.white, fontSize: 23.0)))
+                  : GetX<TodoController>(
+                      init: Get.put<TodoController>(TodoController()),
+                      builder: (TodoController todoController) {
+                        return ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) => GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        Routes.routeToTodoScreenIndex(index,
+                                            todoController.todos[index].id));
+                                  },
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    direction: DismissDirection.startToEnd,
+                                    onDismissed: (_) {
+                                      HapticFeedback.heavyImpact();
+                                      Database().deleteTodo(
+                                          uid, todoController.todos[index].id!);
+                                      NotificationService()
+                                          .flutterLocalNotificationsPlugin
+                                          .cancel(todoController
+                                              .todos[index].intId!);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 6.5, right: 6.5),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: tertiaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(14.0)),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24.0, vertical: 15.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 6.0),
+                                            Text(
+                                                todoController
+                                                        .todos[index].title ??
+                                                    '',
+                                                style: todoTitleStyle(
+                                                    todoController
+                                                        .todos[index].done)),
+                                            const SizedBox(height: 6.0),
+                                            dividerStyle,
+                                            const SizedBox(height: 6.0),
+                                            Text(
+                                                todoController
+                                                        .todos[index].details ??
+                                                    '',
+                                                style: todoDetailsStyle(
+                                                    todoController
+                                                        .todos[index].done)),
+                                            const SizedBox(height: 6.0),
+                                            Visibility(
+                                                visible: todoController
+                                                                .todos[index]
+                                                                .date ==
+                                                            '' &&
+                                                        todoController
+                                                                .todos[index]
+                                                                .time ==
+                                                            ''
+                                                    ? false
+                                                    : true,
+                                                child: dividerStyle),
+                                            const SizedBox(height: 6.0),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Visibility(
+                                                  visible: todoController
+                                                                  .todos[index]
+                                                                  .date ==
+                                                              '' &&
+                                                          todoController
+                                                                  .todos[index]
+                                                                  .time ==
+                                                              ''
+                                                      ? false
+                                                      : true,
+                                                  child: Obx(() => Text(
+                                                      (todoController
+                                                                  .todos[index]
+                                                                  .date !=
+                                                              now)
+                                                          ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
+                                                          : 'Today, ${todoController.todos[index].time}',
+                                                      style: todoTimeStyle(
+                                                          todoController
+                                                              .todos[index]
+                                                              .done))),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      const SizedBox(height: 5.0),
-                                      dividerStyle,
-                                      Text(
-                                          arrayController.arrays[widget.index]
-                                              .todos![index].details,
-                                          style: todoDetailsStyle(
-                                              arrayController
-                                                  .arrays[widget.index]
-                                                  .todos![index]
-                                                  .done)),
-                                      Visibility(
-                                          visible: arrayController
-                                                          .arrays[widget.index]
-                                                          .todos![index]
-                                                          .date ==
-                                                      '' &&
-                                                  arrayController
-                                                          .arrays[widget.index]
-                                                          .todos![index]
-                                                          .time ==
-                                                      ''
-                                              ? false
-                                              : true,
-                                          child: dividerStyle),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Visibility(
-                                            visible: arrayController
-                                                            .arrays[
-                                                                widget.index]
-                                                            .todos![index]
-                                                            .date ==
-                                                        '' &&
-                                                    arrayController
-                                                            .arrays[
-                                                                widget.index]
-                                                            .todos![index]
-                                                            .time ==
-                                                        ''
-                                                ? false
-                                                : true,
-                                            child: Obx(() => Text(
-                                                (arrayController.arrays[widget.index].todos![index].date !=
-                                                        now)
-                                                    ? '${arrayController.arrays[widget.index].todos![index].date!}, ${arrayController.arrays[widget.index].todos![index].time}'
-                                                    : 'Today, ${arrayController.arrays[widget.index].todos![index].time}',
-                                                style: todoTimeStyle(
-                                                    parse(
-                                                                arrayController
-                                                                    .arrays[widget
-                                                                        .index]
-                                                                    .todos![
-                                                                        index]
-                                                                    .date,
-                                                                arrayController
-                                                                    .arrays[widget.index]
-                                                                    .todos![index]
-                                                                    .time)
-                                                            .compareTo(tz.TZDateTime.now(tz.local)) >
-                                                        0,
-                                                    arrayController.arrays[widget.index].todos![index].done))),
-                                          ),
-                                          Visibility(
-                                            visible: arrayController
-                                                            .arrays[
-                                                                widget.index]
-                                                            .todos![index]
-                                                            .date ==
-                                                        '' &&
-                                                    arrayController
-                                                            .arrays[
-                                                                widget.index]
-                                                            .todos![index]
-                                                            .time ==
-                                                        ''
-                                                ? false
-                                                : true,
-                                            child: Switch(
-                                              activeColor: primaryColor,
-                                              onChanged: (value) {
-                                                var changed = arrayController
-                                                    .arrays[widget.index]
-                                                    .todos![index];
-                                                changed.dateAndTimeEnabled =
-                                                    value;
-                                                arrayController
-                                                    .arrays[widget.index]
-                                                    .todos![index] = changed;
-                                                if (arrayController
-                                                        .arrays[widget.index]
-                                                        .todos![index]
-                                                        .dateAndTimeEnabled ==
-                                                    false) {
-                                                  //NotificationService()
-                                                    //  .flutterLocalNotificationsPlugin
-                                                      //.cancel(arrayController
-                                                        //  .arrays[widget.index]
-                                                          //.todos![index]
-                                                          //.id);
-                                                } else {
-                                                  // showNotification();
-                                                }
-                                              },
-                                              value: arrayController
-                                                  .arrays[widget.index]
-                                                  .todos![index]
-                                                  .dateAndTimeEnabled,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                      separatorBuilder: (_, __) => const SizedBox(
-                            height: 25.0,
-                          ),
-                      itemCount:
-                          arrayController.arrays[widget.index].todos!.length),
+                            separatorBuilder: (_, __) => const SizedBox(
+                                  height: 25.0,
+                                ),
+                            itemCount: todoController.todos.length);
+                      }),
             )),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(Routes.routeToTodoScreen(widget.index));
+              Navigator.of(context).push(Routes.routeToTodoScreen());
             },
             child: Container(
               decoration: BoxDecoration(
@@ -287,4 +193,3 @@ class _HomeScreenState extends State<HomeScreen> {
             )));
   }
 }
-*/
