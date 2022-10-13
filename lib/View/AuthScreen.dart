@@ -32,8 +32,11 @@ class _AuthScreenState extends State<AuthScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("TASK", style: headingWhite),
-                Text("S", style: TextStyle(
-    color: primaryColor, fontSize: 50.0, fontWeight: FontWeight.bold)),
+                Text("S",
+                    style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 50.0,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
             (isLogin)

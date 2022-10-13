@@ -126,6 +126,9 @@ class AuthController extends GetxController {
             ),
             TextButton(
               onPressed: () async {
+                NotificationService()
+                    .flutterLocalNotificationsPlugin
+                    .cancelAll();
                 await _auth.signOut();
                 Get.find<UserController>().clear();
                 Navigator.pop(context, 'Ok');
@@ -145,7 +148,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future deleteAccount(context) async {
+  Future deleteAccount(email, password, context) async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -154,38 +157,14 @@ class AuthController extends GetxController {
               color: primaryColor,
             ))));
     try {
-      await showDialog<String>(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 37, 37, 37),
-          title: const Text('Delete account',
-              style: TextStyle(color: Colors.white)),
-          content: const Text('Are you sure you want to delete your account?',
-              style: TextStyle(color: Color.fromARGB(255, 187, 187, 187))),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pop(context, 'Cancel');
-              },
-              child: Text('Cancel', style: TextStyle(color: primaryColor)),
-            ),
-            TextButton(
-              onPressed: () async {
-                NotificationService()
-                    .flutterLocalNotificationsPlugin
-                    .cancelAll();
-                await _auth.currentUser!.delete();
-                Database().deleteUser(_auth.currentUser!.uid);
-                Navigator.pop(context, 'Ok');
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-              child: Text('OK', style: TextStyle(color: primaryColor)),
-            ),
-          ],
-        ),
-      );
+      NotificationService().flutterLocalNotificationsPlugin.cancelAll();
+      Database().deleteUser(_auth.currentUser!.uid);
+      AuthCredential authCredential =
+          EmailAuthProvider.credential(email: email, password: password);
+      UserCredential result =
+          await _auth.currentUser!.reauthenticateWithCredential(authCredential);
+      await result.user!.delete();
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         backgroundColor: secondaryColor,

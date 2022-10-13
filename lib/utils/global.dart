@@ -200,9 +200,9 @@ Theme datePickerTheme(child) => Theme(
           colorScheme: ColorScheme.dark(
         surface: primaryColor,
         secondary: primaryColor,
-        onPrimary: Colors.white, 
-        onSurface: Colors.white, 
-        primary: primaryColor, 
+        onPrimary: Colors.white,
+        onSurface: Colors.white,
+        primary: primaryColor,
       )),
       child: child!,
     );

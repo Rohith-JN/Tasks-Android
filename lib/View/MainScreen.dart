@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tasks/view/DeleteScreen.dart';
 import '../controllers/authController.dart';
 
 class MainScreen extends StatefulWidget {
@@ -126,7 +127,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             onTap: () {
                               Navigator.pop(context);
-                              authController.deleteAccount(context);
+                              Get.to(const DeleteScreen());
                             },
                           ),
                         ]),
@@ -169,7 +170,7 @@ class _MainScreenState extends State<MainScreen> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Text(
-                                "Today",
+                                "Scheduled",
                                 style: GoogleFonts.notoSans(
                                     fontSize: 25.0, color: Colors.white),
                               ),
@@ -197,7 +198,7 @@ class _MainScreenState extends State<MainScreen> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Text(
-                                "Scheduled",
+                                "Today",
                                 style: GoogleFonts.notoSans(
                                     fontSize: 25.0, color: Colors.white),
                               ),
@@ -233,7 +234,7 @@ class _MainScreenState extends State<MainScreen> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Text(
-                                "All",
+                                "Completed",
                                 style: GoogleFonts.notoSans(
                                     fontSize: 25.0, color: Colors.white),
                               ),
@@ -261,7 +262,7 @@ class _MainScreenState extends State<MainScreen> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Text(
-                                "Completed",
+                                "All",
                                 style: GoogleFonts.notoSans(
                                     fontSize: 25.0, color: Colors.white),
                               ),
