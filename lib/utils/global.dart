@@ -131,22 +131,12 @@ TextStyle alertTextStyle = GoogleFonts.notoSans(
 );
 
 TextStyle todoTitleStyle(condition) => GoogleFonts.notoSans(
-    color: const Color(0xFFA8A8A8),
-    fontSize: 23.0,
-    decoration: (condition) ? TextDecoration.lineThrough : TextDecoration.none);
-
-TextStyle todoDetailsStyle(condition) => GoogleFonts.notoSans(
       color: const Color(0xFFA8A8A8),
-      fontSize: 20.0,
+      fontSize: 23.0,
       decoration:
           (condition) ? TextDecoration.lineThrough : TextDecoration.none,
-    );
-
-TextStyle todoTimeStyle(condition1) => GoogleFonts.notoSans(
-      color: const Color(0xFFA8A8A8),
-      fontSize: 20.0,
-      decoration:
-          (condition1) ? TextDecoration.lineThrough : TextDecoration.none,
+      decorationColor: primaryColor,
+      decorationThickness: 2,
     );
 
 TextStyle buttonTextStyleWhite =
@@ -177,3 +167,42 @@ Icon menuIcon = const Icon(
   color: Color(0xFFEAEAEA),
   size: 27.0,
 );
+
+Theme timePickerTheme(child) => Theme(
+      data: ThemeData.dark().copyWith(
+        timePickerTheme: TimePickerThemeData(
+          backgroundColor: const Color.fromARGB(255, 70, 70, 70),
+          dayPeriodTextColor: primaryColor,
+          hourMinuteTextColor: MaterialStateColor.resolveWith((states) =>
+              states.contains(MaterialState.selected)
+                  ? Colors.white
+                  : Colors.white),
+          dialHandColor: primaryColor,
+          helpTextStyle: TextStyle(
+              fontSize: 12, fontWeight: FontWeight.bold, color: primaryColor),
+          dialTextColor: MaterialStateColor.resolveWith((states) =>
+              states.contains(MaterialState.selected)
+                  ? Colors.white
+                  : Colors.white),
+          entryModeIconColor: primaryColor,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+              foregroundColor:
+                  MaterialStateColor.resolveWith((states) => primaryColor)),
+        ),
+      ),
+      child: child!,
+    );
+
+Theme datePickerTheme(child) => Theme(
+      data: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.dark(
+        surface: primaryColor,
+        secondary: primaryColor,
+        onPrimary: Colors.white, 
+        onSurface: Colors.white, 
+        primary: primaryColor, 
+      )),
+      child: child!,
+    );

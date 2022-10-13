@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/view/ArrayScreen.dart';
 import 'package:tasks/view/HomeScreen.dart';
 import 'package:tasks/view/PasswordScreen.dart';
 import 'package:tasks/view/TodoScreen.dart';
@@ -23,11 +24,10 @@ class Routes {
       },
     );
   }
-
-  static Route routeToTodoScreen() {
+  static Route routeToTodoScreen(arrayIndex) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          const TodoScreen(),
+          TodoScreen(arrayIndex: arrayIndex),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
@@ -43,11 +43,11 @@ class Routes {
       },
     );
   }
-
-  static Route routeToTodoScreenIndex(index, id) {
+  
+  static Route routeToTodoScreenIndex(arrayIndex, todoIndex) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          TodoScreen(index: index, id: id),
+          TodoScreen(arrayIndex: arrayIndex, todoIndex: todoIndex,),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
@@ -63,12 +63,53 @@ class Routes {
       },
     );
   }
-
-  static Route routeToHomeScreen() {
+  
+  
+  static Route routeToHomeScreen(index) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
+      pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(index: index),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+  
+    static Route routeToArrayScreen() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const ArrayScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  static Route routeToArrayScreenIndex(index, docId) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          ArrayScreen(index: index, docId: docId),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         const curve = Curves.ease;
 
