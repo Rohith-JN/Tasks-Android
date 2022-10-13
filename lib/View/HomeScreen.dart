@@ -1,28 +1,29 @@
 // ignore_for_file: file_names, empty_statements
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
-import 'package:tasks/controllers/todoController.dart';
 import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/utils/routes.dart';
-import 'package:tasks/view/TodoScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/services/notification.service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final int? index;
+  const HomeScreen({Key? key, this.index}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TodoController todoController = Get.put(TodoController());
+  final ArrayController arrayController = Get.put(ArrayController());
   final AuthController authController = Get.find();
   final String uid = Get.find<AuthController>().user!.uid;
 
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text('Tasks',
+          title: Text(arrayController.arrays[widget.index!].title!,
               style: GoogleFonts.notoSans(
                 fontSize: 30,
                 color: primaryColor,
@@ -60,33 +61,57 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: (todoController.todos.isEmpty)
+              child: (arrayController.arrays[widget.index!].todos!.isEmpty)
                   ? const Center(
                       child: Text("Add new tasks",
                           style:
                               TextStyle(color: Colors.white, fontSize: 23.0)))
-                  : GetX<TodoController>(
-                      init: Get.put<TodoController>(TodoController()),
-                      builder: (TodoController todoController) {
+                  : GetX<ArrayController>(
+                      init: Get.put<ArrayController>(ArrayController()),
+                      builder: (ArrayController todoController) {
                         return ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) => GestureDetector(
                                   onTap: () {
                                     Navigator.of(context).push(
-                                        Routes.routeToTodoScreenIndex(index,
-                                            todoController.todos[index].id));
+                                        Routes.routeToTodoScreenIndex(
+                                            widget.index, index));
                                   },
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     direction: DismissDirection.startToEnd,
-                                    onDismissed: (_) {
+                                    onDismissed: (_) async {
                                       HapticFeedback.heavyImpact();
-                                      Database().deleteTodo(
-                                          uid, todoController.todos[index].id!);
+                                      arrayController
+                                          .arrays[widget.index!].todos!
+                                          .removeAt(index);
+                                      try {
+                                        await FirebaseFirestore.instance
+                                            .collection("users")
+                                            .doc(uid)
+                                            .collection("arrays")
+                                            .doc(arrayController
+                                                .arrays[widget.index!].id)
+                                            .set({
+                                          "title": arrayController
+                                              .arrays[widget.index!].title,
+                                          "dateCreated": arrayController
+                                              .arrays[widget.index!]
+                                              .dateCreated,
+                                          "todos": arrayController
+                                              .arrays[widget.index!].todos!
+                                              .map((todo) => todo.toJson())
+                                              .toList()
+                                        });
+                                      } catch (e) {
+                                        print(e);
+                                      }
                                       NotificationService()
                                           .flutterLocalNotificationsPlugin
-                                          .cancel(todoController
-                                              .todos[index].intId!);
+                                          .cancel(arrayController
+                                              .arrays[widget.index!]
+                                              .todos![index]
+                                              .id!);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
@@ -98,71 +123,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 BorderRadius.circular(14.0)),
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 24.0, vertical: 15.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            const SizedBox(height: 6.0),
                                             Text(
-                                                todoController
-                                                        .todos[index].title ??
+                                                arrayController
+                                                        .arrays[widget.index!]
+                                                        .todos![index]
+                                                        .title ??
                                                     '',
                                                 style: todoTitleStyle(
-                                                    todoController
-                                                        .todos[index].done)),
-                                            const SizedBox(height: 6.0),
-                                            dividerStyle,
-                                            const SizedBox(height: 6.0),
-                                            Text(
-                                                todoController
-                                                        .todos[index].details ??
-                                                    '',
-                                                style: todoDetailsStyle(
-                                                    todoController
-                                                        .todos[index].done)),
-                                            const SizedBox(height: 6.0),
-                                            Visibility(
-                                                visible: todoController
-                                                                .todos[index]
-                                                                .date ==
-                                                            '' &&
-                                                        todoController
-                                                                .todos[index]
-                                                                .time ==
-                                                            ''
-                                                    ? false
-                                                    : true,
-                                                child: dividerStyle),
-                                            const SizedBox(height: 6.0),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Visibility(
-                                                  visible: todoController
-                                                                  .todos[index]
-                                                                  .date ==
-                                                              '' &&
-                                                          todoController
-                                                                  .todos[index]
-                                                                  .time ==
-                                                              ''
-                                                      ? false
-                                                      : true,
-                                                  child: Obx(() => Text(
-                                                      (todoController
-                                                                  .todos[index]
-                                                                  .date !=
-                                                              now)
-                                                          ? '${todoController.todos[index].date!}, ${todoController.todos[index].time}'
-                                                          : 'Today, ${todoController.todos[index].time}',
-                                                      style: todoTimeStyle(
-                                                          todoController
-                                                              .todos[index]
-                                                              .done))),
-                                                ),
-                                              ],
+                                                    arrayController
+                                                        .arrays[widget.index!]
+                                                        .todos![index]
+                                                        .done)),
+                                            Icon(
+                                              Icons.arrow_forward,
+                                              color: primaryColor,
                                             )
                                           ],
                                         ),
@@ -171,14 +149,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                             separatorBuilder: (_, __) => const SizedBox(
-                                  height: 25.0,
+                                  height: 15.0,
                                 ),
-                            itemCount: todoController.todos.length);
+                            itemCount: arrayController
+                                .arrays[widget.index!].todos!.length);
                       }),
             )),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(Routes.routeToTodoScreen());
+              Navigator.of(context)
+                  .push(Routes.routeToTodoScreen(widget.index));
             },
             child: Container(
               decoration: BoxDecoration(
