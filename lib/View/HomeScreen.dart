@@ -82,6 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     direction: DismissDirection.startToEnd,
                                     onDismissed: (_) async {
                                       HapticFeedback.heavyImpact();
+                                      NotificationService()
+                                          .flutterLocalNotificationsPlugin
+                                          .cancel(arrayController
+                                              .arrays[widget.index!]
+                                              .todos![index]
+                                              .id!);
                                       arrayController
                                           .arrays[widget.index!].todos!
                                           .removeAt(index);
@@ -106,12 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       } catch (e) {
                                         print(e);
                                       }
-                                      NotificationService()
-                                          .flutterLocalNotificationsPlugin
-                                          .cancel(arrayController
-                                              .arrays[widget.index!]
-                                              .todos![index]
-                                              .id!);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(

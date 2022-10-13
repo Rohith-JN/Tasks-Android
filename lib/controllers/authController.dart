@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/userController.dart';
 import 'package:tasks/main.dart';
 import 'package:tasks/models/User.dart';
@@ -131,6 +132,7 @@ class AuthController extends GetxController {
                     .cancelAll();
                 await _auth.signOut();
                 Get.find<UserController>().clear();
+                Get.delete<ArrayController>();
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
@@ -164,6 +166,8 @@ class AuthController extends GetxController {
       UserCredential result =
           await _auth.currentUser!.reauthenticateWithCredential(authCredential);
       await result.user!.delete();
+      Get.delete<ArrayController>();
+
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
