@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tasks/controllers/userController.dart';
 import 'package:tasks/main.dart';
 import 'package:tasks/models/User.dart';
+import 'package:tasks/services/Notification.service.dart';
 import 'package:tasks/services/database.service.dart';
 
 import '../utils/global.dart';
@@ -53,7 +54,6 @@ class AuthController extends GetxController {
               color: primaryColor,
             ))));
     try {
-      print(email);
       UserCredential authResult = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       UserModel user =
@@ -125,8 +125,8 @@ class AuthController extends GetxController {
               child: Text('Cancel', style: TextStyle(color: primaryColor)),
             ),
             TextButton(
-              onPressed: () {
-                _auth.signOut();
+              onPressed: () async {
+                await _auth.signOut();
                 Get.find<UserController>().clear();
                 Navigator.pop(context, 'Ok');
                 Navigator.of(context).popUntil((route) => route.isFirst);
@@ -173,6 +173,9 @@ class AuthController extends GetxController {
             ),
             TextButton(
               onPressed: () async {
+                NotificationService()
+                    .flutterLocalNotificationsPlugin
+                    .cancelAll();
                 await _auth.currentUser!.delete();
                 Database().deleteUser(_auth.currentUser!.uid);
                 Navigator.pop(context, 'Ok');

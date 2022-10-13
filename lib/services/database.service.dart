@@ -36,51 +36,39 @@ class Database {
     }
   }
 
-  Future<void> addTodo(String uid, int intId, String title, String details, String date,
-      String time, bool dateAndTimeEnabled, bool done) async {
+  Future<void> addArray(String uid, String title) async {
     try {
-      await _firestore.collection("users").doc(uid).collection("todos").add({
-        'dateCreated': Timestamp.now(),
-        'intId': intId,
-        'title': title,
-        'details': details,
-        'date': date,
-        'time': time,
-        'dateAndTimeEnabled': dateAndTimeEnabled,
-        'done': done
-      });
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("arrays")
+          .add({'dateCreated': Timestamp.now(), 'title': title, 'todos': []});
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> updateTodo(String uid, String title, String details, String date,
-      String time, bool dateAndTimeEnabled, bool done, String id) async {
+  Future<void> updateArray(String uid, String title, String id) async {
     try {
       await _firestore
           .collection("users")
           .doc(uid)
-          .collection("todos")
+          .collection("arrays")
           .doc(id)
           .update({
         'title': title,
-        'details': details,
-        'date': date,
-        'time': time,
-        'dateAndTimeEnabled': dateAndTimeEnabled,
-        'done': done
       });
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> deleteTodo(String uid, String id) async {
+  Future<void> deleteArray(String uid, String id) async {
     try {
       await _firestore
           .collection("users")
           .doc(uid)
-          .collection("todos")
+          .collection("arrays")
           .doc(id)
           .delete();
     } catch (e) {

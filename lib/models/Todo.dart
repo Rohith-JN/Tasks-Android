@@ -3,8 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Todo {
-  String? id;
-  int? intId;
+  int? id;
   String? title;
   String? details;
   String? date;
@@ -15,7 +14,6 @@ class Todo {
 
   Todo({
     this.id,
-    this.intId,
     this.title,
     this.details,
     this.date,
@@ -25,15 +23,27 @@ class Todo {
     this.dateCreated,
   });
 
-  Todo.fromMap(DocumentSnapshot doc) {
-    id = doc.id;
-    intId = doc["intId"];
-    title = doc['title'];
-    details = doc['details'];
-    date = doc['date'];
-    time = doc['time'];
-    done = doc['done'];
-    dateAndTimeEnabled = doc['dateAndTimeEnabled'];
-    dateCreated = doc['dateCreated'];
+  Todo.fromJson(Map<String, dynamic> json) {
+    id = json["id"];
+    title = json['title'];
+    details = json['details'];
+    date = json['date'];
+    time = json['time'];
+    done = json['done'];
+    dateAndTimeEnabled = json['dateAndTimeEnabled'];
+    dateCreated = json['dateCreated'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'details': details,
+      'date': date,
+      'time': time,
+      'dateAndTimeEnabled': dateAndTimeEnabled,
+      'done': done,
+      'dateCreated': dateCreated
+    };
   }
 }
