@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/models/Array.dart';
 
+import '../models/Todo.dart';
+
 class ArrayController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late CollectionReference collectionReference;
 
   RxList<Array> arrays = RxList<Array>([]);
+  List scheduledTodos = [];
 
   @override
   void onInit() {

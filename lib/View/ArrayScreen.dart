@@ -1,8 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:tasks/controllers/authController.dart';
-import 'package:tasks/controllers/userController.dart';
-import 'package:tasks/models/Todo.dart';
 import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';

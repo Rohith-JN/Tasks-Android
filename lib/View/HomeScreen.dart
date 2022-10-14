@@ -24,25 +24,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ArrayController arrayController = Get.put(ArrayController());
-  final AuthController authController = Get.find();
   final String uid = Get.find<AuthController>().user!.uid;
-
-  String now = DateFormat("MM/dd/yyyy").format(DateTime.now());
-  TimeOfDay currentTime = TimeOfDay.now();
-
-  tz.TZDateTime parse(date, time) {
-    String value = '$date $time';
-    String currentFormat = "MM/dd/yyyy hh:mm a";
-    DateTime? dateTime = DateTime.now();
-    if (value != null || value.isNotEmpty) {
-      try {
-        bool isUtc = false;
-        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
-      } catch (e) {}
-    }
-    String parsed = dateTime!.toString();
-    return tz.TZDateTime.parse(tz.local, parsed);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,9 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               .map((todo) => todo.toJson())
                                               .toList()
                                         });
-                                      } catch (e) {
-                                        print(e);
-                                      }
+                                      } catch (e) {}
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
@@ -139,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         .todos![index]
                                                         .done)),
                                             Icon(
-                                              Icons.arrow_forward,
+                                              Icons.arrow_forward_ios,
                                               color: primaryColor,
                                             )
                                           ],

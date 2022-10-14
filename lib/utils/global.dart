@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 //  Colors
 
 const backgroundColor = Colors.black;
-var primaryColor = Color(0xFF33aaf6);
+var primaryColor = const Color(0xFF33aaf6);
 const formInputColor = Color.fromARGB(255, 48, 48, 48);
 const secondaryColor = Color(0xFF707070);
 const tertiaryColor = Color.fromARGB(255, 37, 37, 37);
@@ -164,6 +164,12 @@ Divider dividerStyle = const Divider(
 
 Icon menuIcon = const Icon(
   Icons.menu,
+  color: Color(0xFFEAEAEA),
+  size: 27.0,
+);
+
+Icon searchIcon = const Icon(
+  Icons.search,
   color: Color(0xFFEAEAEA),
   size: 27.0,
 );

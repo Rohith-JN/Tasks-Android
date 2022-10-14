@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text("Tasks",
+          title: Text("Lists",
               style: GoogleFonts.notoSans(
                 fontSize: 30,
                 color: primaryColor,
@@ -171,282 +171,104 @@ class _MainScreenState extends State<MainScreen> {
                 icon: menuIcon)
           ],
         ),
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            width: double.infinity,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          color: tertiaryColor,
-                          borderRadius: BorderRadius.circular(14.0)),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "0",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 40.0, color: primaryColor),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "Scheduled",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 25.0, color: Colors.white),
-                              ),
-                            ),
-                          ]),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          color: tertiaryColor,
-                          borderRadius: BorderRadius.circular(14.0)),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "0",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 40.0, color: primaryColor),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "Today",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 25.0, color: Colors.white),
-                              ),
-                            ),
-                          ]),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          color: tertiaryColor,
-                          borderRadius: BorderRadius.circular(14.0)),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "0",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 40.0, color: primaryColor),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "Completed",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 25.0, color: Colors.white),
-                              ),
-                            ),
-                          ]),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          color: tertiaryColor,
-                          borderRadius: BorderRadius.circular(14.0)),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "0",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 40.0, color: primaryColor),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                "All",
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 25.0, color: Colors.white),
-                              ),
-                            ),
-                          ]),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Lists",
-                        style: GoogleFonts.notoSans(
-                          fontSize: 30,
-                          color: primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ))),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Column(
-                  children: [
-                    Container(
-                        height: MediaQuery.of(context).size.height * 0.37,
-                        child: GetX<ArrayController>(
-                            init: Get.put<ArrayController>(ArrayController()),
-                            builder: (ArrayController arrayController) {
-                              return (arrayController.arrays.isEmpty)
-                                  ? Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.35,
-                                      child: Center(
-                                          child: Text("Add new lists",
-                                              style: buttonTextStyleWhite)),
-                                    )
-                                  : ListView.separated(
-                                      shrinkWrap: true,
-                                      physics: const BouncingScrollPhysics(),
-                                      itemBuilder: (context, index) =>
-                                          GestureDetector(
-                                            onLongPress: () {
-                                              Navigator.of(context).push(Routes
-                                                  .routeToArrayScreenIndex(
-                                                      index,
-                                                      arrayController
-                                                          .arrays[index].id));
-                                            },
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                  Routes.routeToHomeScreen(
-                                                      index));
-                                            },
-                                            child: Dismissible(
-                                              key: UniqueKey(),
-                                              direction:
-                                                  DismissDirection.startToEnd,
-                                              onDismissed: (_) {
-                                                HapticFeedback.heavyImpact();
-                                                Database().deleteArray(
-                                                    uid,
-                                                    arrayController
-                                                            .arrays[index].id ??
-                                                        '');
-                                                for (var i = 0;
-                                                    i <
-                                                        arrayController
-                                                            .arrays[index]
-                                                            .todos!
-                                                            .length;
-                                                    i++) {
-                                                  NotificationService()
-                                                      .flutterLocalNotificationsPlugin
-                                                      .cancel(arrayController
-                                                          .arrays[index]
-                                                          .todos![i]
-                                                          .id!);
-                                                }
-                                              },
-                                              child: Container(
-                                                width: double.infinity,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.07,
-                                                decoration: BoxDecoration(
-                                                    color: tertiaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14.0)),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 25.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 20.0),
-                                                        child: Text(
-                                                          arrayController
-                                                                  .arrays[index]
-                                                                  .title ??
-                                                              '',
-                                                          style: GoogleFonts
-                                                              .notoSans(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      25.0),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 20.0),
-                                                        child: Text(
-                                                          '${arrayController.arrays[index].todos!.length}',
-                                                          style: GoogleFonts
-                                                              .notoSans(
-                                                                  color:
-                                                                      primaryColor,
-                                                                  fontSize:
-                                                                      27.0),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+        body: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+          child: GetX<ArrayController>(
+              init: Get.put<ArrayController>(ArrayController()),
+              builder: (ArrayController arrayController) {
+                return (arrayController.arrays.isEmpty)
+                    ? Center(
+                        child:
+                            Text("Add new lists", style: buttonTextStyleWhite))
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) => GestureDetector(
+                              onLongPress: () {
+                                Navigator.of(context).push(
+                                    Routes.routeToArrayScreenIndex(index,
+                                        arrayController.arrays[index].id));
+                              },
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(Routes.routeToHomeScreen(index));
+                              },
+                              child: Dismissible(
+                                key: UniqueKey(),
+                                direction: DismissDirection.startToEnd,
+                                onDismissed: (_) {
+                                  HapticFeedback.heavyImpact();
+                                  Database().deleteArray(uid,
+                                      arrayController.arrays[index].id ?? '');
+                                  for (var i = 0;
+                                      i <
+                                          arrayController
+                                              .arrays[index].todos!.length;
+                                      i++) {
+                                    NotificationService()
+                                        .flutterLocalNotificationsPlugin
+                                        .cancel(arrayController
+                                            .arrays[index].todos![i].id!);
+                                  }
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.07,
+                                  decoration: BoxDecoration(
+                                      color: tertiaryColor,
+                                      borderRadius:
+                                          BorderRadius.circular(14.0)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 25.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20.0),
+                                          child: Text(
+                                            arrayController
+                                                    .arrays[index].title ??
+                                                '',
+                                            style: GoogleFonts.notoSans(
+                                                color: Colors.white,
+                                                fontSize: 25.0),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '${arrayController.arrays[index].todos!.length}',
+                                                style: GoogleFonts.notoSans(
+                                                    color: primaryColor,
+                                                    fontSize: 27.0),
                                               ),
-                                            ),
+                                              Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: primaryColor,
+                                              )
+                                            ],
                                           ),
-                                      separatorBuilder: (_, __) =>
-                                          const SizedBox(
-                                            height: 15.0,
-                                          ),
-                                      itemCount: arrayController.arrays.length);
-                            })),
-                  ],
-                )
-              ],
-            ),
-          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        separatorBuilder: (_, __) => const SizedBox(
+                              height: 15.0,
+                            ),
+                        itemCount: arrayController.arrays.length);
+              }),
         ),
         floatingActionButton: GestureDetector(
             onTap: () {
