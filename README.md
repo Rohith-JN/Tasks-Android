@@ -17,7 +17,7 @@
 
 ## Preview
 
-To view app screenshots go here: [Preview](https://github.com/Rohith-JN/Tasks/tree/main/preview)
+To view app screenshots go here: [Preview](https://github.com/Rohith-JN/Tasks/tree/main/Preview)
 
 ## Key Features
 
