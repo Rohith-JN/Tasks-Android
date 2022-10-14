@@ -125,9 +125,42 @@ class _MainScreenState extends State<MainScreen> {
                               Icons.delete,
                               color: primaryColor,
                             ),
-                            onTap: () {
+                            onTap: () async {
                               Navigator.pop(context);
-                              Get.to(const DeleteScreen());
+                              await showDialog<String>(
+                                barrierDismissible: true,
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 37, 37, 37),
+                                  title: const Text('Delete account',
+                                      style: TextStyle(color: Colors.white)),
+                                  content: const Text(
+                                      'Are you sure you want to delete your account?',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 187, 187, 187))),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Cancel');
+                                      },
+                                      child: Text('Cancel',
+                                          style:
+                                              TextStyle(color: primaryColor)),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context, 'Ok');
+                                        Get.to(const DeleteScreen());
+                                      },
+                                      child: Text('OK',
+                                          style:
+                                              TextStyle(color: primaryColor)),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                           ),
                         ]),
@@ -160,7 +193,7 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "0",
                                 style: GoogleFonts.notoSans(
@@ -168,7 +201,7 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "Scheduled",
                                 style: GoogleFonts.notoSans(
@@ -188,7 +221,7 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "0",
                                 style: GoogleFonts.notoSans(
@@ -196,7 +229,7 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "Today",
                                 style: GoogleFonts.notoSans(
@@ -224,7 +257,7 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "0",
                                 style: GoogleFonts.notoSans(
@@ -232,7 +265,7 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "Completed",
                                 style: GoogleFonts.notoSans(
@@ -252,7 +285,7 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "0",
                                 style: GoogleFonts.notoSans(
@@ -260,7 +293,7 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
+                              padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 "All",
                                 style: GoogleFonts.notoSans(
@@ -296,7 +329,7 @@ class _MainScreenState extends State<MainScreen> {
                                   ? Container(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.37,
+                                              0.35,
                                       child: Center(
                                           child: Text("Add new lists",
                                               style: buttonTextStyleWhite)),

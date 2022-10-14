@@ -116,12 +116,12 @@ class _LogInState extends State<LogIn> {
           ),
           const SizedBox(height: 30.0),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text("Don't have an account? ", style: paragraphWhite),
+            Text("Don't have an account? ", style: TextStyle(color: secondaryColor, fontSize: 20.0)),
             GestureDetector(
               onTap: widget.onClickedSignUp,
               child: Text(
                 'Sign Up',
-                style: TextStyle(color: primaryColor, fontSize: 25.0),
+                style: TextStyle(color: primaryColor, fontSize: 20.0),
               ),
             )
           ]),

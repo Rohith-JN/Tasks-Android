@@ -23,7 +23,7 @@ TextStyle counterTextStyle = const TextStyle(
   fontSize: 15,
 );
 TextStyle paragraphWhite =
-    const TextStyle(color: secondaryColor, fontSize: 25.0);
+    const TextStyle(color: secondaryColor, fontSize: 15.0);
 TextStyle paragraphGray =
     const TextStyle(color: secondaryColor, fontSize: 20.0);
 TextStyle paragraphWhiteBig =
