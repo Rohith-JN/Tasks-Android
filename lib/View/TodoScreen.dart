@@ -7,13 +7,13 @@ import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/models/Todo.dart';
 import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/utils/validators.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class TodoScreen extends StatefulWidget {
   final int? todoIndex;
@@ -30,20 +30,6 @@ class _TodoScreenState extends State<TodoScreen> {
   final ArrayController arrayController = Get.find();
   final AuthController authController = Get.find();
   final String uid = Get.find<AuthController>().user!.uid;
-
-  tz.TZDateTime parse(date, time) {
-    String value = '$date $time';
-    String currentFormat = "MM/dd/yyyy hh:mm a";
-    DateTime? dateTime = DateTime.now();
-    if (value != null || value.isNotEmpty) {
-      try {
-        bool isUtc = false;
-        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
-      } catch (e) {}
-    }
-    String parsed = dateTime!.toString();
-    return tz.TZDateTime.parse(tz.local, parsed);
-  }
 
   bool done = false;
 
@@ -79,10 +65,10 @@ class _TodoScreenState extends State<TodoScreen> {
     late String dateTime;
     DateTime selectedDate = DateTime.now();
     TimeOfDay selectedTime = TimeOfDay(
-        hour: (TimeOfDay.now().minute > 55) ? TimeOfDay.now().hour + 1 : TimeOfDay.now().hour,
-        minute: (TimeOfDay.now().minute > 55)
-            ? 0
-            : TimeOfDay.now().minute + 5);
+        hour: (TimeOfDay.now().minute > 55)
+            ? TimeOfDay.now().hour + 1
+            : TimeOfDay.now().hour,
+        minute: (TimeOfDay.now().minute > 55) ? 0 : TimeOfDay.now().minute + 5);
 
     Future<DateTime?> _selectDate() => showDatePicker(
         builder: (context, child) {
@@ -193,6 +179,20 @@ class _TodoScreenState extends State<TodoScreen> {
                         .map((todo) => todo.toJson())
                         .toList()
                   });
+                  Database().addAllTodo(
+                      uid,
+                      finalId,
+                      arrayController.arrays[widget.arrayIndex!].title!,
+                      titleEditingController.text,
+                      detailEditingController.text,
+                      Timestamp.now(),
+                      _dateController.text,
+                      _timeController.text,
+                      false,
+                      (_dateController.text != '' && _timeController.text != '')
+                          ? true
+                          : false,
+                      finalId);
                   Get.back();
                   HapticFeedback.heavyImpact();
                   NotificationService().showNotification(
@@ -230,6 +230,22 @@ class _TodoScreenState extends State<TodoScreen> {
                         .map((todo) => todo.toJson())
                         .toList()
                   });
+                  Database().updateAllTodo(
+                      uid,
+                      arrayController.arrays[widget.arrayIndex!]
+                          .todos![widget.todoIndex!].id!, // get doc id
+                      arrayController.arrays[widget.arrayIndex!].title!,
+                      titleEditingController.text,
+                      detailEditingController.text,
+                      Timestamp.now(),
+                      _dateController.text,
+                      _timeController.text,
+                      done,
+                      (_dateController.text != '' && _timeController.text != '')
+                          ? true
+                          : false,
+                      arrayController.arrays[widget.arrayIndex!]
+                          .todos![widget.todoIndex!].id!);
                   Get.back();
                   HapticFeedback.heavyImpact();
                   NotificationService().showNotification(

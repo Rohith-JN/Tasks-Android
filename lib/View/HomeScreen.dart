@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               TextStyle(color: Colors.white, fontSize: 23.0)))
                   : GetX<ArrayController>(
                       init: Get.put<ArrayController>(ArrayController()),
-                      builder: (ArrayController todoController) {
+                      builder: (ArrayController arrayController) {
                         return ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) => GestureDetector(
@@ -70,6 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               .arrays[widget.index!]
                                               .todos![index]
                                               .id!);
+                                      Database().deleteAllTodo(
+                                          uid,
+                                          arrayController.arrays[widget.index!]
+                                              .todos![index].id!);
                                       arrayController
                                           .arrays[widget.index!].todos!
                                           .removeAt(index);

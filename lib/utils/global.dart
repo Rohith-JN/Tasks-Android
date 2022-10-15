@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 //  Colors
 
@@ -212,3 +214,17 @@ Theme datePickerTheme(child) => Theme(
       )),
       child: child!,
     );
+
+ tz.TZDateTime parse(date, time) {
+    String value = '$date $time';
+    String currentFormat = "MM/dd/yyyy hh:mm a";
+    DateTime? dateTime = DateTime.now();
+    if (value != null || value.isNotEmpty) {
+      try {
+        bool isUtc = false;
+        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
+      } catch (e) {}
+    }
+    String parsed = dateTime!.toString();
+    return tz.TZDateTime.parse(tz.local, parsed);
+  }

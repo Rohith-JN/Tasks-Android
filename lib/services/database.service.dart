@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tasks/models/Todo.dart';
 import 'package:tasks/models/User.dart';
 
 class Database {
@@ -48,6 +47,74 @@ class Database {
     }
   }
 
+  Future<void> addAllTodo(
+      String uid,
+      int docId,
+      String arrayTitle,
+      String title,
+      String details,
+      Timestamp dateCreated,
+      String date,
+      String time,
+      done,
+      dateAndTimeEnabled,
+      int id) async {
+    try {
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("allTodos")
+          .doc(docId.toString())
+          .set({
+        "arrayTitle": arrayTitle,
+        "title": title,
+        "details": details,
+        "dateCreated": dateCreated,
+        "date": date,
+        "time": time,
+        "done": done,
+        "dateAndTimeEnabled": dateAndTimeEnabled,
+        "id": id
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateAllTodo(
+      String uid,
+      int docId,
+      String arrayTitle,
+      String title,
+      String details,
+      Timestamp dateCreated,
+      String date,
+      String time,
+      done,
+      dateAndTimeEnabled,
+      int id) async {
+    try {
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("allTodos")
+          .doc(docId.toString())
+          .update({
+        "arrayTitle": arrayTitle,
+        "title": title,
+        "details": details,
+        "dateCreated": dateCreated,
+        "date": date,
+        "time": time,
+        "done": done,
+        "dateAndTimeEnabled": dateAndTimeEnabled,
+        "id": id
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> updateArray(String uid, String title, String id) async {
     try {
       await _firestore
@@ -70,6 +137,19 @@ class Database {
           .doc(uid)
           .collection("arrays")
           .doc(id)
+          .delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteAllTodo(String uid, int docId) async {
+    try {
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("allTodos")
+          .doc(docId.toString())
           .delete();
     } catch (e) {
       rethrow;
