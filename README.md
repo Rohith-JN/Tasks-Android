@@ -17,13 +17,16 @@
 
 ## Preview
 
+<img src = "https://user-images.githubusercontent.com/78314165/198681066-90b04842-adc7-46ec-b5b7-e1c58e3715cb.mp4" />
+
 To view app screenshots go here: [Preview](https://github.com/Rohith-JN/Tasks/tree/main/Preview)
 
 ## Key Features
 
 * Multi-list Todo app
+* User Authentication using Firebase Auth
 * Tasks are stored in Firestore DB
 * Tasks can be added, deleted, marked as done
-* Tasks can be scheduled at a specific time and date
+* Tasks can be scheduled at a specific date and time
 * Multi-color theme
 * Minimal and clean
