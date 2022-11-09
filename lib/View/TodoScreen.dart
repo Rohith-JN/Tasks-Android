@@ -395,18 +395,16 @@ class _TodoScreenState extends State<TodoScreen> {
                                 style: todoScreenStyle,
                               ),
                             ),
-                            _dateController.text.isNotEmpty &&
-                                    _timeController.text.isNotEmpty
-                                ? IconButton(
+                            if (_dateController.text.isNotEmpty ||
+                                _timeController.text.isNotEmpty)
+                              {
+                                ElevatedButton(
                                     onPressed: () {
                                       _dateController.clear();
                                       _timeController.clear();
                                     },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                    ))
-                                : Container()
+                                    child: const Text("Clear"))
+                              }.single
                           ],
                         ),
                         dividerStyle,
