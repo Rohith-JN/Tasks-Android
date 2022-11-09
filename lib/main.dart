@@ -2,14 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tasks/controllers/bindings/Bindings.dart';
-import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tasks/view/AuthScreen.dart';
 import 'package:tasks/view/MainScreen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/services.dart';
-
 Future main() async {
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();

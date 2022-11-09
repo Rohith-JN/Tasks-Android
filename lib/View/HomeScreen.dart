@@ -8,11 +8,9 @@ import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/services/notification.service.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
   final int? index;

@@ -38,4 +38,8 @@ class NotificationService {
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);
   }
+
+  Future<void> repeatNotification() async {
+    // Todo
+  }
 }

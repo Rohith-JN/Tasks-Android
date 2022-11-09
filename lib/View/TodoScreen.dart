@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/models/Todo.dart';
-import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:date_format/date_format.dart';
@@ -372,49 +372,58 @@ class _TodoScreenState extends State<TodoScreen> {
                 child: Container(
                     margin: const EdgeInsets.only(top: 20.0),
                     width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 15.0),
                     decoration: BoxDecoration(
                         color: tertiaryColor,
                         borderRadius: BorderRadius.circular(14.0)),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 15.0),
-                    child: TextField(
-                      enabled: false,
-                      controller: _dateController,
-                      onChanged: (String val) {
-                        _setDate = val;
-                      },
-                      decoration: InputDecoration(
-                          hintText: "Date",
-                          hintStyle: hintTextStyle,
-                          border: InputBorder.none),
-                      style: todoScreenStyle,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: TextField(
+                                enabled: false,
+                                controller: _dateController,
+                                onChanged: (String val) {
+                                  _setDate = val;
+                                },
+                                decoration: InputDecoration(
+                                    hintText: "Date",
+                                    hintStyle: hintTextStyle,
+                                    border: InputBorder.none),
+                                style: todoScreenStyle,
+                              ),
+                            ),
+                            _dateController.text.isNotEmpty &&
+                                    _timeController.text.isNotEmpty
+                                ? IconButton(
+                                    onPressed: () {
+                                      _dateController.clear();
+                                      _timeController.clear();
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ))
+                                : Container()
+                          ],
+                        ),
+                        dividerStyle,
+                        TextField(
+                          onChanged: (String val) {
+                            _setTime = val;
+                          },
+                          enabled: false,
+                          controller: _timeController,
+                          decoration: InputDecoration(
+                              hintText: "Time",
+                              hintStyle: hintTextStyle,
+                              border: InputBorder.none),
+                          style: todoScreenStyle,
+                        )
+                      ],
                     )),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  await _pickDateTime();
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: tertiaryColor,
-                      borderRadius: BorderRadius.circular(14.0)),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 15.0),
-                  child: TextField(
-                    onChanged: (String val) {
-                      _setTime = val;
-                    },
-                    enabled: false,
-                    controller: _timeController,
-                    decoration: InputDecoration(
-                        hintText: "Time",
-                        hintStyle: hintTextStyle,
-                        border: InputBorder.none),
-                    style: todoScreenStyle,
-                  ),
-                ),
               ),
             ],
           ),

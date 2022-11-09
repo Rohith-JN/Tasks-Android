@@ -5,7 +5,7 @@ import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/userController.dart';
 import 'package:tasks/main.dart';
 import 'package:tasks/models/User.dart';
-import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/services/database.service.dart';
 
 import '../utils/global.dart';

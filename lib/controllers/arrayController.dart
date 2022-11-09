@@ -36,9 +36,9 @@ class ArrayController extends GetxController {
         isEqualTo: DateFormat("MM/dd/yyyy").format(DateTime.now()));
     arrays.bindStream(getArrays());
     allTodos.bindStream(getAllTodos());
-    doneTodos.bindStream(getAllDoneTodos());
-    scheduledTodos.bindStream(getAllScheduledTodos());
-    todayTodos.bindStream(getAllTodayTodos());
+    doneTodos.bindStream(getDoneTodos());
+    scheduledTodos.bindStream(getScheduledTodos());
+    todayTodos.bindStream(getTodayTodos());
   }
 
   Stream<List<Array>> getArrays() {
@@ -52,17 +52,17 @@ class ArrayController extends GetxController {
         (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getAllDoneTodos() {
+  Stream<List<FilterTodo>> getDoneTodos() {
     return doneQuery.snapshots().map(
         (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getAllScheduledTodos() {
+  Stream<List<FilterTodo>> getScheduledTodos() {
     return scheduledQuery.snapshots().map(
         (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getAllTodayTodos() {
+  Stream<List<FilterTodo>> getTodayTodos() {
     return todayQuery.snapshots().map(
         (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
   }

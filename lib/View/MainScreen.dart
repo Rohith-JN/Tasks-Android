@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:tasks/controllers/arrayController.dart';
-import 'package:tasks/services/Notification.service.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:tasks/utils/global.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tasks/view/DeleteScreen.dart';
-import 'package:tasks/view/AllTodosScreen.dart';
 import '../controllers/authController.dart';
 
 class MainScreen extends StatefulWidget {
@@ -29,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text("Lists",
+          title: Text("Tasks",
               style: GoogleFonts.notoSans(
                 fontSize: 30,
                 color: primaryColor,
@@ -517,7 +515,3 @@ class _MainScreenState extends State<MainScreen> {
             )));
   }
 }
-
-/*
-
-*/

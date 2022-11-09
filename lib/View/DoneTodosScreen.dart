@@ -56,38 +56,12 @@ class _DoneTodosScreenState extends State<DoneTodosScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          arrayController
-                                              .doneTodos[index].title!,
-                                          style: GoogleFonts.notoSans(
-                                            color: const Color(0xFFA8A8A8),
-                                            fontSize: 23.0,
-                                          ),
-                                        ),
-                                        Transform.scale(
-                                          scale: 1.3,
-                                          child: Theme(
-                                            data: ThemeData(
-                                                unselectedWidgetColor:
-                                                    const Color.fromARGB(
-                                                        255, 187, 187, 187)),
-                                            child: Checkbox(
-                                                shape: const CircleBorder(),
-                                                checkColor: Colors.white,
-                                                activeColor: primaryColor,
-                                                value: arrayController
-                                                    .doneTodos[index].done,
-                                                side: Theme.of(context)
-                                                    .checkboxTheme
-                                                    .side,
-                                                onChanged: null),
-                                          ),
-                                        )
-                                      ],
+                                    Text(
+                                      arrayController.doneTodos[index].title!,
+                                      style: GoogleFonts.notoSans(
+                                        color: const Color(0xFFA8A8A8),
+                                        fontSize: 23.0,
+                                      ),
                                     ),
                                     const SizedBox(height: 5.0),
                                     const Divider(
