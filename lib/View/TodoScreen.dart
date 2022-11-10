@@ -195,11 +195,14 @@ class _TodoScreenState extends State<TodoScreen> {
                       finalId);
                   Get.back();
                   HapticFeedback.heavyImpact();
-                  NotificationService().showNotification(
-                      finalId,
-                      'Reminder',
-                      titleEditingController.text,
-                      parse(_dateController.text, _timeController.text));
+                  if (_dateController.text.isNotEmpty &&
+                      _timeController.text.isNotEmpty) {
+                    NotificationService().showNotification(
+                        finalId,
+                        'Reminder',
+                        titleEditingController.text,
+                        parse(_dateController.text, _timeController.text));
+                  }
                 }
                 if (widget.todoIndex != null &&
                     _formKey.currentState!.validate()) {
@@ -248,12 +251,15 @@ class _TodoScreenState extends State<TodoScreen> {
                           .todos![widget.todoIndex!].id!);
                   Get.back();
                   HapticFeedback.heavyImpact();
-                  NotificationService().showNotification(
-                      arrayController.arrays[widget.arrayIndex!]
-                          .todos![widget.todoIndex!].id!,
-                      'Reminder',
-                      titleEditingController.text,
-                      parse(_dateController.text, _timeController.text));
+                  if (_dateController.text.isNotEmpty &&
+                      _timeController.text.isNotEmpty) {
+                    NotificationService().showNotification(
+                        arrayController.arrays[widget.arrayIndex!]
+                            .todos![widget.todoIndex!].id!,
+                        'Reminder',
+                        titleEditingController.text,
+                        parse(_dateController.text, _timeController.text));
+                  }
                 }
               },
               child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
@@ -295,8 +301,7 @@ class _TodoScreenState extends State<TodoScreen> {
                                 border: InputBorder.none),
                             style: todoScreenStyle),
                         dividerStyle,
-                        TextFormField(
-                            validator: Validator.titleValidator,
+                        TextField(
                             controller: detailEditingController,
                             maxLines: null,
                             autocorrect: false,
@@ -379,33 +384,17 @@ class _TodoScreenState extends State<TodoScreen> {
                         borderRadius: BorderRadius.circular(14.0)),
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: TextField(
-                                enabled: false,
-                                controller: _dateController,
-                                onChanged: (String val) {
-                                  _setDate = val;
-                                },
-                                decoration: InputDecoration(
-                                    hintText: "Date",
-                                    hintStyle: hintTextStyle,
-                                    border: InputBorder.none),
-                                style: todoScreenStyle,
-                              ),
-                            ),
-                            if (_dateController.text.isNotEmpty ||
-                                _timeController.text.isNotEmpty)
-                              {
-                                ElevatedButton(
-                                    onPressed: () {
-                                      _dateController.clear();
-                                      _timeController.clear();
-                                    },
-                                    child: const Text("Clear"))
-                              }.single
-                          ],
+                        TextField(
+                          enabled: false,
+                          controller: _dateController,
+                          onChanged: (String val) {
+                            _setDate = val;
+                          },
+                          decoration: InputDecoration(
+                              hintText: "Date",
+                              hintStyle: hintTextStyle,
+                              border: InputBorder.none),
+                          style: todoScreenStyle,
                         ),
                         dividerStyle,
                         TextField(
