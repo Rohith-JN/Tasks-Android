@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:tasks/utils/validators.dart';
 
 //  Colors
 
 const backgroundColor = Colors.black;
 var primaryColor = const Color(0xFF33aaf6);
-const formInputColor = Color.fromARGB(255, 48, 48, 48);
 const secondaryColor = Color(0xFF707070);
 const tertiaryColor = Color.fromARGB(255, 37, 37, 37);
 
 // TextStyles
 
-TextStyle headingWhite = const TextStyle(
-    color: Colors.white, fontSize: 50.0, fontWeight: FontWeight.bold);
+TextStyle appBarTextStyle = GoogleFonts.notoSans(
+  fontSize: 30,
+  color: primaryColor,
+  fontWeight: FontWeight.bold,
+);
+TextStyle infoTextStyle = const TextStyle(color: Colors.white, fontSize: 23.0);
+TextStyle heading(color) => TextStyle(
+    color: color, fontSize: 50.0, fontWeight: FontWeight.bold);
 TextStyle formInputText = const TextStyle(color: Colors.white, fontSize: 20);
 TextStyle hintTextStyle = const TextStyle(
   color: Color.fromARGB(255, 173, 173, 173),
@@ -24,18 +28,28 @@ TextStyle counterTextStyle = const TextStyle(
   color: Color.fromARGB(255, 173, 173, 173),
   fontSize: 15,
 );
-TextStyle paragraphWhite =
-    const TextStyle(color: secondaryColor, fontSize: 15.0);
 TextStyle paragraphGray =
     const TextStyle(color: secondaryColor, fontSize: 20.0);
 TextStyle paragraphWhiteBig =
     const TextStyle(color: Colors.white, fontSize: 25.0);
-TextStyle accountTextStyle = const TextStyle(
-  fontSize: 20.0,
-  color: Colors.black,
+TextStyle buttonTextStyleWhite =
+    const TextStyle(color: Colors.white, fontSize: 23.0);
+TextStyle menuTextStyle =
+    const TextStyle(fontSize: 22, color: Color(0xFFEAEAEA));
+TextStyle todoScreenStyle = GoogleFonts.notoSans(
+  color: const Color(0xFFA8A8A8),
+  fontSize: 23.0,
 );
-TextStyle listTileTextStyle =
-    const TextStyle(fontSize: 17.0, color: Colors.white);
+TextStyle todoScreenDetailsStyle = GoogleFonts.notoSans(
+  color: const Color(0xFFA8A8A8),
+  fontSize: 20.0,
+);
+TextStyle listInfoTextStyle = GoogleFonts.notoSans(
+  color: primaryColor,
+  fontSize: 23.0,
+);
+TextStyle actionButtonTextStyle =
+    TextStyle(fontSize: 20.0, color: primaryColor);
 
 // Decorations
 
@@ -127,11 +141,6 @@ TextStyle optionsTextStyle = GoogleFonts.notoSans(
   color: const Color(0xFFEAEAEA),
 );
 
-TextStyle alertTextStyle = GoogleFonts.notoSans(
-  fontSize: 20.0,
-  color: const Color(0xFFEAEAEA),
-);
-
 TextStyle todoTitleStyle(condition) => GoogleFonts.notoSans(
       color: const Color(0xFFA8A8A8),
       fontSize: 23.0,
@@ -140,22 +149,6 @@ TextStyle todoTitleStyle(condition) => GoogleFonts.notoSans(
       decorationColor: primaryColor,
       decorationThickness: 2,
     );
-
-TextStyle buttonTextStyleWhite =
-    const TextStyle(color: Colors.white, fontSize: 23.0);
-
-TextStyle menuTextStyle =
-    const TextStyle(fontSize: 22, color: Color(0xFFEAEAEA));
-
-TextStyle todoScreenStyle = GoogleFonts.notoSans(
-  color: const Color(0xFFA8A8A8),
-  fontSize: 23.0,
-);
-
-TextStyle todoScreenDetailsStyle = GoogleFonts.notoSans(
-  color: const Color(0xFFA8A8A8),
-  fontSize: 20.0,
-);
 
 //Other styles
 
@@ -166,12 +159,6 @@ Divider dividerStyle = const Divider(
 
 Icon menuIcon = const Icon(
   Icons.menu,
-  color: Color(0xFFEAEAEA),
-  size: 27.0,
-);
-
-Icon searchIcon = const Icon(
-  Icons.search,
   color: Color(0xFFEAEAEA),
   size: 27.0,
 );
@@ -215,16 +202,20 @@ Theme datePickerTheme(child) => Theme(
       child: child!,
     );
 
- tz.TZDateTime parse(date, time) {
-    String value = '$date $time';
-    String currentFormat = "MM/dd/yyyy hh:mm a";
-    DateTime? dateTime = DateTime.now();
-    if (value != null || value.isNotEmpty) {
-      try {
-        bool isUtc = false;
-        dateTime = DateFormat(currentFormat).parse(value, isUtc).toLocal();
-      } catch (e) {}
-    }
-    String parsed = dateTime!.toString();
-    return tz.TZDateTime.parse(tz.local, parsed);
-  }
+TextFormField buildTextField(BuildContext context, controller, maxLines, maxLength, textInputAction, hintText, style) {
+  return TextFormField(
+      validator: Validator.titleValidator,
+      controller: controller,
+      autofocus: true,
+      autocorrect: false,
+      cursorColor: Colors.grey,
+      maxLines: maxLines,
+      maxLength: maxLength,
+      textInputAction: textInputAction,
+      decoration: InputDecoration(
+          counterStyle: counterTextStyle,
+          hintText: hintText,
+          hintStyle: hintTextStyle,
+          border: InputBorder.none),
+      style: style);
+}

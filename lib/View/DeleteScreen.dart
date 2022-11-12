@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:tasks/utils/validators.dart';
-
 import '../controllers/authController.dart';
 
 class DeleteScreen extends StatefulWidget {
@@ -41,12 +40,8 @@ class _DeleteScreenState extends State<DeleteScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("TASK", style: headingWhite),
-                Text("S",
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 50.0,
-                        fontWeight: FontWeight.bold)),
+                Text("TASK", style: heading(Colors.white)),
+                Text("S", style: heading(primaryColor)),
               ],
             ),
             Form(

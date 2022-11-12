@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
               ));
             } else if (snapshot.hasError) {
               return Center(
-                  child: Text("Something went wrong!", style: headingWhite));
+                  child: Text("Something went wrong!", style: heading(Colors.white)));
             } else if (snapshot.hasData) {
               return const MainScreen();
             } else {

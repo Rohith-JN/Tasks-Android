@@ -31,12 +31,9 @@ class _AuthScreenState extends State<AuthScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("TASK", style: headingWhite),
+                Text("TASK", style: heading(Colors.white)),
                 Text("S",
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 50.0,
-                        fontWeight: FontWeight.bold)),
+                    style: heading(primaryColor)),
               ],
             ),
             (isLogin)
