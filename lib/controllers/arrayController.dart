@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/models/Array.dart';
-import '../models/FilterTodo.dart';
+import '../models/FTodo.dart';
 
 class ArrayController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -16,10 +16,10 @@ class ArrayController extends GetxController {
   late Query todayQuery;
 
   RxList<Array> arrays = RxList<Array>([]);
-  RxList<FilterTodo> allTodos = RxList<FilterTodo>([]);
-  RxList<FilterTodo> doneTodos = RxList<FilterTodo>([]);
-  RxList<FilterTodo> scheduledTodos = RxList<FilterTodo>([]);
-  RxList<FilterTodo> todayTodos = RxList<FilterTodo>([]);
+  RxList<FTodo> allTodos = RxList<FTodo>([]);
+  RxList<FTodo> doneTodos = RxList<FTodo>([]);
+  RxList<FTodo> scheduledTodos = RxList<FTodo>([]);
+  RxList<FTodo> todayTodos = RxList<FTodo>([]);
 
   @override
   void onInit() {
@@ -47,23 +47,23 @@ class ArrayController extends GetxController {
         .map((query) => query.docs.map((item) => Array.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getAllTodos() {
+  Stream<List<FTodo>> getAllTodos() {
     return allTodosCollectionReference.snapshots().map(
-        (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
+        (query) => query.docs.map((item) => FTodo.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getDoneTodos() {
+  Stream<List<FTodo>> getDoneTodos() {
     return doneQuery.snapshots().map(
-        (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
+        (query) => query.docs.map((item) => FTodo.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getScheduledTodos() {
+  Stream<List<FTodo>> getScheduledTodos() {
     return scheduledQuery.snapshots().map(
-        (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
+        (query) => query.docs.map((item) => FTodo.fromMap(item)).toList());
   }
 
-  Stream<List<FilterTodo>> getTodayTodos() {
+  Stream<List<FTodo>> getTodayTodos() {
     return todayQuery.snapshots().map(
-        (query) => query.docs.map((item) => FilterTodo.fromMap(item)).toList());
+        (query) => query.docs.map((item) => FTodo.fromMap(item)).toList());
   }
 }

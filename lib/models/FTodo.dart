@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FilterTodo {
+class FTodo {
   int? id;
   String? docId;
   String? arrayTitle;
@@ -12,7 +12,7 @@ class FilterTodo {
   bool? done;
   Timestamp? dateCreated;
 
-  FilterTodo({
+  FTodo({
     this.id,
     this.docId,
     this.arrayTitle,
@@ -25,7 +25,7 @@ class FilterTodo {
     this.dateCreated,
   });
 
-  FilterTodo.fromMap(DocumentSnapshot doc) {
+  FTodo.fromMap(DocumentSnapshot doc) {
     id = doc["id"];
     docId = doc.id;
     arrayTitle = doc["arrayTitle"];
