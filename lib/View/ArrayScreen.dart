@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tasks/controllers/arrayController.dart';
-import 'package:tasks/utils/validators.dart';
 
 class ArrayScreen extends StatefulWidget {
   final int? index;
@@ -52,7 +51,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
             },
             child: Text(
               "Cancel",
-              style: TextStyle(fontSize: 20.0, color: primaryColor),
+              style: actionButtonTextStyle,
             ),
           ),
         ),
@@ -65,8 +64,8 @@ class _ArrayScreenState extends State<ArrayScreen> {
               ),
               onPressed: () {
                 if (widget.index == null && formKey.currentState!.validate()) {
-                  Database().addArray(authController.user!.uid,
-                      titleEditingController.text);
+                  Database().addArray(
+                      authController.user!.uid, titleEditingController.text);
                   Get.back();
                   HapticFeedback.heavyImpact();
                 }
@@ -81,7 +80,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
                 }
               },
               child: Text((widget.index == null) ? 'Add' : 'Update',
-                  style: TextStyle(fontSize: 20.0, color: primaryColor)),
+                  style: actionButtonTextStyle),
             ),
           )
         ],
@@ -103,21 +102,8 @@ class _ArrayScreenState extends State<ArrayScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextFormField(
-                            validator: Validator.titleValidator,
-                            controller: titleEditingController,
-                            autofocus: true,
-                            autocorrect: false,
-                            cursorColor: Colors.grey,
-                            maxLines: 1,
-                            maxLength: 25,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                                counterStyle: counterTextStyle,
-                                hintText: "Title",
-                                hintStyle: hintTextStyle,
-                                border: InputBorder.none),
-                            style: todoScreenStyle),
+                        buildTextField(context, titleEditingController, 1, 25,
+                            TextInputAction.done, "Title", todoScreenStyle)
                       ],
                     ),
                   )),

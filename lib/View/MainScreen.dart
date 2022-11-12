@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tasks/view/ArrayScreen.dart';
 import 'package:tasks/view/DeleteScreen.dart';
+import 'package:tasks/view/FilteredScreen.dart';
+import 'package:tasks/view/HomeScreen.dart';
 import '../controllers/authController.dart';
 
 class MainScreen extends StatefulWidget {
@@ -183,8 +186,12 @@ class _MainScreenState extends State<MainScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .push(Routes.routeToScheduledTodosScreen());
+                          Navigator.of(context).push(Routes.route(
+                              FilteredScreen(
+                                  title: 'Scheduled',
+                                  data: arrayController.scheduledTodos,
+                                  infoText: "No scheduled tasks"),
+                              const Offset(1.0, 0.0)));
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.45,
@@ -219,8 +226,12 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .push(Routes.routeToTodayTodosScreen());
+                          Navigator.of(context).push(Routes.route(
+                              FilteredScreen(
+                                  title: 'Today',
+                                  data: arrayController.todayTodos,
+                                  infoText: "No tasks scheduled for today"),
+                              const Offset(1.0, 0.0)));
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.45,
@@ -263,8 +274,12 @@ class _MainScreenState extends State<MainScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .push(Routes.routeToDoneTodosScreen());
+                          Navigator.of(context).push(Routes.route(
+                              FilteredScreen(
+                                  title: 'Completed',
+                                  data: arrayController.doneTodos,
+                                  infoText: "No completed tasks"),
+                              const Offset(1.0, 0.0)));
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.45,
@@ -299,8 +314,12 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .push(Routes.routeToAllTodosScreen());
+                          Navigator.of(context).push(Routes.route(
+                              FilteredScreen(
+                                  title: 'All',
+                                  data: arrayController.allTodos,
+                                  infoText: "No tasks yet"),
+                              const Offset(1.0, 0.0)));
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.45,
@@ -371,16 +390,20 @@ class _MainScreenState extends State<MainScreen> {
                                       itemBuilder: (context, index) =>
                                           GestureDetector(
                                             onLongPress: () {
-                                              Navigator.of(context).push(Routes
-                                                  .routeToArrayScreenIndex(
-                                                      index,
-                                                      arrayController
-                                                          .arrays[index].id));
+                                              Navigator.of(context).push(
+                                                  Routes.route(
+                                                      ArrayScreen(
+                                                          index: index,
+                                                          docId: arrayController
+                                                              .arrays[index]
+                                                              .id),
+                                                      const Offset(0.0, 1.0)));
                                             },
                                             onTap: () {
                                               Navigator.of(context).push(
-                                                  Routes.routeToHomeScreen(
-                                                      index));
+                                                  Routes.route(
+                                                      HomeScreen(index: index),
+                                                      const Offset(1.0, 0.0)));
                                             },
                                             child: Dismissible(
                                               key: UniqueKey(),
@@ -500,7 +523,8 @@ class _MainScreenState extends State<MainScreen> {
         ),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(Routes.routeToArrayScreen());
+              Navigator.of(context).push(
+                  Routes.route(const ArrayScreen(), const Offset(0.0, 1.0)));
             },
             child: Container(
               decoration: BoxDecoration(

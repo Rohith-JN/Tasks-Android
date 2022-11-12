@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/services/notification.service.dart';
+import 'package:tasks/view/TodoScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   final int? index;
@@ -53,9 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) => GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                        Routes.routeToTodoScreenIndex(
-                                            widget.index, index));
+                                    Navigator.of(context).push(Routes.route(
+                                        TodoScreen(
+                                          arrayIndex: widget.index,
+                                          todoIndex: index,
+                                        ),
+                                        const Offset(0.0, 1.0)));
                                   },
                                   child: Dismissible(
                                     key: UniqueKey(),
@@ -139,8 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
             )),
         floatingActionButton: GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(Routes.routeToTodoScreen(widget.index));
+              Navigator.of(context).push(Routes.route(
+                  TodoScreen(arrayIndex: widget.index),
+                  const Offset(0.0, 1.0)));
             },
             child: Container(
               decoration: BoxDecoration(

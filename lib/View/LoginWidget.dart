@@ -4,6 +4,7 @@ import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:tasks/utils/validators.dart';
+import 'package:tasks/view/PasswordScreen.dart';
 
 class LogIn extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -60,7 +61,8 @@ class _LogInState extends State<LogIn> {
           const SizedBox(height: 15),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(Routes.routeToPassword());
+              Navigator.of(context)
+                  .push(Routes.route(const Password(), const Offset(1.0, 0.0)));
             },
             child: Container(
               constraints: const BoxConstraints(maxWidth: 600),
@@ -73,7 +75,7 @@ class _LogInState extends State<LogIn> {
           Container(
             constraints: const BoxConstraints(maxWidth: 600),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(9),
                 ),
                 boxShadow: [
@@ -116,7 +118,8 @@ class _LogInState extends State<LogIn> {
           ),
           const SizedBox(height: 30.0),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text("Don't have an account? ", style: TextStyle(color: secondaryColor, fontSize: 20.0)),
+            const Text("Don't have an account? ",
+                style: TextStyle(color: secondaryColor, fontSize: 20.0)),
             GestureDetector(
               onTap: widget.onClickedSignUp,
               child: Text(

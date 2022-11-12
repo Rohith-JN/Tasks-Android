@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/utils/validators.dart';
+import 'package:tasks/services/functions.services.dart';
 
 class TodoScreen extends StatefulWidget {
   final int? todoIndex;
@@ -201,7 +202,7 @@ class _TodoScreenState extends State<TodoScreen> {
                         finalId,
                         'Reminder',
                         titleEditingController.text,
-                        parse(_dateController.text, _timeController.text));
+                        Functions.parse(_dateController.text, _timeController.text));
                   }
                 }
                 if (widget.todoIndex != null &&
@@ -258,7 +259,7 @@ class _TodoScreenState extends State<TodoScreen> {
                             .todos![widget.todoIndex!].id!,
                         'Reminder',
                         titleEditingController.text,
-                        parse(_dateController.text, _timeController.text));
+                        Functions.parse(_dateController.text, _timeController.text));
                   }
                 }
               },
