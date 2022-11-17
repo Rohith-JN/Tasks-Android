@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/utils/validators.dart';
 import 'package:tasks/services/functions.services.dart';
+import 'package:tasks/utils/widgets.dart';
 
 class TodoScreen extends StatefulWidget {
   final int? todoIndex;
@@ -301,7 +302,7 @@ class _TodoScreenState extends State<TodoScreen> {
                                 hintText: "Title",
                                 border: InputBorder.none),
                             style: todoScreenStyle),
-                        dividerStyle,
+                        primaryDivider,
                         TextField(
                             controller: detailEditingController,
                             maxLines: null,
@@ -397,7 +398,7 @@ class _TodoScreenState extends State<TodoScreen> {
                               border: InputBorder.none),
                           style: todoScreenStyle,
                         ),
-                        dividerStyle,
+                        primaryDivider,
                         TextField(
                           onChanged: (String val) {
                             _setTime = val;

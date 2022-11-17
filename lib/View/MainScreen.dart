@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tasks/utils/widgets.dart';
 import 'package:tasks/view/ArrayScreen.dart';
 import 'package:tasks/view/DeleteScreen.dart';
 import 'package:tasks/view/FilteredScreen.dart';
@@ -63,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
                                 fontSize: 20.0, color: Colors.white),
                           )),
                           const SizedBox(height: 15.0),
-                          dividerStyle,
+                          primaryDivider,
                           ListTile(
                             title: Text(
                               "Change theme",
@@ -170,7 +171,7 @@ class _MainScreenState extends State<MainScreen> {
                     },
                   );
                 },
-                icon: menuIcon)
+                icon: primaryIcon(Icons.menu))
           ],
         ),
         body: SingleChildScrollView(

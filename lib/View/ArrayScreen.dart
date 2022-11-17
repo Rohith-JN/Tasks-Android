@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tasks/controllers/arrayController.dart';
+import 'package:tasks/utils/widgets.dart';
 
 class ArrayScreen extends StatefulWidget {
   final int? index;
@@ -102,7 +103,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        buildTextField(context, titleEditingController, 1, 25,
+                        primaryTextField(context, titleEditingController, 1, 25,
                             TextInputAction.done, "Title", todoScreenStyle)
                       ],
                     ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tasks/utils/validators.dart';
 
 //  Colors
 
@@ -17,8 +16,8 @@ TextStyle appBarTextStyle = GoogleFonts.notoSans(
   fontWeight: FontWeight.bold,
 );
 TextStyle infoTextStyle = const TextStyle(color: Colors.white, fontSize: 23.0);
-TextStyle heading(color) => TextStyle(
-    color: color, fontSize: 50.0, fontWeight: FontWeight.bold);
+TextStyle heading(color) =>
+    TextStyle(color: color, fontSize: 50.0, fontWeight: FontWeight.bold);
 TextStyle formInputText = const TextStyle(color: Colors.white, fontSize: 20);
 TextStyle hintTextStyle = const TextStyle(
   color: Color.fromARGB(255, 173, 173, 173),
@@ -135,7 +134,6 @@ InputDecoration passwordInputDecoration(
             onPressed: onPressed),
         hintStyle: hintTextStyle);
 
-//
 TextStyle optionsTextStyle = GoogleFonts.notoSans(
   fontSize: 17.0,
   color: const Color(0xFFEAEAEA),
@@ -150,18 +148,7 @@ TextStyle todoTitleStyle(condition) => GoogleFonts.notoSans(
       decorationThickness: 2,
     );
 
-//Other styles
-
-Divider dividerStyle = const Divider(
-  color: Color(0xFF707070),
-  thickness: 1.0,
-);
-
-Icon menuIcon = const Icon(
-  Icons.menu,
-  color: Color(0xFFEAEAEA),
-  size: 27.0,
-);
+//Themes
 
 Theme timePickerTheme(child) => Theme(
       data: ThemeData.dark().copyWith(
@@ -201,21 +188,3 @@ Theme datePickerTheme(child) => Theme(
       )),
       child: child!,
     );
-
-TextFormField buildTextField(BuildContext context, controller, maxLines, maxLength, textInputAction, hintText, style) {
-  return TextFormField(
-      validator: Validator.titleValidator,
-      controller: controller,
-      autofocus: true,
-      autocorrect: false,
-      cursorColor: Colors.grey,
-      maxLines: maxLines,
-      maxLength: maxLength,
-      textInputAction: textInputAction,
-      decoration: InputDecoration(
-          counterStyle: counterTextStyle,
-          hintText: hintText,
-          hintStyle: hintTextStyle,
-          border: InputBorder.none),
-      style: style);
-}

@@ -5,6 +5,7 @@ import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasks/utils/widgets.dart';
 
 class FilteredScreen extends StatefulWidget {
   final String title;
@@ -57,7 +58,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                     Text(widget.data[index].title!,
                                         style: todoScreenStyle),
                                     const SizedBox(height: 5.0),
-                                    dividerStyle,
+                                    primaryDivider,
                                     Visibility(
                                       child: Text(widget.data[index].details!,
                                           style: todoScreenStyle),
@@ -68,7 +69,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                                 widget.data[index].time == ''
                                             ? false
                                             : true,
-                                        child: dividerStyle),
+                                        child: primaryDivider),
                                     const SizedBox(height: 10.0),
                                     Row(
                                       mainAxisAlignment:
@@ -98,7 +99,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                         ),
                                       ],
                                     ),
-                                    dividerStyle,
+                                    primaryDivider,
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           top: 5.0, bottom: 5.0),
