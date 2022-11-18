@@ -24,6 +24,7 @@
 * Tasks can be scheduled at a specific date and time
 * Multi-color theme
 * Minimal and clean
+* Test
 
 # Command
 ### Install dependencies
