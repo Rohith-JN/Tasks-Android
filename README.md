@@ -15,10 +15,6 @@
 | ![login](./Preview/LoginScreen.png) | ![add_task](./Preview/TodoScreen.png) |![home](./Preview/MainScreen.png) |
 | ![task](./Preview/HomeScreen.png) | ![filtered](./Preview/FilterScreen.png) |![theme](./Preview/ThemeScreen.png) |
 
-## Preview
-
-<img src = "https://user-images.githubusercontent.com/78314165/198681066-90b04842-adc7-46ec-b5b7-e1c58e3715cb.mp4" />
-
 ## Key Features
 
 * Multi-list Todo app
@@ -56,15 +52,3 @@ flutter build apk
 - [Getx](https://pub.dev/packages/get) // State management
 - [Firebase](https://firebase.google.com/) // Authentication
 - [Firestore](https://firebase.google.com/products/firestore) // Database
-
-
-## Author
-
-👤 **Rohith Nambiar**
-
-* Github: [Rohith-JN](https://github.com/Rohith-JN)
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-

@@ -127,9 +127,7 @@ class AuthController extends GetxController {
             ),
             TextButton(
               onPressed: () async {
-                NotificationService()
-                    .flutterLocalNotificationsPlugin
-                    .cancelAll();
+                // Todo cancel all notifications
                 await _auth.signOut();
                 Get.find<UserController>().clear();
                 Get.delete<ArrayController>();
@@ -159,7 +157,7 @@ class AuthController extends GetxController {
               color: primaryColor,
             ))));
     try {
-      NotificationService().flutterLocalNotificationsPlugin.cancelAll();
+      // Todo cancel all notifications
       Database().deleteUser(_auth.currentUser!.uid);
       AuthCredential authCredential =
           EmailAuthProvider.credential(email: email, password: password);

@@ -430,12 +430,7 @@ class _MainScreenState extends State<MainScreen> {
                                                           .arrays[index]
                                                           .todos![i]
                                                           .id!);
-                                                  NotificationService()
-                                                      .flutterLocalNotificationsPlugin
-                                                      .cancel(arrayController
-                                                          .arrays[index]
-                                                          .todos![i]
-                                                          .id!);
+                                                  // Todo Cancel notification at arrayController.arrays[index].todos![i].id!
                                                 }
                                               },
                                               child: Container(

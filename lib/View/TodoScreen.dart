@@ -199,11 +199,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   HapticFeedback.heavyImpact();
                   if (_dateController.text.isNotEmpty &&
                       _timeController.text.isNotEmpty) {
-                    NotificationService().showNotification(
-                        finalId,
-                        'Reminder',
-                        titleEditingController.text,
-                        Functions.parse(_dateController.text, _timeController.text));
+                        // Todo set notification at finalId
                   }
                 }
                 if (widget.todoIndex != null &&
@@ -255,12 +251,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   HapticFeedback.heavyImpact();
                   if (_dateController.text.isNotEmpty &&
                       _timeController.text.isNotEmpty) {
-                    NotificationService().showNotification(
-                        arrayController.arrays[widget.arrayIndex!]
-                            .todos![widget.todoIndex!].id!,
-                        'Reminder',
-                        titleEditingController.text,
-                        Functions.parse(_dateController.text, _timeController.text));
+                    // Todo set notification at arrayController.arrays[widget.arrayIndex!].todos![widget.todoIndex!].id!
                   }
                 }
               },
