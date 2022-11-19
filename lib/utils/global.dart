@@ -29,6 +29,8 @@ TextStyle counterTextStyle = const TextStyle(
 );
 TextStyle paragraphGray =
     const TextStyle(color: secondaryColor, fontSize: 20.0);
+TextStyle paragraphPrimary = TextStyle(color: primaryColor, fontSize: 20.0);
+
 TextStyle paragraphWhiteBig =
     const TextStyle(color: Colors.white, fontSize: 25.0);
 TextStyle buttonTextStyleWhite =
@@ -49,7 +51,7 @@ TextStyle listInfoTextStyle = GoogleFonts.notoSans(
 );
 TextStyle actionButtonTextStyle =
     TextStyle(fontSize: 20.0, color: primaryColor);
-
+TextStyle accountTextStyle = const TextStyle(fontSize: 20.0, color: Colors.white);
 // Decorations
 
 InputDecoration emailInputDecoration = InputDecoration(

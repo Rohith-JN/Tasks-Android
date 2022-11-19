@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/utils/validators.dart';
-import 'package:tasks/services/functions.services.dart';
 import 'package:tasks/utils/widgets.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -141,7 +140,7 @@ class _TodoScreenState extends State<TodoScreen> {
             },
             child: Text(
               "Cancel",
-              style: TextStyle(fontSize: 20.0, color: primaryColor),
+              style: paragraphPrimary,
             ),
           ),
         ),
@@ -256,7 +255,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 }
               },
               child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
-                  style: TextStyle(fontSize: 20.0, color: primaryColor)),
+                  style: paragraphPrimary),
             ),
           )
         ],

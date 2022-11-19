@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tasks/utils/global.dart';
+import 'package:tasks/utils/routes.dart';
 import 'package:tasks/utils/validators.dart';
+import 'package:tasks/view/FilteredScreen.dart';
 
 TextFormField primaryTextField(BuildContext context, controller, maxLines,
     maxLength, textInputAction, hintText, style) {
@@ -24,7 +28,7 @@ TextFormField primaryTextField(BuildContext context, controller, maxLines,
 Icon primaryIcon(icon) {
   return Icon(
     icon,
-    color: Color(0xFFEAEAEA),
+    color: const Color(0xFFEAEAEA),
     size: 27.0,
   );
 }
@@ -71,6 +75,63 @@ Container primaryButton(VoidCallback function, String title) {
       ),
       onPressed: function,
       child: Text(title),
+    ),
+  );
+}
+
+GestureDetector secondaryButton(VoidCallback onTap, String title) {
+  return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+            color: tertiaryColor, borderRadius: BorderRadius.circular(14.0)),
+        width: 140.0,
+        height: 55.0,
+        child: Center(
+          child: Text(title,
+              style: TextStyle(color: primaryColor, fontSize: 23.0)),
+        ),
+      ));
+}
+
+GestureDetector filteredWidget(context, title, infoText, data) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.of(context).push(Routes.route(
+          FilteredScreen(
+              title: title,
+              data: data,
+              infoText: infoText),
+          const Offset(1.0, 0.0)));
+    },
+    child: Container(
+      width: MediaQuery.of(context).size.width * 0.45,
+      height: MediaQuery.of(context).size.height * 0.15,
+      decoration: BoxDecoration(
+          color: tertiaryColor, borderRadius: BorderRadius.circular(14.0)),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Obx(
+                () => Text(
+                  '${data.length}',
+                  style:
+                      GoogleFonts.notoSans(fontSize: 40.0, color: primaryColor),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Text(
+                title,
+                style:
+                    GoogleFonts.notoSans(fontSize: 25.0, color: Colors.white),
+              ),
+            ),
+          ]),
     ),
   );
 }

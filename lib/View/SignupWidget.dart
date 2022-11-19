@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:tasks/utils/validators.dart';
+import 'package:tasks/utils/widgets.dart';
 
 class SignUp extends StatefulWidget {
   final VoidCallback onClickedSignIn;
@@ -67,59 +68,21 @@ class _SignUpState extends State<SignUp> {
                 validator: Validator.passwordValidator),
           ),
           const SizedBox(height: 40),
-          Container(
-            constraints: const BoxConstraints(maxWidth: 600),
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(9),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: primaryColor,
-                    spreadRadius: 5,
-                    blurRadius: 10,
-                  ),
-                  BoxShadow(
-                    color: primaryColor,
-                    spreadRadius: -4,
-                    blurRadius: 5,
-                  )
-                ]),
-            width: double.infinity,
-            height: 60.0,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                textStyle: MaterialStateProperty.all<TextStyle?>(
-                    const TextStyle(
-                        fontSize: 25.0, fontWeight: FontWeight.bold)),
-                shape: MaterialStateProperty.all<OutlinedBorder?>(
-                  RoundedRectangleBorder(
-                      side: const BorderSide(
-                          color: Colors.transparent,
-                          width: 1,
-                          style: BorderStyle.solid),
-                      borderRadius: BorderRadius.circular(9)),
-                ),
-                backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
-              ),
-              onPressed: () {
-                if (formkey.currentState!.validate()) {
+          primaryButton(() {
+            if (formkey.currentState!.validate()) {
                   authController.signUp(emailController.text.trim(),
                       passwordController.text, nameController.text, context);
                 }
-              },
-              child: const Text('SIGNUP'),
-            ),
-          ),
+          }, 'SIGNUP'),
           const SizedBox(height: 30.0),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Text("Already have an account? ",
-                style: TextStyle(color: secondaryColor, fontSize: 20.0)),
+            Text("Already have an account? ",
+                style: paragraphGray,),
             GestureDetector(
               onTap: widget.onClickedSignIn,
               child: Text(
                 'Login',
-                style: TextStyle(color: primaryColor, fontSize: 20.0),
+                style: paragraphPrimary,
               ),
             )
           ]),

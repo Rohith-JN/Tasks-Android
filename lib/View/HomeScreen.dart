@@ -1,16 +1,15 @@
 // ignore_for_file: file_names, empty_statements
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
-import 'package:tasks/services/database.service.dart';
+import 'package:tasks/services/functions.services.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tasks/utils/routes.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/services/notification.service.dart';
+import 'package:tasks/utils/widgets.dart';
 import 'package:tasks/view/TodoScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,11 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           centerTitle: false,
           title: Text(arrayController.arrays[widget.index!].title!,
-              style: GoogleFonts.notoSans(
-                fontSize: 30,
-                color: primaryColor,
-                fontWeight: FontWeight.bold,
-              )),
+              style: appBarTextStyle),
         ),
         extendBodyBehindAppBar: true,
         body: Obx(() => Container(
@@ -43,10 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: (arrayController.arrays[widget.index!].todos!.isEmpty)
-                  ? const Center(
-                      child: Text("Add new tasks",
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 23.0)))
+                  ? Center(child: Text("Add new tasks", style: infoTextStyle))
                   : GetX<ArrayController>(
                       init: Get.put<ArrayController>(ArrayController()),
                       builder: (ArrayController arrayController) {
@@ -67,32 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onDismissed: (_) async {
                                       HapticFeedback.heavyImpact();
                                       // Todo cancel notification at arrayController.arrays[widget.index!].todos![index].id!
-                                      Database().deleteAllTodo(
-                                          uid,
-                                          arrayController.arrays[widget.index!]
-                                              .todos![index].id!);
-                                      arrayController
-                                          .arrays[widget.index!].todos!
-                                          .removeAt(index);
-                                      try {
-                                        await FirebaseFirestore.instance
-                                            .collection("users")
-                                            .doc(uid)
-                                            .collection("arrays")
-                                            .doc(arrayController
-                                                .arrays[widget.index!].id)
-                                            .set({
-                                          "title": arrayController
-                                              .arrays[widget.index!].title,
-                                          "dateCreated": arrayController
-                                              .arrays[widget.index!]
-                                              .dateCreated,
-                                          "todos": arrayController
-                                              .arrays[widget.index!].todos!
-                                              .map((todo) => todo.toJson())
-                                              .toList()
-                                        });
-                                      } catch (e) {}
+                                      Functions.deleteTodo(arrayController, uid,
+                                          widget.index, index);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
@@ -136,22 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .arrays[widget.index!].todos!.length);
                       }),
             )),
-        floatingActionButton: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(Routes.route(
-                  TodoScreen(arrayIndex: widget.index),
-                  const Offset(0.0, 1.0)));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: tertiaryColor,
-                  borderRadius: BorderRadius.circular(14.0)),
-              width: 140.0,
-              height: 55.0,
-              child: Center(
-                child: Text('Add task',
-                    style: TextStyle(color: primaryColor, fontSize: 23.0)),
-              ),
-            )));
+        floatingActionButton: secondaryButton(() {
+          Navigator.of(context).push(Routes.route(
+              TodoScreen(arrayIndex: widget.index), const Offset(0.0, 1.0)));
+        }, 'Add task'));
   }
 }

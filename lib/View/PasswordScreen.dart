@@ -37,11 +37,7 @@ class _PasswordState extends State<Password> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: IconButton(
                   splashColor: Colors.transparent,
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: primaryColor,
-                    size: 30.0,
-                  ),
+                  icon: primaryIcon(Icons.arrow_back),
                   onPressed: () => Navigator.of(context).pop(),
                 )),
           ],
