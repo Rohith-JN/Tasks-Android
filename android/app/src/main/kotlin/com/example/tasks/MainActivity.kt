@@ -1,4 +1,4 @@
-package com.example.tasks
+package `in`.rohithnambiar.tasks
 
 import io.flutter.embedding.android.FlutterActivity
 

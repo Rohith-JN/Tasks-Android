@@ -33,10 +33,9 @@ dependencies:
   google_fonts: ^2.1.0
   get: ^4.3.8
   rxdart: ^0.27.3
-  flutter_local_notifications: ^9.1.5
   intl: ^0.17.0
-  audioplayers: ^0.20.1
   flutter_native_timezone: ^2.0.0
+  firebase_core_platform_interface: 4.5.1
   flutter:
     sdk: flutter
 
@@ -46,6 +45,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   date_format: ^2.0.7
   flutter_colorpicker: ^1.0.3
+  timezone: ^0.9.0
 
 dev_dependencies:
   flutter_test:

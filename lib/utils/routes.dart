@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tasks/view/PasswordScreen.dart';
 
 class Routes {
   static Route route(Widget screen, Offset offset) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const Password(),
+      pageBuilder: (context, animation, secondaryAnimation) => screen,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final begin = offset;
         const end = Offset.zero;
