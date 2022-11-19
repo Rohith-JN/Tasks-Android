@@ -59,7 +59,7 @@ class Functions {
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.only(top: 15.0),
-          height: 310,
+          height: 260,
           child: ListView(children: [
             const SizedBox(height: 10.0),
             Center(
