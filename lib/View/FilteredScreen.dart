@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, empty_statements
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/global.dart';
@@ -56,12 +57,21 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(widget.data[index].title!,
-                                        style: todoScreenStyle),
-                                    const SizedBox(height: 5.0),
-                                    primaryDivider,
+                                        style: GoogleFonts.notoSans(
+                                            color: Colors.white,
+                                            fontSize: 25.0)),
+                                    (widget.data[index].details != '')
+                                        ? SizedBox(height: 5.0)
+                                        : SizedBox(),
                                     Visibility(
+                                      visible: widget.data[index].details == ''
+                                          ? false
+                                          : true,
                                       child: Text(widget.data[index].details!,
-                                          style: todoScreenStyle),
+                                          style: GoogleFonts.notoSans(
+                                            color: const Color(0xFFA8A8A8),
+                                            fontSize: 20.0,
+                                          )),
                                     ),
                                     Visibility(
                                         visible: widget.data[index].date ==
@@ -70,7 +80,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                             ? false
                                             : true,
                                         child: primaryDivider),
-                                    const SizedBox(height: 10.0),
+                                    const SizedBox(height: 5.0),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
