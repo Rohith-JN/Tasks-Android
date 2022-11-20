@@ -32,9 +32,19 @@ class _TodoScreenState extends State<TodoScreen> {
   final ArrayController arrayController = Get.find();
   final AuthController authController = Get.find();
   final String uid = Get.find<AuthController>().user!.uid;
+  late TextEditingController _dateController;
+  late TextEditingController _timeController;
+  late TextEditingController titleEditingController;
+  late TextEditingController detailEditingController;
+
+  late String _setTime, _setDate;
+  late String _hour, _minute, _time;
+  late String dateTime;
+  late bool done;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     String title = '';
     String detail = '';
     String date = '';
@@ -53,84 +63,80 @@ class _TodoScreenState extends State<TodoScreen> {
           .arrays[widget.arrayIndex!].todos![widget.todoIndex!].time;
     }
 
-    TextEditingController titleEditingController =
-        TextEditingController(text: title);
-    TextEditingController detailEditingController =
-        TextEditingController(text: detail);
-    TextEditingController _dateController = TextEditingController(text: date);
-    TextEditingController _timeController = TextEditingController(text: time);
-
-    bool done = (widget.todoIndex == null)
+    _dateController = TextEditingController(text: date);
+    _timeController = TextEditingController(text: time);
+    titleEditingController = TextEditingController(text: title);
+    detailEditingController = TextEditingController(text: detail);
+    done = (widget.todoIndex == null)
         ? false
         : arrayController
             .arrays[widget.arrayIndex!].todos![widget.todoIndex!].done!;
+  }
 
-    late String _setTime, _setDate;
-    late String _hour, _minute, _time;
-    late String dateTime;
-    DateTime selectedDate = DateTime.now();
-    TimeOfDay selectedTime = TimeOfDay(
-        hour: (TimeOfDay.now().minute > 55)
-            ? TimeOfDay.now().hour + 1
-            : TimeOfDay.now().hour,
-        minute: (TimeOfDay.now().minute > 55) ? 0 : TimeOfDay.now().minute + 5);
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay(
+      hour: (TimeOfDay.now().minute > 55)
+          ? TimeOfDay.now().hour + 1
+          : TimeOfDay.now().hour,
+      minute: (TimeOfDay.now().minute > 55) ? 0 : TimeOfDay.now().minute + 5);
 
-    Future<DateTime?> _selectDate() => showDatePicker(
-        builder: (context, child) {
-          return datePickerTheme(child);
-        },
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        context: context,
-        initialDate: selectedDate,
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(DateTime.now().year + 5));
+  Future<DateTime?> _selectDate() => showDatePicker(
+      builder: (context, child) {
+        return datePickerTheme(child);
+      },
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      context: context,
+      initialDate: selectedDate,
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 5));
 
-    Future<TimeOfDay?> _selectTime() => showTimePicker(
-        builder: (context, child) {
-          return timePickerTheme(child);
-        },
-        context: context,
-        initialTime: selectedTime,
-        initialEntryMode: TimePickerEntryMode.input);
+  Future<TimeOfDay?> _selectTime() => showTimePicker(
+      builder: (context, child) {
+        return timePickerTheme(child);
+      },
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.input);
 
-    Future _pickDateTime() async {
-      DateTime? date = await _selectDate();
-      if (date == null) return;
-      if (date != null) {
-        selectedDate = date;
-        _dateController.text = DateFormat("MM/dd/yyyy").format(selectedDate);
-      }
-      TimeOfDay? time = await _selectTime();
-      if (time == null) {
-        _timeController.text = formatDate(
-            DateTime(
-                DateTime.now().year,
-                DateTime.now().day,
-                DateTime.now().month,
-                DateTime.now().hour,
-                DateTime.now().minute + 5),
-            [hh, ':', nn, " ", am]).toString();
-      }
-      if (time != null) {
-        selectedTime = time;
-        _hour = selectedTime.hour.toString();
-        _minute = selectedTime.minute.toString();
-        _time = _hour + ' : ' + _minute;
-        _timeController.text = _time;
-        _timeController.text = formatDate(
-            DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
-            [hh, ':', nn, " ", am]).toString();
-      }
+  Future _pickDateTime() async {
+    DateTime? date = await _selectDate();
+    if (date == null) return;
+    if (date != null) {
+      selectedDate = date;
+      _dateController.text = DateFormat("MM/dd/yyyy").format(selectedDate);
     }
+    TimeOfDay? time = await _selectTime();
+    if (time == null) {
+      _timeController.text = formatDate(
+          DateTime(
+              DateTime.now().year,
+              DateTime.now().day,
+              DateTime.now().month,
+              DateTime.now().hour,
+              DateTime.now().minute + 5),
+          [hh, ':', nn, " ", am]).toString();
+    }
+    if (time != null) {
+      selectedTime = time;
+      _hour = selectedTime.hour.toString();
+      _minute = selectedTime.minute.toString();
+      _time = _hour + ' : ' + _minute;
+      _timeController.text = _time;
+      _timeController.text = formatDate(
+          DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+          [hh, ':', nn, " ", am]).toString();
+    }
+  }
 
-    final _formKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
     bool visible =
         (_dateController.text.isEmpty && _timeController.text.isEmpty)
             ? false
             : true;
 
-    final StreamController<bool> checkBoxController = StreamController();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -161,7 +167,7 @@ class _TodoScreenState extends State<TodoScreen> {
               ),
               onPressed: () async {
                 if (widget.todoIndex == null &&
-                    _formKey.currentState!.validate()) {
+                    formKey.currentState!.validate()) {
                   var finalId = UniqueKey().hashCode;
                   arrayController.arrays[widget.arrayIndex!].todos!.add(Todo(
                       title: titleEditingController.text,
@@ -210,7 +216,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   }
                 }
                 if (widget.todoIndex != null &&
-                    _formKey.currentState!.validate()) {
+                    formKey.currentState!.validate()) {
                   var editing = arrayController
                       .arrays[widget.arrayIndex!].todos![widget.todoIndex!];
                   editing.title = titleEditingController.text;
@@ -281,7 +287,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 15.0),
                   child: Form(
-                    key: _formKey,
+                    key: formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -338,33 +344,20 @@ class _TodoScreenState extends State<TodoScreen> {
                           Transform.scale(
                             scale: 1.3,
                             child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor:
-                                      const Color.fromARGB(255, 187, 187, 187)),
-                              child: StreamBuilder(
-                                  stream: checkBoxController.stream,
-                                  initialData: (widget.todoIndex == null)
-                                      ? false
-                                      : arrayController
-                                          .arrays[widget.arrayIndex!]
-                                          .todos![widget.todoIndex!]
-                                          .done,
-                                  builder:
-                                      (context, AsyncSnapshot<bool> snapshot) {
-                                    return Checkbox(
-                                        shape: const CircleBorder(),
-                                        checkColor: Colors.white,
-                                        activeColor: primaryColor,
-                                        value: snapshot.data,
-                                        side: Theme.of(context)
-                                            .checkboxTheme
-                                            .side,
-                                        onChanged: (value) {
-                                          checkBoxController.sink.add(value!);
-                                          done = value;
-                                        });
-                                  }),
-                            ),
+                                data: ThemeData(
+                                    unselectedWidgetColor: const Color.fromARGB(
+                                        255, 187, 187, 187)),
+                                child: Checkbox(
+                                    shape: const CircleBorder(),
+                                    checkColor: Colors.white,
+                                    activeColor: primaryColor,
+                                    value: done,
+                                    side: Theme.of(context).checkboxTheme.side,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        done = value!;
+                                      });
+                                    })),
                           )
                         ],
                       ),
@@ -373,7 +366,9 @@ class _TodoScreenState extends State<TodoScreen> {
               GestureDetector(
                 onTap: () async {
                   await _pickDateTime();
-                  visible = true;
+                  setState(() {
+                    visible = true;
+                  });
                 },
                 child: Container(
                     margin: const EdgeInsets.only(top: 20.0),
@@ -406,7 +401,7 @@ class _TodoScreenState extends State<TodoScreen> {
                                     onPressed: () {
                                       _dateController.clear();
                                       _timeController.clear();
-                                      visible = false;
+                                      setState(() {});
                                     },
                                     icon: const Icon(
                                       Icons.close,
