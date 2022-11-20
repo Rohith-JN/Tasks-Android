@@ -41,7 +41,8 @@ class MyApp extends StatelessWidget {
               return Center(
                   child: CircularProgressIndicator(
                 color: primaryColor,
-              ));
+              )
+            );
             } else if (snapshot.hasError) {
               return Center(
                   child: Text("Something went wrong!", style: heading(Colors.white)));
@@ -50,7 +51,8 @@ class MyApp extends StatelessWidget {
             } else {
               return const AuthScreen();
             }
-          }),
+          }
+        ),
     );
   }
 }

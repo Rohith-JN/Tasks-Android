@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/controllers/arrayController.dart';
@@ -32,8 +33,6 @@ class _TodoScreenState extends State<TodoScreen> {
   final AuthController authController = Get.find();
   final String uid = Get.find<AuthController>().user!.uid;
 
-  bool done = false;
-
   @override
   Widget build(BuildContext context) {
     String title = '';
@@ -60,6 +59,11 @@ class _TodoScreenState extends State<TodoScreen> {
         TextEditingController(text: detail);
     TextEditingController _dateController = TextEditingController(text: date);
     TextEditingController _timeController = TextEditingController(text: time);
+
+    bool done = (widget.todoIndex == null)
+        ? false
+        : arrayController
+            .arrays[widget.arrayIndex!].todos![widget.todoIndex!].done!;
 
     late String _setTime, _setDate;
     late String _hour, _minute, _time;
@@ -121,6 +125,10 @@ class _TodoScreenState extends State<TodoScreen> {
     }
 
     final _formKey = GlobalKey<FormState>();
+    bool visible =
+        (_dateController.text.isEmpty && _timeController.text.isEmpty)
+            ? false
+            : true;
 
     final StreamController<bool> checkBoxController = StreamController();
 
@@ -198,7 +206,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   HapticFeedback.heavyImpact();
                   if (_dateController.text.isNotEmpty &&
                       _timeController.text.isNotEmpty) {
-                        // Todo set notification at finalId
+                    // Todo set notification at finalId
                   }
                 }
                 if (widget.todoIndex != null &&
@@ -365,6 +373,7 @@ class _TodoScreenState extends State<TodoScreen> {
               GestureDetector(
                 onTap: () async {
                   await _pickDateTime();
+                  visible = true;
                 },
                 child: Container(
                     margin: const EdgeInsets.only(top: 20.0),
@@ -376,17 +385,35 @@ class _TodoScreenState extends State<TodoScreen> {
                         borderRadius: BorderRadius.circular(14.0)),
                     child: Column(
                       children: [
-                        TextField(
-                          enabled: false,
-                          controller: _dateController,
-                          onChanged: (String val) {
-                            _setDate = val;
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Date",
-                              hintStyle: hintTextStyle,
-                              border: InputBorder.none),
-                          style: todoScreenStyle,
+                        Row(
+                          children: [
+                            Flexible(
+                              child: TextField(
+                                enabled: false,
+                                controller: _dateController,
+                                onChanged: (String val) {
+                                  _setDate = val;
+                                },
+                                decoration: InputDecoration(
+                                    hintText: "Date",
+                                    hintStyle: hintTextStyle,
+                                    border: InputBorder.none),
+                                style: todoScreenStyle,
+                              ),
+                            ),
+                            visible
+                                ? IconButton(
+                                    onPressed: () {
+                                      _dateController.clear();
+                                      _timeController.clear();
+                                      visible = false;
+                                    },
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ))
+                                : Container()
+                          ],
                         ),
                         primaryDivider,
                         TextField(
