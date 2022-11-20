@@ -1,4 +1,6 @@
+import 'package:intl/intl.dart';
 import 'package:tasks/controllers/arrayController.dart';
+import 'package:tasks/models/FTodo.dart';
 import 'package:tasks/services/functions.services.dart';
 import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/utils/routes.dart';
@@ -32,6 +34,12 @@ class _MainScreenState extends State<MainScreen> {
           centerTitle: false,
           title: Text("Tasks", style: appBarTextStyle),
           actions: [
+            IconButton(
+                onPressed: () {
+                  showSearch(
+                      context: context, delegate: CustomSearchDelegate());
+                },
+                icon: primaryIcon(Icons.search)),
             IconButton(
                 onPressed: () {
                   showModalBottomSheet<void>(
@@ -115,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
                                               TextStyle(color: primaryColor)),
                                     ),
                                   ],
-                                ),  
+                                ),
                               );
                             },
                           ),
@@ -124,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                     },
                   );
                 },
-                icon: primaryIcon(Icons.menu))
+                icon: primaryIcon(Icons.menu)),
           ],
         ),
         body: SingleChildScrollView(
@@ -302,5 +310,166 @@ class _MainScreenState extends State<MainScreen> {
           Navigator.of(context)
               .push(Routes.route(const ArrayScreen(), const Offset(0.0, 1.0)));
         }, 'Add list'));
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData(
+        backgroundColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
+        textTheme: const TextTheme(
+          headline6: TextStyle(
+            color: Colors.white,
+            fontSize: 20.0,
+          ),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+            hintStyle: TextStyle(color: Color(0xFFA8A8A8), fontSize: 20.0),
+            border: InputBorder.none),
+        appBarTheme: const AppBarTheme(backgroundColor: tertiaryColor));
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+      onPressed: () => close(context, null),
+      icon: primaryIcon(Icons.arrow_back));
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+        IconButton(
+            onPressed: () {
+              if (query.isEmpty) {
+                close(context, null);
+              } else {
+                query = '';
+              }
+            },
+            icon: primaryIcon(Icons.close))
+      ];
+  @override
+  Widget buildResults(BuildContext context) => Container();
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final ArrayController arrayController = Get.put(ArrayController());
+    List<FTodo> filteredTodos = arrayController.allTodos.where((todo) {
+      final title = todo.title!.toLowerCase();
+      final details = todo.details!.toLowerCase();
+      final input = query.toLowerCase();
+      return title.contains(input) || details.contains(input);
+    }).toList();
+
+    if (query == '') {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Center(
+              child: Icon(Icons.search, color: Colors.white, size: 100.0),
+            ),
+            Center(
+              child: Text(
+                "Search for tasks",
+                style: infoTextStyle,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+          child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      List<String?> arrays = [];
+                      var arrayIndex = 0;
+                      for (var i = 0; i < arrayController.arrays.length; i++) {
+                        arrays.add(arrayController.arrays[i].title);
+                      }
+                      for (var array in arrays) {
+                        if (array == filteredTodos[index].arrayTitle) {
+                          arrayIndex = arrays.indexOf(array);
+                        }
+                      }
+                      Navigator.of(context).push(Routes.route(
+                          HomeScreen(index: arrayIndex),
+                          const Offset(1.0, 0.0)));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 6.5, right: 6.5),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: tertiaryColor,
+                            borderRadius: BorderRadius.circular(14.0)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(filteredTodos[index].title!,
+                                style: GoogleFonts.notoSans(
+                                    color: Colors.white, fontSize: 25.0)),
+                            (filteredTodos[index].details != '')
+                                ? const SizedBox(height: 5.0)
+                                : const SizedBox(),
+                            Visibility(
+                              visible: filteredTodos[index].details == ''
+                                  ? false
+                                  : true,
+                              child: Text(filteredTodos[index].details!,
+                                  style: GoogleFonts.notoSans(
+                                    color: const Color(0xFFA8A8A8),
+                                    fontSize: 20.0,
+                                  )),
+                            ),
+                            Visibility(
+                                visible: filteredTodos[index].date == '' &&
+                                        filteredTodos[index].time == ''
+                                    ? false
+                                    : true,
+                                child: primaryDivider),
+                            const SizedBox(height: 5.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Visibility(
+                                  visible: filteredTodos[index].date == '' &&
+                                          filteredTodos[index].time == ''
+                                      ? false
+                                      : true,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 5.0),
+                                    child: Text(
+                                        (filteredTodos[index].date !=
+                                                DateFormat("MM/dd/yyyy")
+                                                    .format(DateTime.now()))
+                                            ? '${filteredTodos[index].date!}, ${filteredTodos[index].time}'
+                                            : 'Today, ${filteredTodos[index].time}',
+                                        style: todoScreenStyle),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            primaryDivider,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                              child: Text(
+                                  'List: ${filteredTodos[index].arrayTitle}',
+                                  style: listInfoTextStyle),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              separatorBuilder: (_, __) => const SizedBox(
+                    height: 15.0,
+                  ),
+              itemCount: filteredTodos.length));
+    }
   }
 }
