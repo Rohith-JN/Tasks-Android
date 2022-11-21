@@ -38,7 +38,21 @@ class _HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: (arrayController.arrays[widget.index!].todos!.isEmpty)
-                  ? Center(child: Text("Add new tasks", style: infoTextStyle))
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Center(
+                          child: Icon(Icons.task,
+                              color: Colors.white, size: 120.0),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Center(
+                            child: Text('Add new tasks', style: infoTextStyle)),
+                      ],
+                    )
                   : GetX<ArrayController>(
                       init: Get.put<ArrayController>(ArrayController()),
                       builder: (ArrayController arrayController) {

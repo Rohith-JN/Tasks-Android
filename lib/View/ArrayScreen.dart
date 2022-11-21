@@ -65,6 +65,13 @@ class _ArrayScreenState extends State<ArrayScreen> {
               ),
               onPressed: () {
                 if (widget.index == null && formKey.currentState!.validate()) {
+                  for (var i = 0; i < arrayController.arrays.length; i++) {
+                    if (titleEditingController.text.toLowerCase() ==
+                        arrayController.arrays[i].title!.toLowerCase()) {
+                      titleEditingController.text =
+                          "${titleEditingController.text} - copy";
+                    }
+                  }
                   Database().addArray(
                       authController.user!.uid, titleEditingController.text);
                   Get.back();
