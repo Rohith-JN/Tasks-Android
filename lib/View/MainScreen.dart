@@ -13,6 +13,7 @@ import 'package:tasks/utils/widgets.dart';
 import 'package:tasks/view/ArrayScreen.dart';
 import 'package:tasks/view/DeleteScreen.dart';
 import 'package:tasks/view/HomeScreen.dart';
+import 'package:tasks/view/TodoScreen.dart';
 import '../controllers/authController.dart';
 
 class MainScreen extends StatefulWidget {
@@ -147,12 +148,13 @@ class _MainScreenState extends State<MainScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       filteredWidget(context, 'Scheduled', 'No scheduled tasks',
-                          arrayController.scheduledTodos),
+                          arrayController.scheduledTodos, Icons.schedule),
                       filteredWidget(
                           context,
                           'Today',
                           'No tasks scheduled for today',
-                          arrayController.todayTodos),
+                          arrayController.todayTodos,
+                          Icons.calendar_today),
                     ],
                   ),
                   const SizedBox(
@@ -162,9 +164,9 @@ class _MainScreenState extends State<MainScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       filteredWidget(context, 'Completed', 'No completed tasks',
-                          arrayController.doneTodos),
+                          arrayController.doneTodos, Icons.done_rounded),
                       filteredWidget(context, 'All', 'No tasks yet',
-                          arrayController.allTodos)
+                          arrayController.allTodos, Icons.task)
                     ],
                   ),
                   const SizedBox(
@@ -368,9 +370,34 @@ class CustomSearchDelegate extends SearchDelegate {
             const Center(
               child: Icon(Icons.search, color: Colors.white, size: 100.0),
             ),
+            SizedBox(
+              height: 10.0,
+            ),
             Center(
               child: Text(
                 "Search for tasks",
+                style: infoTextStyle,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (query != '' && filteredTodos.isEmpty) {
+      var message = '"$query"';
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Center(
+              child: Icon(Icons.search, color: Colors.white, size: 100.0),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            Center(
+              child: Text(
+                "No task with $message",
                 style: infoTextStyle,
               ),
             ),
@@ -384,19 +411,26 @@ class CustomSearchDelegate extends SearchDelegate {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
-                      List<String?> arrays = [];
                       var arrayIndex = 0;
-                      for (var i = 0; i < arrayController.arrays.length; i++) {
-                        arrays.add(arrayController.arrays[i].title);
+                      var todoIndex = 0;
+                      for (var array in arrayController.arrays) {
+                        if (array.title == filteredTodos[index].arrayTitle) {
+                          arrayIndex = arrayController.arrays.indexOf(array);
+                        }
                       }
-                      for (var array in arrays) {
-                        if (array == filteredTodos[index].arrayTitle) {
-                          arrayIndex = arrays.indexOf(array);
+                      for (var todo
+                          in arrayController.arrays[arrayIndex].todos!) {
+                        if (filteredTodos[index].id == todo.id) {
+                          todoIndex = arrayController.arrays[arrayIndex].todos!
+                              .indexOf(todo);
                         }
                       }
                       Navigator.of(context).push(Routes.route(
-                          HomeScreen(index: arrayIndex),
-                          const Offset(1.0, 0.0)));
+                          TodoScreen(
+                            arrayIndex: arrayIndex,
+                            todoIndex: todoIndex,
+                          ),
+                          const Offset(0.0, 1.0)));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 6.5, right: 6.5),

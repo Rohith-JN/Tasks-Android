@@ -94,14 +94,14 @@ GestureDetector secondaryButton(VoidCallback onTap, String title) {
       ));
 }
 
-GestureDetector filteredWidget(context, title, infoText, data) {
+GestureDetector filteredWidget(context, title, infoText, data, icon) {
   return GestureDetector(
     onTap: () {
       Navigator.of(context).push(Routes.route(
           FilteredScreen(
               title: title,
               data: data,
-              infoText: infoText),
+              infoText: infoText, icon: icon,),
           const Offset(1.0, 0.0)));
     },
     child: Container(
