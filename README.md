@@ -12,8 +12,8 @@
 
 ||||
 |--|--|--|
-| ![login](./Preview/LoginScreen.png) | ![add_task](./Preview/TodoScreen.png) |![home](./Preview/MainScreen.png) |
-| ![task](./Preview/HomeScreen.png) | ![filtered](./Preview/FilterScreen.png) |![theme](./Preview/ThemeScreen.png) |
+| ![login](./Preview/LoginScreen.png) | ![add_task](./Preview/TaskScreen.png) |![home](./Preview/MainScreen.png) |
+| ![task](./Preview/HomeScreen.png) | ![filtered](./Preview/AllTasksScreen.png) |![theme](./Preview/TaskEditScreen.png) |
 
 ## Key Features
 
