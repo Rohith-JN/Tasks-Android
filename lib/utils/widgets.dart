@@ -79,19 +79,24 @@ Container primaryButton(VoidCallback function, String title) {
   );
 }
 
-GestureDetector secondaryButton(VoidCallback onTap, String title) {
-  return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-            color: tertiaryColor, borderRadius: BorderRadius.circular(14.0)),
-        width: 140.0,
-        height: 55.0,
-        child: Center(
-          child: Text(title,
-              style: TextStyle(color: primaryColor, fontSize: 23.0)),
-        ),
-      ));
+Padding secondaryButton(VoidCallback onTap, String title, context) {
+  return Padding(
+    padding: (MediaQuery.of(context).size.width < 768)
+        ? const EdgeInsets.only(right: 0.0)
+        : const EdgeInsets.only(right: 15.0),
+    child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+              color: tertiaryColor, borderRadius: BorderRadius.circular(14.0)),
+          width: 140.0,
+          height: 55.0,
+          child: Center(
+            child: Text(title,
+                style: TextStyle(color: primaryColor, fontSize: 23.0)),
+          ),
+        )),
+  );
 }
 
 GestureDetector filteredWidget(context, title, infoText, data, icon) {
@@ -99,13 +104,17 @@ GestureDetector filteredWidget(context, title, infoText, data, icon) {
     onTap: () {
       Navigator.of(context).push(Routes.route(
           FilteredScreen(
-              title: title,
-              data: data,
-              infoText: infoText, icon: icon,),
+            title: title,
+            data: data,
+            infoText: infoText,
+            icon: icon,
+          ),
           const Offset(1.0, 0.0)));
     },
     child: Container(
-      width: MediaQuery.of(context).size.width * 0.45,
+      width: (MediaQuery.of(context).size.width < 768)
+          ? MediaQuery.of(context).size.width * 0.45
+          : MediaQuery.of(context).size.width * 0.42,
       height: MediaQuery.of(context).size.height * 0.15,
       decoration: BoxDecoration(
           color: tertiaryColor, borderRadius: BorderRadius.circular(14.0)),

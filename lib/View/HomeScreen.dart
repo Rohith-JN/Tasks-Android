@@ -82,8 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           widget.index, index);
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 6.5, right: 6.5),
+                                      padding:
+                                          (MediaQuery.of(context).size.width <
+                                                  768)
+                                              ? const EdgeInsets.only(
+                                                  left: 6.5, right: 6.5)
+                                              : const EdgeInsets.only(
+                                                  left: 20.0, right: 20.0),
                                       child: Container(
                                         decoration: BoxDecoration(
                                             color: tertiaryColor,
@@ -126,6 +131,6 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: secondaryButton(() {
           Navigator.of(context).push(Routes.route(
               TodoScreen(arrayIndex: widget.index), const Offset(0.0, 1.0)));
-        }, 'Add task'));
+        }, 'Add task', context));
   }
 }

@@ -127,8 +127,13 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                           arrayIndex, todoIndex);
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 6.5, right: 6.5),
+                                      padding:
+                                          (MediaQuery.of(context).size.width <
+                                                  768)
+                                              ? const EdgeInsets.only(
+                                                  left: 6.5, right: 6.5)
+                                              : const EdgeInsets.only(
+                                                  left: 20.0, right: 20.0),
                                       child: Container(
                                         decoration: BoxDecoration(
                                             color: tertiaryColor,
@@ -145,8 +150,8 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                                     color: Colors.white,
                                                     fontSize: 25.0)),
                                             (widget.data[index].details != '')
-                                                ? SizedBox(height: 5.0)
-                                                : SizedBox(),
+                                                ? const SizedBox(height: 5.0)
+                                                : const SizedBox(),
                                             Visibility(
                                               visible:
                                                   widget.data[index].details ==

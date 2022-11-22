@@ -144,149 +144,161 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(
         title: Text((widget.todoIndex == null) ? 'New Task' : 'Edit Task',
             style: menuTextStyle),
-        leadingWidth: 90.0,
+        leadingWidth: (MediaQuery.of(context).size.width < 768) ? 90.0 : 100.0,
         leading: Center(
-          child: TextButton(
-            style: const ButtonStyle(
-              splashFactory: NoSplash.splashFactory,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              "Cancel",
-              style: paragraphPrimary,
+          child: Padding(
+            padding: (MediaQuery.of(context).size.width < 768)
+                ? const EdgeInsets.only(left: 0)
+                : const EdgeInsets.only(left: 21.0),
+            child: TextButton(
+              style: const ButtonStyle(
+                splashFactory: NoSplash.splashFactory,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+              child: Text(
+                "Cancel",
+                style: paragraphPrimary,
+              ),
             ),
           ),
         ),
         centerTitle: true,
         actions: [
           Center(
-            child: TextButton(
-              style: const ButtonStyle(
-                splashFactory: NoSplash.splashFactory,
-              ),
-              onPressed: () async {
-                if (widget.todoIndex == null &&
-                    formKey.currentState!.validate()) {
-                  var finalId = UniqueKey().hashCode;
-                  arrayController.arrays[widget.arrayIndex!].todos!.add(Todo(
-                      title: titleEditingController.text,
-                      details: detailEditingController.text,
-                      id: finalId,
-                      date: _dateController.text,
-                      time: _timeController.text,
-                      dateAndTimeEnabled: (_dateController.text != '' &&
-                              _timeController.text != '')
-                          ? true
-                          : false,
-                      done: false,
-                      dateCreated: Timestamp.now()));
-                  await FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(uid)
-                      .collection("arrays")
-                      .doc(arrayController.arrays[widget.arrayIndex!].id)
-                      .set({
-                    "title": arrayController.arrays[widget.arrayIndex!].title,
-                    "dateCreated":
-                        arrayController.arrays[widget.arrayIndex!].dateCreated,
-                    "todos": arrayController.arrays[widget.arrayIndex!].todos!
-                        .map((todo) => todo.toJson())
-                        .toList()
-                  });
-                  Database().addAllTodo(
-                      uid,
-                      finalId,
-                      arrayController.arrays[widget.arrayIndex!].title!,
-                      titleEditingController.text,
-                      detailEditingController.text,
-                      Timestamp.now(),
-                      _dateController.text,
-                      _timeController.text,
-                      false,
-                      (_dateController.text != '' && _timeController.text != '')
-                          ? true
-                          : false,
-                      finalId);
-                  Get.back();
-                  HapticFeedback.heavyImpact();
-                  if (_dateController.text.isNotEmpty &&
-                      _timeController.text.isNotEmpty) {
-                    NotificationService().showNotification(
+            child: Padding(
+              padding: (MediaQuery.of(context).size.width < 768)
+                  ? const EdgeInsets.only(left: 0)
+                  : const EdgeInsets.only(right: 21.0),
+              child: TextButton(
+                style: const ButtonStyle(
+                  splashFactory: NoSplash.splashFactory,
+                ),
+                onPressed: () async {
+                  if (widget.todoIndex == null &&
+                      formKey.currentState!.validate()) {
+                    var finalId = UniqueKey().hashCode;
+                    arrayController.arrays[widget.arrayIndex!].todos!.add(Todo(
+                        title: titleEditingController.text,
+                        details: detailEditingController.text,
+                        id: finalId,
+                        date: _dateController.text,
+                        time: _timeController.text,
+                        dateAndTimeEnabled: (_dateController.text != '' &&
+                                _timeController.text != '')
+                            ? true
+                            : false,
+                        done: false,
+                        dateCreated: Timestamp.now()));
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(uid)
+                        .collection("arrays")
+                        .doc(arrayController.arrays[widget.arrayIndex!].id)
+                        .set({
+                      "title": arrayController.arrays[widget.arrayIndex!].title,
+                      "dateCreated": arrayController
+                          .arrays[widget.arrayIndex!].dateCreated,
+                      "todos": arrayController.arrays[widget.arrayIndex!].todos!
+                          .map((todo) => todo.toJson())
+                          .toList()
+                    });
+                    Database().addAllTodo(
+                        uid,
                         finalId,
-                        'Reminder',
+                        arrayController.arrays[widget.arrayIndex!].title!,
                         titleEditingController.text,
-                        Functions.parse(
-                            _dateController.text, _timeController.text));
+                        detailEditingController.text,
+                        Timestamp.now(),
+                        _dateController.text,
+                        _timeController.text,
+                        false,
+                        (_dateController.text != '' &&
+                                _timeController.text != '')
+                            ? true
+                            : false,
+                        finalId);
+                    Get.back();
+                    HapticFeedback.heavyImpact();
+                    if (_dateController.text.isNotEmpty &&
+                        _timeController.text.isNotEmpty) {
+                      NotificationService().showNotification(
+                          finalId,
+                          'Reminder',
+                          titleEditingController.text,
+                          Functions.parse(
+                              _dateController.text, _timeController.text));
+                    }
                   }
-                }
-                if (widget.todoIndex != null &&
-                    formKey.currentState!.validate()) {
-                  var editing = arrayController
-                      .arrays[widget.arrayIndex!].todos![widget.todoIndex!];
-                  editing.title = titleEditingController.text;
-                  editing.details = detailEditingController.text;
-                  editing.date = _dateController.text;
-                  editing.time = _timeController.text;
-                  editing.done = done;
-                  editing.dateAndTimeEnabled =
-                      (titleEditingController.text != '' &&
-                              detailEditingController.text != '')
-                          ? true
-                          : false;
-                  arrayController.arrays[widget.arrayIndex!]
-                      .todos![widget.todoIndex!] = editing;
-                  await FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(uid)
-                      .collection("arrays")
-                      .doc(arrayController.arrays[widget.arrayIndex!].id)
-                      .set({
-                    "title": arrayController.arrays[widget.arrayIndex!].title,
-                    "dateCreated":
-                        arrayController.arrays[widget.arrayIndex!].dateCreated,
-                    "todos": arrayController.arrays[widget.arrayIndex!].todos!
-                        .map((todo) => todo.toJson())
-                        .toList()
-                  });
-                  Database().updateAllTodo(
-                      uid,
-                      arrayController.arrays[widget.arrayIndex!]
-                          .todos![widget.todoIndex!].id!, // get doc id
-                      arrayController.arrays[widget.arrayIndex!].title!,
-                      titleEditingController.text,
-                      detailEditingController.text,
-                      Timestamp.now(),
-                      _dateController.text,
-                      _timeController.text,
-                      done,
-                      (_dateController.text != '' && _timeController.text != '')
-                          ? true
-                          : false,
-                      arrayController.arrays[widget.arrayIndex!]
-                          .todos![widget.todoIndex!].id!);
-                  Get.back();
-                  HapticFeedback.heavyImpact();
-                  if (_dateController.text.isNotEmpty &&
-                      _timeController.text.isNotEmpty) {
-                    NotificationService().showNotification(
+                  if (widget.todoIndex != null &&
+                      formKey.currentState!.validate()) {
+                    var editing = arrayController
+                        .arrays[widget.arrayIndex!].todos![widget.todoIndex!];
+                    editing.title = titleEditingController.text;
+                    editing.details = detailEditingController.text;
+                    editing.date = _dateController.text;
+                    editing.time = _timeController.text;
+                    editing.done = done;
+                    editing.dateAndTimeEnabled =
+                        (titleEditingController.text != '' &&
+                                detailEditingController.text != '')
+                            ? true
+                            : false;
+                    arrayController.arrays[widget.arrayIndex!]
+                        .todos![widget.todoIndex!] = editing;
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(uid)
+                        .collection("arrays")
+                        .doc(arrayController.arrays[widget.arrayIndex!].id)
+                        .set({
+                      "title": arrayController.arrays[widget.arrayIndex!].title,
+                      "dateCreated": arrayController
+                          .arrays[widget.arrayIndex!].dateCreated,
+                      "todos": arrayController.arrays[widget.arrayIndex!].todos!
+                          .map((todo) => todo.toJson())
+                          .toList()
+                    });
+                    Database().updateAllTodo(
+                        uid,
                         arrayController.arrays[widget.arrayIndex!]
-                            .todos![widget.todoIndex!].id!,
-                        'Reminder',
+                            .todos![widget.todoIndex!].id!, // get doc id
+                        arrayController.arrays[widget.arrayIndex!].title!,
                         titleEditingController.text,
-                        Functions.parse(
-                            _dateController.text, _timeController.text));
-                  } else {
-                    NotificationService()
-                        .flutterLocalNotificationsPlugin
-                        .cancel(arrayController.arrays[widget.arrayIndex!]
+                        detailEditingController.text,
+                        Timestamp.now(),
+                        _dateController.text,
+                        _timeController.text,
+                        done,
+                        (_dateController.text != '' &&
+                                _timeController.text != '')
+                            ? true
+                            : false,
+                        arrayController.arrays[widget.arrayIndex!]
                             .todos![widget.todoIndex!].id!);
+                    Get.back();
+                    HapticFeedback.heavyImpact();
+                    if (_dateController.text.isNotEmpty &&
+                        _timeController.text.isNotEmpty) {
+                      NotificationService().showNotification(
+                          arrayController.arrays[widget.arrayIndex!]
+                              .todos![widget.todoIndex!].id!,
+                          'Reminder',
+                          titleEditingController.text,
+                          Functions.parse(
+                              _dateController.text, _timeController.text));
+                    } else {
+                      NotificationService()
+                          .flutterLocalNotificationsPlugin
+                          .cancel(arrayController.arrays[widget.arrayIndex!]
+                              .todos![widget.todoIndex!].id!);
+                    }
                   }
-                }
-              },
-              child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
-                  style: paragraphPrimary),
+                },
+                child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
+                    style: paragraphPrimary),
+              ),
             ),
           )
         ],
@@ -294,7 +306,9 @@ class _TodoScreenState extends State<TodoScreen> {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+          padding: (MediaQuery.of(context).size.width < 768)
+              ? const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0)
+              : const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
           child: Column(
             children: [
               Container(

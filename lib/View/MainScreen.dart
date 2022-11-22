@@ -32,7 +32,12 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text("Tasks", style: appBarTextStyle),
+          title: Padding(
+            padding: (MediaQuery.of(context).size.width < 768)
+                ? const EdgeInsets.only(left: 0.0)
+                : EdgeInsets.only(left: 15.0),
+            child: Text("Tasks", style: appBarTextStyle),
+          ),
           actions: [
             IconButton(
                 onPressed: () {
@@ -40,107 +45,115 @@ class _MainScreenState extends State<MainScreen> {
                       context: context, delegate: CustomSearchDelegate());
                 },
                 icon: primaryIcon(Icons.search)),
-            IconButton(
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    backgroundColor: tertiaryColor,
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        padding: const EdgeInsets.only(top: 15.0),
-                        height: 260,
-                        child: ListView(children: [
-                          const SizedBox(height: 10.0),
-                          Center(
-                            child: Icon(
-                              Icons.account_circle,
-                              size: 40.0,
-                              color: primaryColor,
+            Padding(
+              padding: (MediaQuery.of(context).size.width < 768)
+                  ? const EdgeInsets.only(right: 0.0)
+                  : EdgeInsets.only(right: 25.0),
+              child: IconButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      backgroundColor: tertiaryColor,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          height: 260,
+                          child: ListView(children: [
+                            const SizedBox(height: 10.0),
+                            Center(
+                              child: Icon(
+                                Icons.account_circle,
+                                size: 40.0,
+                                color: primaryColor,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 15.0),
-                          Center(
-                              child: Text(
-                            authController.user!.email ?? '',
-                            style: accountTextStyle,
-                          )),
-                          const SizedBox(height: 15.0),
-                          primaryDivider,
-                          ListTile(
-                            title: Text(
-                              "Sign out",
-                              style: optionsTextStyle,
+                            const SizedBox(height: 15.0),
+                            Center(
+                                child: Text(
+                              authController.user!.email ?? '',
+                              style: accountTextStyle,
+                            )),
+                            const SizedBox(height: 15.0),
+                            primaryDivider,
+                            ListTile(
+                              title: Text(
+                                "Sign out",
+                                style: optionsTextStyle,
+                              ),
+                              leading: Icon(
+                                Icons.logout,
+                                color: primaryColor,
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                                authController.signOut(context);
+                              },
                             ),
-                            leading: Icon(
-                              Icons.logout,
-                              color: primaryColor,
+                            ListTile(
+                              title: Text(
+                                "Delete account",
+                                style: optionsTextStyle,
+                              ),
+                              leading: Icon(
+                                Icons.delete,
+                                color: primaryColor,
+                              ),
+                              onTap: () async {
+                                Navigator.pop(context);
+                                await showDialog<String>(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 37, 37, 37),
+                                    title: const Text('Delete account',
+                                        style: TextStyle(color: Colors.white)),
+                                    content: const Text(
+                                        'Are you sure you want to delete your account?',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 187, 187, 187))),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, 'Cancel');
+                                        },
+                                        child: Text('Cancel',
+                                            style:
+                                                TextStyle(color: primaryColor)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context, 'Ok');
+                                          Get.to(const DeleteScreen());
+                                        },
+                                        child: Text('OK',
+                                            style:
+                                                TextStyle(color: primaryColor)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                            onTap: () {
-                              Navigator.pop(context);
-                              authController.signOut(context);
-                            },
-                          ),
-                          ListTile(
-                            title: Text(
-                              "Delete account",
-                              style: optionsTextStyle,
-                            ),
-                            leading: Icon(
-                              Icons.delete,
-                              color: primaryColor,
-                            ),
-                            onTap: () async {
-                              Navigator.pop(context);
-                              await showDialog<String>(
-                                barrierDismissible: true,
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 37, 37, 37),
-                                  title: const Text('Delete account',
-                                      style: TextStyle(color: Colors.white)),
-                                  content: const Text(
-                                      'Are you sure you want to delete your account?',
-                                      style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 187, 187, 187))),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'Cancel');
-                                      },
-                                      child: Text('Cancel',
-                                          style:
-                                              TextStyle(color: primaryColor)),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context, 'Ok');
-                                        Get.to(const DeleteScreen());
-                                      },
-                                      child: Text('OK',
-                                          style:
-                                              TextStyle(color: primaryColor)),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ]),
-                      );
-                    },
-                  );
-                },
-                icon: primaryIcon(Icons.menu)),
+                          ]),
+                        );
+                      },
+                    );
+                  },
+                  icon: primaryIcon(Icons.menu)),
+            ),
           ],
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Container(
               width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+              padding: (MediaQuery.of(context).size.width < 768)
+                  ? const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0)
+                  : const EdgeInsets.symmetric(
+                      horizontal: 35.0, vertical: 15.0),
               child: Column(
                 children: [
                   Row(
@@ -310,7 +323,7 @@ class _MainScreenState extends State<MainScreen> {
         floatingActionButton: secondaryButton(() {
           Navigator.of(context)
               .push(Routes.route(const ArrayScreen(), const Offset(0.0, 1.0)));
-        }, 'Add list'));
+        }, 'Add list', context));
   }
 }
 
@@ -432,7 +445,9 @@ class CustomSearchDelegate extends SearchDelegate {
                           const Offset(0.0, 1.0)));
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 6.5, right: 6.5),
+                      padding: (MediaQuery.of(context).size.width < 768)
+                          ? const EdgeInsets.only(left: 6.5, right: 6.5)
+                          : const EdgeInsets.only(left: 20.0, right: 20.0),
                       child: Container(
                         decoration: BoxDecoration(
                             color: tertiaryColor,
