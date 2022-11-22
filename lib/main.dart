@@ -9,12 +9,14 @@ import 'package:tasks/view/AuthScreen.dart';
 import 'package:tasks/view/MainScreen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/services.dart';
+
 Future main() async {
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+  NotificationService().initNotification();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -41,18 +43,17 @@ class MyApp extends StatelessWidget {
               return Center(
                   child: CircularProgressIndicator(
                 color: primaryColor,
-              )
-            );
+              ));
             } else if (snapshot.hasError) {
               return Center(
-                  child: Text("Something went wrong!", style: heading(Colors.white)));
+                  child: Text("Something went wrong!",
+                      style: heading(Colors.white)));
             } else if (snapshot.hasData) {
               return const MainScreen();
             } else {
               return const AuthScreen();
             }
-          }
-        ),
+          }),
     );
   }
 }

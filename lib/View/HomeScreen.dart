@@ -72,7 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     direction: DismissDirection.startToEnd,
                                     onDismissed: (_) async {
                                       HapticFeedback.heavyImpact();
-                                      // Todo cancel notification at arrayController.arrays[widget.index!].todos![index].id!
+                                      NotificationService()
+                                          .flutterLocalNotificationsPlugin
+                                          .cancel(arrayController
+                                              .arrays[widget.index!]
+                                              .todos![index]
+                                              .id!);
                                       Functions.deleteTodo(arrayController, uid,
                                           widget.index, index);
                                     },

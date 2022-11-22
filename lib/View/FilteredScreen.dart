@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/services/functions.services.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -98,7 +99,6 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                     direction: DismissDirection.startToEnd,
                                     onDismissed: (_) async {
                                       HapticFeedback.heavyImpact();
-                                      // Todo cancel notification at arrayController.arrays[widget.index!].todos![index].id!
                                       var arrayIndex = 0;
                                       var todoIndex = 0;
                                       for (var array
@@ -117,6 +117,12 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                               .indexOf(todo);
                                         }
                                       }
+                                      NotificationService()
+                                          .flutterLocalNotificationsPlugin
+                                          .cancel(arrayController
+                                              .arrays[arrayIndex]
+                                              .todos![todoIndex]
+                                              .id!);
                                       Functions.deleteTodo(arrayController, uid,
                                           arrayIndex, todoIndex);
                                     },

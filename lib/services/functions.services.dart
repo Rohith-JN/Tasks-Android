@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/services/database.service.dart';
-import 'package:tasks/utils/global.dart';
-import 'package:tasks/utils/widgets.dart';
-import 'package:tasks/view/DeleteScreen.dart';
+import 'package:tasks/services/notification.service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class Functions {
@@ -48,7 +44,9 @@ class Functions {
     for (var i = 0; i < arrayController.arrays[index].todos!.length; i++) {
       Database()
           .deleteAllTodo(uid, arrayController.arrays[index].todos![i].id!);
-      // Todo Cancel notification at arrayController.arrays[index].todos![i].id!
+      NotificationService()
+          .flutterLocalNotificationsPlugin
+          .cancel(arrayController.arrays[index].todos![i].id!);
     }
   }
 }

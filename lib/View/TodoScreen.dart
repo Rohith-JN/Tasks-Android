@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/models/Todo.dart';
+import 'package:tasks/services/functions.services.dart';
 import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
@@ -212,7 +213,12 @@ class _TodoScreenState extends State<TodoScreen> {
                   HapticFeedback.heavyImpact();
                   if (_dateController.text.isNotEmpty &&
                       _timeController.text.isNotEmpty) {
-                    // Todo set notification at finalId
+                    NotificationService().showNotification(
+                        finalId,
+                        'Reminder',
+                        titleEditingController.text,
+                        Functions.parse(
+                            _dateController.text, _timeController.text));
                   }
                 }
                 if (widget.todoIndex != null &&
@@ -264,7 +270,18 @@ class _TodoScreenState extends State<TodoScreen> {
                   HapticFeedback.heavyImpact();
                   if (_dateController.text.isNotEmpty &&
                       _timeController.text.isNotEmpty) {
-                    // Todo set notification at arrayController.arrays[widget.arrayIndex!].todos![widget.todoIndex!].id!
+                    NotificationService().showNotification(
+                        arrayController.arrays[widget.arrayIndex!]
+                            .todos![widget.todoIndex!].id!,
+                        'Reminder',
+                        titleEditingController.text,
+                        Functions.parse(
+                            _dateController.text, _timeController.text));
+                  } else {
+                    NotificationService()
+                        .flutterLocalNotificationsPlugin
+                        .cancel(arrayController.arrays[widget.arrayIndex!]
+                            .todos![widget.todoIndex!].id!);
                   }
                 }
               },
