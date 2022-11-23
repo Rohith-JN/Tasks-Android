@@ -74,6 +74,15 @@ class _TodoScreenState extends State<TodoScreen> {
             .arrays[widget.arrayIndex!].todos![widget.todoIndex!].done!;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    titleEditingController.dispose();
+    detailEditingController.dispose();
+    _timeController.dispose();
+    _dateController.dispose();
+  }
+
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(
       hour: (TimeOfDay.now().minute > 55)
@@ -122,7 +131,7 @@ class _TodoScreenState extends State<TodoScreen> {
       selectedTime = time;
       _hour = selectedTime.hour.toString();
       _minute = selectedTime.minute.toString();
-      _time = _hour + ' : ' + _minute;
+      _time = '$_hour : $_minute';
       _timeController.text = _time;
       _timeController.text = formatDate(
           DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
@@ -449,7 +458,7 @@ class _TodoScreenState extends State<TodoScreen> {
                           enabled: false,
                           controller: _timeController,
                           decoration: InputDecoration(
-                              hintText: "Time",
+                              hintText: "Enter",
                               hintStyle: hintTextStyle,
                               border: InputBorder.none),
                           style: todoScreenStyle,
