@@ -22,18 +22,26 @@ class ArrayScreen extends StatefulWidget {
 class _ArrayScreenState extends State<ArrayScreen> {
   final ArrayController arrayController = Get.find();
   final AuthController authController = Get.find();
-
+  late TextEditingController titleEditingController;
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     String? title = '';
-
     if (widget.index != null) {
       title = arrayController.arrays[widget.index!].title;
     }
-
     TextEditingController titleEditingController =
         TextEditingController(text: title);
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+    titleEditingController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
