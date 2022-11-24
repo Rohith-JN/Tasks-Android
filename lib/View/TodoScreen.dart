@@ -313,160 +313,166 @@ class _TodoScreenState extends State<TodoScreen> {
         ],
       ),
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          padding: (MediaQuery.of(context).size.width < 768)
-              ? const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0)
-              : const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
-          child: Column(
-            children: [
-              Container(
-                  decoration: BoxDecoration(
-                      color: tertiaryColor,
-                      borderRadius: BorderRadius.circular(14.0)),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 15.0),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                            validator: Validator.titleValidator,
-                            controller: titleEditingController,
-                            autofocus: true,
-                            autocorrect: false,
-                            cursorColor: Colors.grey,
-                            maxLines: 1,
-                            maxLength: 25,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                                counterStyle: counterTextStyle,
-                                hintStyle: hintTextStyle,
-                                hintText: "Title",
-                                border: InputBorder.none),
-                            style: todoScreenStyle),
-                        primaryDivider,
-                        TextField(
-                            controller: detailEditingController,
-                            maxLines: null,
-                            autocorrect: false,
-                            cursorColor: Colors.grey,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                                counterStyle: counterTextStyle,
-                                hintStyle: hintTextStyle,
-                                hintText: "Notes",
-                                border: InputBorder.none),
-                            style: todoScreenDetailsStyle),
-                      ],
-                    ),
-                  )),
-              Visibility(
-                visible: (widget.todoIndex != null) ? true : false,
-                child: Container(
-                    margin: const EdgeInsets.only(top: 20.0),
-                    width: double.infinity,
+        child: GestureDetector(
+          onTap: () {
+                  FocusScope.of(context).unfocus();
+                  TextEditingController().clear();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: (MediaQuery.of(context).size.width < 768)
+                ? const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0)
+                : const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
+            child: Column(
+              children: [
+                Container(
                     decoration: BoxDecoration(
                         color: tertiaryColor,
                         borderRadius: BorderRadius.circular(14.0)),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 20.0),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        horizontal: 24.0, vertical: 15.0),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "Completed",
-                            style: todoScreenStyle,
-                          ),
-                          Transform.scale(
-                            scale: 1.3,
-                            child: Theme(
-                                data: ThemeData(
-                                    unselectedWidgetColor: const Color.fromARGB(
-                                        255, 187, 187, 187)),
-                                child: Checkbox(
-                                    shape: const CircleBorder(),
-                                    checkColor: Colors.white,
-                                    activeColor: primaryColor,
-                                    value: done,
-                                    side: Theme.of(context).checkboxTheme.side,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        done = value!;
-                                      });
-                                    })),
-                          )
+                          TextFormField(
+                              validator: Validator.titleValidator,
+                              controller: titleEditingController,
+                              autofocus: true,
+                              autocorrect: false,
+                              cursorColor: Colors.grey,
+                              maxLines: 1,
+                              maxLength: 25,
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                  counterStyle: counterTextStyle,
+                                  hintStyle: hintTextStyle,
+                                  hintText: "Title",
+                                  border: InputBorder.none),
+                              style: todoScreenStyle),
+                          primaryDivider,
+                          TextField(
+                              controller: detailEditingController,
+                              maxLines: null,
+                              autocorrect: false,
+                              cursorColor: Colors.grey,
+                              textInputAction: TextInputAction.done,
+                              decoration: InputDecoration(
+                                  counterStyle: counterTextStyle,
+                                  hintStyle: hintTextStyle,
+                                  hintText: "Notes",
+                                  border: InputBorder.none),
+                              style: todoScreenDetailsStyle),
                         ],
                       ),
                     )),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  await _pickDateTime();
-                  setState(() {
-                    visible = true;
-                  });
-                },
-                child: Container(
-                    margin: const EdgeInsets.only(top: 20.0),
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 15.0),
-                    decoration: BoxDecoration(
-                        color: tertiaryColor,
-                        borderRadius: BorderRadius.circular(14.0)),
-                    child: Column(
-                      children: [
-                        Row(
+                Visibility(
+                  visible: (widget.todoIndex != null) ? true : false,
+                  child: Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: tertiaryColor,
+                          borderRadius: BorderRadius.circular(14.0)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 20.0),
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Flexible(
-                              child: TextField(
-                                enabled: false,
-                                controller: _dateController,
-                                onChanged: (String val) {
-                                  _setDate = val;
-                                },
-                                decoration: InputDecoration(
-                                    hintText: "Date",
-                                    hintStyle: hintTextStyle,
-                                    border: InputBorder.none),
-                                style: todoScreenStyle,
-                              ),
+                            Text(
+                              "Completed",
+                              style: todoScreenStyle,
                             ),
-                            visible
-                                ? IconButton(
-                                    onPressed: () {
-                                      _dateController.clear();
-                                      _timeController.clear();
-                                      setState(() {});
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                    ))
-                                : Container()
+                            Transform.scale(
+                              scale: 1.3,
+                              child: Theme(
+                                  data: ThemeData(
+                                      unselectedWidgetColor: const Color.fromARGB(
+                                          255, 187, 187, 187)),
+                                  child: Checkbox(
+                                      shape: const CircleBorder(),
+                                      checkColor: Colors.white,
+                                      activeColor: primaryColor,
+                                      value: done,
+                                      side: Theme.of(context).checkboxTheme.side,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          done = value!;
+                                        });
+                                      })),
+                            )
                           ],
                         ),
-                        primaryDivider,
-                        TextField(
-                          onChanged: (String val) {
-                            _setTime = val;
-                          },
-                          enabled: false,
-                          controller: _timeController,
-                          decoration: InputDecoration(
-                              hintText: "Enter",
-                              hintStyle: hintTextStyle,
-                              border: InputBorder.none),
-                          style: todoScreenStyle,
-                        )
-                      ],
-                    )),
-              ),
-            ],
+                      )),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await _pickDateTime();
+                    setState(() {
+                      visible = true;
+                    });
+                  },
+                  child: Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 15.0),
+                      decoration: BoxDecoration(
+                          color: tertiaryColor,
+                          borderRadius: BorderRadius.circular(14.0)),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: TextField(
+                                  enabled: false,
+                                  controller: _dateController,
+                                  onChanged: (String val) {
+                                    _setDate = val;
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText: "Date",
+                                      hintStyle: hintTextStyle,
+                                      border: InputBorder.none),
+                                  style: todoScreenStyle,
+                                ),
+                              ),
+                              visible
+                                  ? IconButton(
+                                      onPressed: () {
+                                        _dateController.clear();
+                                        _timeController.clear();
+                                        setState(() {});
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ))
+                                  : Container()
+                            ],
+                          ),
+                          primaryDivider,
+                          TextField(
+                            onChanged: (String val) {
+                              _setTime = val;
+                            },
+                            enabled: false,
+                            controller: _timeController,
+                            decoration: InputDecoration(
+                                hintText: "Enter",
+                                hintStyle: hintTextStyle,
+                                border: InputBorder.none),
+                            style: todoScreenStyle,
+                          )
+                        ],
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
       ),
