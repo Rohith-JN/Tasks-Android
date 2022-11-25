@@ -18,9 +18,6 @@ import 'package:intl/intl.dart';
 import 'package:tasks/utils/validators.dart';
 import 'package:tasks/utils/widgets.dart';
 
-/// Keys shouldn't be in the build method.
-/// Because each time you call setState, it'll be recreated.
-/// In this case, you don't want that.
 final formKey = GlobalKey<FormState>();
 
 class TodoScreen extends StatefulWidget {
@@ -47,11 +44,6 @@ class _TodoScreenState extends State<TodoScreen> {
   late String _hour, _minute, _time;
   late String dateTime;
   late bool done;
-
-  /// This unfocus any text field that currently has focus.
-  void _unfocusTextFields() {
-    FocusManager.instance.primaryFocus!.unfocus();
-  }
 
   @override
   void initState() {
@@ -322,10 +314,7 @@ class _TodoScreenState extends State<TodoScreen> {
       ),
       body: SafeArea(
         child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-            TextEditingController().clear();
-          },
+          onTap: () {},
           child: Container(
             width: double.infinity,
             padding: (MediaQuery.of(context).size.width < 768)
@@ -346,8 +335,6 @@ class _TodoScreenState extends State<TodoScreen> {
                         children: [
                           TextFormField(
                               validator: Validator.titleValidator,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
                               controller: titleEditingController,
                               autofocus: true,
                               autocorrect: false,
@@ -411,8 +398,6 @@ class _TodoScreenState extends State<TodoScreen> {
                                       side:
                                           Theme.of(context).checkboxTheme.side,
                                       onChanged: (value) {
-                                        _unfocusTextFields();
-
                                         setState(() {
                                           done = value!;
                                         });
@@ -424,8 +409,6 @@ class _TodoScreenState extends State<TodoScreen> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    _unfocusTextFields();
-
                     await _pickDateTime();
                     setState(() {
                       visible = true;
