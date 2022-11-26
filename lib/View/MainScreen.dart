@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
           title: Padding(
             padding: (MediaQuery.of(context).size.width < 768)
                 ? const EdgeInsets.only(left: 0.0)
-                : EdgeInsets.only(left: 15.0),
+                : const EdgeInsets.only(left: 15.0),
             child: Text("Tasks", style: appBarTextStyle),
           ),
           actions: [
@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
               padding: (MediaQuery.of(context).size.width < 768)
                   ? const EdgeInsets.only(right: 0.0)
-                  : EdgeInsets.only(right: 25.0),
+                  : const EdgeInsets.only(right: 25.0),
               child: IconButton(
                   onPressed: () {
                     showModalBottomSheet<void>(
