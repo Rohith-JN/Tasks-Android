@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:tasks/models/User.dart';
 
 class UserController extends GetxController {
-  Rx<UserModel> _userModel = UserModel().obs;
+  final Rx<UserModel> _userModel = UserModel().obs;
 
   UserModel get user => _userModel.value;
 

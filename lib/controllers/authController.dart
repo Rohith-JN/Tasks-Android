@@ -11,8 +11,8 @@ import 'package:tasks/services/database.service.dart';
 import '../utils/global.dart';
 
 class AuthController extends GetxController {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  Rxn<User> _firebaseUser = Rxn<User>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Rxn<User> _firebaseUser = Rxn<User>();
 
   User? get user => _firebaseUser.value;
 
