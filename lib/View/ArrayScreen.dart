@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/utils/widgets.dart';
 
+final formKey = GlobalKey<FormState>();
+
 class ArrayScreen extends StatefulWidget {
   final int? index;
   final String? docId;
@@ -30,8 +32,7 @@ class _ArrayScreenState extends State<ArrayScreen> {
     if (widget.index != null) {
       title = arrayController.arrays[widget.index!].title;
     }
-    TextEditingController titleEditingController =
-        TextEditingController(text: title);
+    titleEditingController = TextEditingController(text: title);
   }
 
   @override
@@ -42,8 +43,6 @@ class _ArrayScreenState extends State<ArrayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

@@ -198,13 +198,23 @@ class _MainScreenState extends State<MainScreen> {
                             init: Get.put<ArrayController>(ArrayController()),
                             builder: (ArrayController arrayController) {
                               return (arrayController.arrays.isEmpty)
-                                  ? Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.37,
-                                      child: Center(
-                                          child: Text("Add new lists",
-                                              style: buttonTextStyleWhite)),
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const Center(
+                                          child: Icon(Icons.list,
+                                              color: Colors.white, size: 90.0),
+                                        ),
+                                        const SizedBox(
+                                          height: 5.0,
+                                        ),
+                                        Center(
+                                            child: Text('Add new lists',
+                                                style: buttonTextStyleWhite)),
+                                      ],
                                     )
                                   : ListView.separated(
                                       shrinkWrap: true,
@@ -351,15 +361,18 @@ class CustomSearchDelegate extends SearchDelegate {
       icon: primaryIcon(Icons.arrow_back));
   @override
   List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-            onPressed: () {
-              if (query.isEmpty) {
-                close(context, null);
-              } else {
-                query = '';
-              }
-            },
-            icon: primaryIcon(Icons.close))
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: IconButton(
+              onPressed: () {
+                if (query.isEmpty) {
+                  close(context, null);
+                } else {
+                  query = '';
+                }
+              },
+              icon: primaryIcon(Icons.close)),
+        )
       ];
   @override
   Widget buildResults(BuildContext context) => Container();
@@ -382,7 +395,7 @@ class CustomSearchDelegate extends SearchDelegate {
             const Center(
               child: Icon(Icons.search, color: Colors.white, size: 100.0),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             Center(
