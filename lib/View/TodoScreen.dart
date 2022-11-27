@@ -603,7 +603,7 @@ class _TodoScreenState extends State<TodoScreen> {
                               FocusManager.instance.primaryFocus!.unfocus();
                             }
                             setState(() {
-                              _height = (_height == 75.0) ? 235 : 75;
+                              _height = (_height == 75.0) ? 205 : 75;
                             });
                             Future.delayed(
                                 Duration(
@@ -616,22 +616,23 @@ class _TodoScreenState extends State<TodoScreen> {
                               });
                             });
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Repeat',
-                                style: todoScreenStyle,
-                              ),
-                              Text(
-                                options[selectedIndex!],
-                                style: todoScreenStyle,
-                              )
-                            ],
+                          child: Visibility(
+                            visible: (optionsVisible) ? false : true,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Repeat',
+                                  style: todoScreenStyle,
+                                ),
+                                Text(
+                                  options[selectedIndex!],
+                                  style: todoScreenStyle,
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                        Visibility(
-                            visible: optionsVisible, child: primaryDivider),
                         Visibility(
                           visible: optionsVisible,
                           child: Column(
@@ -639,34 +640,38 @@ class _TodoScreenState extends State<TodoScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 10.0),
                                 child: SizedBox(
-                                  height: 130,
+                                  height: 148,
                                   child: ListView.separated(
-                                    itemCount: options.length,
-                                    itemBuilder: ((context, index) {
-                                      return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedIndex = index;
-                                                });
-                                              },
-                                              child: Text(
-                                                options[index],
-                                                style: todoScreenStyle,
-                                              ),
-                                            ),
-                                            (selectedIndex == index)
-                                                ? primaryIcon(Icons.check)
-                                                : Container()
-                                          ]);
-                                    }),
-                                    separatorBuilder:
-                                        (BuildContext context, int index) =>
-                                            const SizedBox(height: 20.0),
-                                  ),
+                                      physics: const BouncingScrollPhysics(),
+                                      itemCount: options.length,
+                                      itemBuilder: ((context, index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedIndex = index;
+                                            });
+                                          },
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  options[index],
+                                                  style: todoScreenStyle,
+                                                ),
+                                                (selectedIndex == index)
+                                                    ? primaryIcon(Icons.check)
+                                                    : Container()
+                                              ]),
+                                        );
+                                      }),
+                                      separatorBuilder:
+                                          (BuildContext context, int index) =>
+                                              SizedBox(
+                                                height: 25.0,
+                                                child: primaryDivider,
+                                              )),
                                 ),
                               ),
                             ],
