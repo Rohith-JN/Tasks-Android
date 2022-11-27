@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:tasks/controllers/arrayController.dart';
@@ -44,6 +43,9 @@ class _TodoScreenState extends State<TodoScreen> {
   late String dateTime;
   late bool done;
 
+  late List<String> options;
+  late int? selectedIndex;
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +75,11 @@ class _TodoScreenState extends State<TodoScreen> {
         ? false
         : arrayController
             .arrays[widget.arrayIndex!].todos![widget.todoIndex!].done!;
+    options = ['Never', 'Daily', 'Weekly'];
+    selectedIndex = (widget.todoIndex == null)
+        ? 0
+        : arrayController
+            .arrays[widget.arrayIndex!].todos![widget.todoIndex!].repeatIndex;
   }
 
   @override
@@ -140,6 +147,9 @@ class _TodoScreenState extends State<TodoScreen> {
     }
   }
 
+  bool optionsVisible = false;
+  double _height = 75.0;
+
   @override
   Widget build(BuildContext context) {
     bool visible =
@@ -147,173 +157,268 @@ class _TodoScreenState extends State<TodoScreen> {
             ? false
             : true;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text((widget.todoIndex == null) ? 'New Task' : 'Edit Task',
-            style: menuTextStyle),
-        leadingWidth: (MediaQuery.of(context).size.width < 768) ? 90.0 : 100.0,
-        leading: Center(
-          child: Padding(
-            padding: (MediaQuery.of(context).size.width < 768)
-                ? const EdgeInsets.only(left: 0)
-                : const EdgeInsets.only(left: 21.0),
-            child: TextButton(
-              style: const ButtonStyle(
-                splashFactory: NoSplash.splashFactory,
-              ),
-              onPressed: () {
-                Get.back();
-              },
-              child: Text(
-                "Cancel",
-                style: paragraphPrimary,
-              ),
-            ),
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          Center(
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _height = 75;
+        });
+        Future.delayed(Duration(milliseconds: 100), () {
+          setState(() {
+            optionsVisible = false;
+          });
+        });
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus!.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text((widget.todoIndex == null) ? 'New Task' : 'Edit Task',
+              style: menuTextStyle),
+          leadingWidth:
+              (MediaQuery.of(context).size.width < 768) ? 90.0 : 100.0,
+          leading: Center(
             child: Padding(
               padding: (MediaQuery.of(context).size.width < 768)
                   ? const EdgeInsets.only(left: 0)
-                  : const EdgeInsets.only(right: 21.0),
+                  : const EdgeInsets.only(left: 21.0),
               child: TextButton(
                 style: const ButtonStyle(
                   splashFactory: NoSplash.splashFactory,
                 ),
-                onPressed: () async {
-                  if (widget.todoIndex == null &&
-                      formKey.currentState!.validate()) {
-                    var finalId = UniqueKey().hashCode;
-                    arrayController.arrays[widget.arrayIndex!].todos!.add(Todo(
-                        title: titleEditingController.text,
-                        details: detailEditingController.text,
-                        id: finalId,
-                        date: _dateController.text,
-                        time: _timeController.text,
-                        dateAndTimeEnabled: (_dateController.text != '' &&
-                                _timeController.text != '')
-                            ? true
-                            : false,
-                        done: false,
-                        dateCreated: Timestamp.now()));
-                    await FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(uid)
-                        .collection("arrays")
-                        .doc(arrayController.arrays[widget.arrayIndex!].id)
-                        .set({
-                      "title": arrayController.arrays[widget.arrayIndex!].title,
-                      "dateCreated": arrayController
-                          .arrays[widget.arrayIndex!].dateCreated,
-                      "todos": arrayController.arrays[widget.arrayIndex!].todos!
-                          .map((todo) => todo.toJson())
-                          .toList()
-                    });
-                    Database().addAllTodo(
-                        uid,
-                        finalId,
-                        arrayController.arrays[widget.arrayIndex!].title!,
-                        titleEditingController.text,
-                        detailEditingController.text,
-                        Timestamp.now(),
-                        _dateController.text,
-                        _timeController.text,
-                        false,
-                        (_dateController.text != '' &&
-                                _timeController.text != '')
-                            ? true
-                            : false,
-                        finalId);
-                    Get.back();
-                    HapticFeedback.heavyImpact();
-                    if (_dateController.text.isNotEmpty &&
-                        _timeController.text.isNotEmpty) {
-                      NotificationService().showNotification(
-                          finalId,
-                          'Reminder',
-                          titleEditingController.text,
-                          Functions.parse(
-                              _dateController.text, _timeController.text));
-                    }
-                  }
-                  if (widget.todoIndex != null &&
-                      formKey.currentState!.validate()) {
-                    var editing = arrayController
-                        .arrays[widget.arrayIndex!].todos![widget.todoIndex!];
-                    editing.title = titleEditingController.text;
-                    editing.details = detailEditingController.text;
-                    editing.date = _dateController.text;
-                    editing.time = _timeController.text;
-                    editing.done = done;
-                    editing.dateAndTimeEnabled =
-                        (titleEditingController.text != '' &&
-                                detailEditingController.text != '')
-                            ? true
-                            : false;
-                    arrayController.arrays[widget.arrayIndex!]
-                        .todos![widget.todoIndex!] = editing;
-                    await FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(uid)
-                        .collection("arrays")
-                        .doc(arrayController.arrays[widget.arrayIndex!].id)
-                        .set({
-                      "title": arrayController.arrays[widget.arrayIndex!].title,
-                      "dateCreated": arrayController
-                          .arrays[widget.arrayIndex!].dateCreated,
-                      "todos": arrayController.arrays[widget.arrayIndex!].todos!
-                          .map((todo) => todo.toJson())
-                          .toList()
-                    });
-                    Database().updateAllTodo(
-                        uid,
-                        arrayController.arrays[widget.arrayIndex!]
-                            .todos![widget.todoIndex!].id!, // get doc id
-                        arrayController.arrays[widget.arrayIndex!].title!,
-                        titleEditingController.text,
-                        detailEditingController.text,
-                        Timestamp.now(),
-                        _dateController.text,
-                        _timeController.text,
-                        done,
-                        (_dateController.text != '' &&
-                                _timeController.text != '')
-                            ? true
-                            : false,
-                        arrayController.arrays[widget.arrayIndex!]
-                            .todos![widget.todoIndex!].id!);
-                    Get.back();
-                    HapticFeedback.heavyImpact();
-                    if (_dateController.text.isNotEmpty &&
-                        _timeController.text.isNotEmpty) {
-                      NotificationService().showNotification(
-                          arrayController.arrays[widget.arrayIndex!]
-                              .todos![widget.todoIndex!].id!,
-                          'Reminder',
-                          titleEditingController.text,
-                          Functions.parse(
-                              _dateController.text, _timeController.text));
-                    } else {
-                      NotificationService()
-                          .flutterLocalNotificationsPlugin
-                          .cancel(arrayController.arrays[widget.arrayIndex!]
-                              .todos![widget.todoIndex!].id!);
-                    }
-                  }
+                onPressed: () {
+                  Get.back();
                 },
-                child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
-                    style: paragraphPrimary),
+                child: Text(
+                  "Cancel",
+                  style: paragraphPrimary,
+                ),
               ),
             ),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {},
+          ),
+          centerTitle: true,
+          actions: [
+            Center(
+              child: Padding(
+                padding: (MediaQuery.of(context).size.width < 768)
+                    ? const EdgeInsets.only(left: 0)
+                    : const EdgeInsets.only(right: 21.0),
+                child: TextButton(
+                  style: const ButtonStyle(
+                    splashFactory: NoSplash.splashFactory,
+                  ),
+                  onPressed: () async {
+                    if (widget.todoIndex == null &&
+                        formKey.currentState!.validate()) {
+                      var finalId = UniqueKey().hashCode;
+                      arrayController.arrays[widget.arrayIndex!].todos!.add(
+                          Todo(
+                              title: titleEditingController.text,
+                              details: detailEditingController.text,
+                              id: finalId,
+                              date: _dateController.text,
+                              time: _timeController.text,
+                              dateAndTimeEnabled: (_dateController.text != '' &&
+                                      _timeController.text != '')
+                                  ? true
+                                  : false,
+                              done: false,
+                              dateCreated: Timestamp.now(),
+                              repeatIndex: (_dateController.text != '' &&
+                                      _timeController.text != '')
+                                  ? selectedIndex
+                                  : 0));
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(uid)
+                          .collection("arrays")
+                          .doc(arrayController.arrays[widget.arrayIndex!].id)
+                          .set({
+                        "title":
+                            arrayController.arrays[widget.arrayIndex!].title,
+                        "dateCreated": arrayController
+                            .arrays[widget.arrayIndex!].dateCreated,
+                        "todos": arrayController
+                            .arrays[widget.arrayIndex!].todos!
+                            .map((todo) => todo.toJson())
+                            .toList()
+                      });
+                      Database().addAllTodo(
+                          uid,
+                          finalId,
+                          arrayController.arrays[widget.arrayIndex!].title!,
+                          titleEditingController.text,
+                          detailEditingController.text,
+                          Timestamp.now(),
+                          _dateController.text,
+                          _timeController.text,
+                          false,
+                          (_dateController.text != '' &&
+                                  _timeController.text != '')
+                              ? true
+                              : false,
+                          finalId,
+                          (_dateController.text != '' &&
+                                  _timeController.text != '')
+                              ? selectedIndex!
+                              : 0);
+                      Get.back();
+                      HapticFeedback.heavyImpact();
+                      if (_dateController.text.isNotEmpty &&
+                          _timeController.text.isNotEmpty &&
+                          selectedIndex == 0) {
+                        NotificationService().showNotification(
+                            finalId,
+                            'Reminder',
+                            titleEditingController.text,
+                            Functions.parse(
+                                _dateController.text, _timeController.text));
+                      } else if (_dateController.text.isNotEmpty &&
+                          _timeController.text.isNotEmpty &&
+                          selectedIndex == 1) {
+                        NotificationService().showDailyNotification(
+                            finalId,
+                            'Reminder',
+                            titleEditingController.text,
+                            Functions.parse(
+                                _dateController.text, _timeController.text));
+                      } else if (_dateController.text.isNotEmpty &&
+                          _timeController.text.isNotEmpty &&
+                          selectedIndex == 2) {
+                        DateTime date = DateFormat("mm/dd/yyyy")
+                            .parse(_dateController.text);
+                        NotificationService().showWeeklyNotification(
+                            finalId,
+                            'Reminder',
+                            titleEditingController.text,
+                            Functions.parse(
+                                _dateController.text, _timeController.text),
+                            [date.weekday]);
+                      }
+                    }
+                    if (widget.todoIndex != null &&
+                        formKey.currentState!.validate()) {
+                      var editing = arrayController
+                          .arrays[widget.arrayIndex!].todos![widget.todoIndex!];
+                      editing.title = titleEditingController.text;
+                      editing.details = detailEditingController.text;
+                      editing.date = _dateController.text;
+                      editing.time = _timeController.text;
+                      editing.done = done;
+                      editing.dateAndTimeEnabled =
+                          (_dateController.text != '' &&
+                                  _timeController.text != '')
+                              ? true
+                              : false;
+                      editing.repeatIndex = (_dateController.text != '' &&
+                              _timeController.text != '')
+                          ? selectedIndex
+                          : 0;
+                      arrayController.arrays[widget.arrayIndex!]
+                          .todos![widget.todoIndex!] = editing;
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(uid)
+                          .collection("arrays")
+                          .doc(arrayController.arrays[widget.arrayIndex!].id)
+                          .set({
+                        "title":
+                            arrayController.arrays[widget.arrayIndex!].title,
+                        "dateCreated": arrayController
+                            .arrays[widget.arrayIndex!].dateCreated,
+                        "todos": arrayController
+                            .arrays[widget.arrayIndex!].todos!
+                            .map((todo) => todo.toJson())
+                            .toList()
+                      });
+                      Database().updateAllTodo(
+                          uid,
+                          arrayController.arrays[widget.arrayIndex!]
+                              .todos![widget.todoIndex!].id!, // get doc id
+                          arrayController.arrays[widget.arrayIndex!].title!,
+                          titleEditingController.text,
+                          detailEditingController.text,
+                          Timestamp.now(),
+                          _dateController.text,
+                          _timeController.text,
+                          done,
+                          (_dateController.text != '' &&
+                                  _timeController.text != '')
+                              ? true
+                              : false,
+                          arrayController.arrays[widget.arrayIndex!]
+                              .todos![widget.todoIndex!].id!,
+                          (_dateController.text != '' &&
+                                  _timeController.text != '')
+                              ? selectedIndex!
+                              : 0);
+                      Get.back();
+                      HapticFeedback.heavyImpact();
+                      if (_dateController.text.isNotEmpty &&
+                          _timeController.text.isNotEmpty &&
+                          selectedIndex == 0) {
+                        NotificationService()
+                            .flutterLocalNotificationsPlugin
+                            .cancel(arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!);
+                        NotificationService().showNotification(
+                            arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!,
+                            'Reminder',
+                            titleEditingController.text,
+                            Functions.parse(
+                                _dateController.text, _timeController.text));
+                      } else if (_dateController.text.isNotEmpty &&
+                          _timeController.text.isNotEmpty &&
+                          selectedIndex == 1) {
+                        NotificationService()
+                            .flutterLocalNotificationsPlugin
+                            .cancel(arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!);
+                        NotificationService().showDailyNotification(
+                            arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!,
+                            'Reminder',
+                            titleEditingController.text,
+                            Functions.parse(
+                                _dateController.text, _timeController.text));
+                      } else if (_dateController.text.isNotEmpty &&
+                          _timeController.text.isNotEmpty &&
+                          selectedIndex == 2) {
+                        NotificationService()
+                            .flutterLocalNotificationsPlugin
+                            .cancel(arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!);
+                        DateTime date = DateFormat("mm/dd/yyyy")
+                            .parse(_dateController.text);
+                        NotificationService().showWeeklyNotification(
+                            arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!,
+                            'Reminder',
+                            titleEditingController.text,
+                            Functions.parse(
+                                _dateController.text, _timeController.text),
+                            [date.weekday]);
+                      } else {
+                        NotificationService()
+                            .flutterLocalNotificationsPlugin
+                            .cancel(arrayController.arrays[widget.arrayIndex!]
+                                .todos![widget.todoIndex!].id!);
+                      }
+                    }
+                  },
+                  child: Text((widget.todoIndex == null) ? 'Add' : 'Update',
+                      style: paragraphPrimary),
+                ),
+              ),
+            )
+          ],
+        ),
+        body: SafeArea(
           child: Container(
             width: double.infinity,
             padding: (MediaQuery.of(context).size.width < 768)
@@ -373,41 +478,44 @@ class _TodoScreenState extends State<TodoScreen> {
                           borderRadius: BorderRadius.circular(14.0)),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24.0, vertical: 20.0),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Completed",
-                              style: todoScreenStyle,
-                            ),
-                            Transform.scale(
-                              scale: 1.3,
-                              child: Theme(
-                                  data: ThemeData(
-                                      unselectedWidgetColor:
-                                          const Color.fromARGB(
-                                              255, 187, 187, 187)),
-                                  child: Checkbox(
-                                      shape: const CircleBorder(),
-                                      checkColor: Colors.white,
-                                      activeColor: primaryColor,
-                                      value: done,
-                                      side:
-                                          Theme.of(context).checkboxTheme.side,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          done = value!;
-                                        });
-                                      })),
-                            )
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Completed",
+                            style: todoScreenStyle,
+                          ),
+                          Transform.scale(
+                            scale: 1.3,
+                            child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: const Color.fromARGB(
+                                        255, 187, 187, 187)),
+                                child: Checkbox(
+                                    shape: const CircleBorder(),
+                                    checkColor: Colors.white,
+                                    activeColor: primaryColor,
+                                    value: done,
+                                    side: Theme.of(context).checkboxTheme.side,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        done = value!;
+                                      });
+                                    })),
+                          )
+                        ],
                       )),
                 ),
                 GestureDetector(
                   onTap: () async {
+                    setState(() {
+                      _height = 75;
+                    });
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      setState(() {
+                        optionsVisible = false;
+                      });
+                    });
                     await _pickDateTime();
                     setState(() {
                       visible = true;
@@ -468,6 +576,105 @@ class _TodoScreenState extends State<TodoScreen> {
                           )
                         ],
                       )),
+                ),
+                Visibility(
+                  visible: visible,
+                  child: AnimatedContainer(
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.fastOutSlowIn,
+                    margin: const EdgeInsets.only(top: 20.0),
+                    height: _height,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: tertiaryColor,
+                        borderRadius: BorderRadius.circular(14.0)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+
+                            if (!currentFocus.hasPrimaryFocus &&
+                                currentFocus.focusedChild != null) {
+                              FocusManager.instance.primaryFocus!.unfocus();
+                            }
+                            setState(() {
+                              _height = (_height == 75.0) ? 235 : 75;
+                            });
+                            Future.delayed(
+                                Duration(
+                                    milliseconds: (optionsVisible == true)
+                                        ? 100
+                                        : 750), () {
+                              setState(() {
+                                optionsVisible =
+                                    (optionsVisible == false) ? true : false;
+                              });
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Repeat',
+                                style: todoScreenStyle,
+                              ),
+                              Text(
+                                options[selectedIndex!],
+                                style: todoScreenStyle,
+                              )
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                            visible: optionsVisible, child: primaryDivider),
+                        Visibility(
+                          visible: optionsVisible,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: SizedBox(
+                                  height: 130,
+                                  child: ListView.separated(
+                                    itemCount: options.length,
+                                    itemBuilder: ((context, index) {
+                                      return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedIndex = index;
+                                                });
+                                              },
+                                              child: Text(
+                                                options[index],
+                                                style: todoScreenStyle,
+                                              ),
+                                            ),
+                                            (selectedIndex == index)
+                                                ? primaryIcon(Icons.check)
+                                                : Container()
+                                          ]);
+                                    }),
+                                    separatorBuilder:
+                                        (BuildContext context, int index) =>
+                                            const SizedBox(height: 20.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

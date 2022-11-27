@@ -11,19 +11,20 @@ class FTodo {
   bool? dateAndTimeEnabled;
   bool? done;
   Timestamp? dateCreated;
+  int? repeatIndex;
 
-  FTodo({
-    this.id,
-    this.docId,
-    this.arrayTitle,
-    this.title,
-    this.details,
-    this.date,
-    this.time,
-    this.dateAndTimeEnabled,
-    this.done,
-    this.dateCreated,
-  });
+  FTodo(
+      {this.id,
+      this.docId,
+      this.arrayTitle,
+      this.title,
+      this.details,
+      this.date,
+      this.time,
+      this.dateAndTimeEnabled,
+      this.done,
+      this.dateCreated,
+      this.repeatIndex});
 
   FTodo.fromMap(DocumentSnapshot doc) {
     id = doc["id"];
@@ -36,6 +37,7 @@ class FTodo {
     done = doc['done'];
     dateAndTimeEnabled = doc['dateAndTimeEnabled'];
     dateCreated = doc['dateCreated'];
+    repeatIndex = doc['repeatIndex'];
   }
 
   Map<String, dynamic> toMap() {
@@ -49,7 +51,8 @@ class FTodo {
       'time': time,
       'dateAndTimeEnabled': dateAndTimeEnabled,
       'done': done,
-      'dateCreated': dateCreated
+      'dateCreated': dateCreated,
+      'repeatIndex': repeatIndex
     };
   }
 }

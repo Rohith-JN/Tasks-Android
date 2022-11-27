@@ -34,6 +34,7 @@ class FilteredScreen extends StatefulWidget {
 class _FilteredScreenState extends State<FilteredScreen> {
   final ArrayController arrayController = Get.put(ArrayController());
   final String uid = Get.find<AuthController>().user!.uid;
+  List<String> options = ['Never', 'Daily', 'Weekly'];
 
   @override
   Widget build(BuildContext context) {
@@ -203,8 +204,8 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                                                           "MM/dd/yyyy")
                                                                       .format(DateTime
                                                                           .now()))
-                                                              ? '${widget.data[index].date!}, ${widget.data[index].time}'
-                                                              : 'Today, ${widget.data[index].time}',
+                                                              ? '${widget.data[index].date!}, ${widget.data[index].time} ${(widget.data[index].repeatIndex == 0) ? "" : options[widget.data[index].repeatIndex]}'
+                                                              : 'Today, ${widget.data[index].time} ${(widget.data[index].repeatIndex == 0) ? "" : options[widget.data[index].repeatIndex]}',
                                                           style:
                                                               todoScreenStyle),
                                                     ),

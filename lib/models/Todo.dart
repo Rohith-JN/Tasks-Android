@@ -11,17 +11,18 @@ class Todo {
   bool? dateAndTimeEnabled;
   bool? done;
   Timestamp? dateCreated;
+  int? repeatIndex;
 
-  Todo({
-    this.id,
-    this.title,
-    this.details,
-    this.date,
-    this.time,
-    this.dateAndTimeEnabled,
-    this.done,
-    this.dateCreated,
-  });
+  Todo(
+      {this.id,
+      this.title,
+      this.details,
+      this.date,
+      this.time,
+      this.dateAndTimeEnabled,
+      this.done,
+      this.dateCreated,
+      this.repeatIndex});
 
   Todo.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -32,6 +33,7 @@ class Todo {
     done = json['done'];
     dateAndTimeEnabled = json['dateAndTimeEnabled'];
     dateCreated = json['dateCreated'];
+    repeatIndex = json['repeatIndex'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,7 +45,8 @@ class Todo {
       'time': time,
       'dateAndTimeEnabled': dateAndTimeEnabled,
       'done': done,
-      'dateCreated': dateCreated
+      'dateCreated': dateCreated,
+      'repeatIndex': repeatIndex
     };
   }
 }

@@ -58,7 +58,7 @@ class Database {
       String time,
       done,
       dateAndTimeEnabled,
-      int id) async {
+      int id, int repeatIndex) async {
     try {
       await _firestore
           .collection("users")
@@ -74,7 +74,8 @@ class Database {
         "time": time,
         "done": done,
         "dateAndTimeEnabled": dateAndTimeEnabled,
-        "id": id
+        "id": id,
+        "repeatIndex": repeatIndex
       });
     } catch (e) {
       rethrow;
@@ -92,7 +93,7 @@ class Database {
       String time,
       done,
       dateAndTimeEnabled,
-      int id) async {
+      int id, int repeatIndex) async {
     try {
       await _firestore
           .collection("users")
@@ -108,7 +109,8 @@ class Database {
         "time": time,
         "done": done,
         "dateAndTimeEnabled": dateAndTimeEnabled,
-        "id": id
+        "id": id,
+        "repeatIndex": repeatIndex
       });
     } catch (e) {
       rethrow;
