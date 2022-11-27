@@ -204,8 +204,8 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                                                           "MM/dd/yyyy")
                                                                       .format(DateTime
                                                                           .now()))
-                                                              ? '${widget.data[index].date!}, ${widget.data[index].time} ${(widget.data[index].repeatIndex == 0) ? "" : options[widget.data[index].repeatIndex]}'
-                                                              : 'Today, ${widget.data[index].time} ${(widget.data[index].repeatIndex == 0) ? "" : options[widget.data[index].repeatIndex]}',
+                                                              ? '${widget.data[index].date!}, ${widget.data[index].time}}'
+                                                              : 'Today, ${widget.data[index].time}}',
                                                           style:
                                                               todoScreenStyle),
                                                     ),
