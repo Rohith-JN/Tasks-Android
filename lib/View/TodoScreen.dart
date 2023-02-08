@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:tasks/controllers/arrayController.dart';
 import 'package:tasks/controllers/authController.dart';
 import 'package:tasks/models/Todo.dart';
-import 'package:tasks/services/functions.services.dart';
+import 'package:tasks/services/functions.service.dart';
 import 'package:tasks/services/notification.service.dart';
 import 'package:tasks/services/database.service.dart';
 import 'package:tasks/utils/global.dart';
