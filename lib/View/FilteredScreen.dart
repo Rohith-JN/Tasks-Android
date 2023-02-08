@@ -205,7 +205,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                                                       .format(DateTime
                                                                           .now()))
                                                               ? '${widget.data[index].date!}, ${widget.data[index].time}}'
-                                                              : 'Today, ${widget.data[index].time}}',
+                                                              : 'Today, ${widget.data[index].time}',
                                                           style:
                                                               todoScreenStyle),
                                                     ),
